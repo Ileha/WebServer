@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<server>
+	    <name>first host</name><!--имя хоста-->
+	    <ip_adress>127.0.0.1</ip_adress><!--адрес хоста-->
+		<port>11000</port><!--порт хоста-->
+		<root_dir>../../../Resourses</root_dir><!--корневой каталог хоста-->
+		<!--<root_dir>/Users/Alexey/Documents/Programm Projects/C#/WebServer/Resourses</root_dir>-->
+		<default_file>index</default_file><!--файл открывающийся по умолчанию-->
+	</server>
+</root>
