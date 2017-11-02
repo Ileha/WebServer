@@ -15,7 +15,6 @@ namespace MyWebServer
     }
 
     public class Reqest {
-        public IHttpHandler Handler;
         public string URL;
         public Dictionary<string, string> varibles;
         public Dictionary<string, string> preferens;
@@ -25,15 +24,13 @@ namespace MyWebServer
             preferens = new Dictionary<string, string>();
         }
 
-        public static Reqest CreateNewReqest(string reqest, out IHttpHandler _handler) {
+        public static Reqest CreateNewReqest(string reqest, Func<TypeReqest, IHttpHandler> getHTTPHandl) {
             Reqest result = new Reqest();
             string[] elements = Regex.Split(reqest, "\r\n");
-            _handler = null;
             try {
                 string[] header = elements[0].Split(' ');
-                _handler = MainProgramm.ReqestsHandlers[IHttpHandler.HttpHandlerIdentification((TypeReqest)Enum.Parse(typeof(TypeReqest), header[0]), header[2])];
+                IHttpHandler _handler = getHTTPHandl((TypeReqest)Enum.Parse(typeof(TypeReqest), header[0]));
                 _handler.Parse(ref result, elements.ToList().GetRange(1, elements.Length - 1).ToArray(), header[1]);
-                result.Handler = _handler;
             }
             catch (Exception err) {
                 if (err is ExceptionCode) {

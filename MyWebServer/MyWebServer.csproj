@@ -47,6 +47,7 @@
     <Compile Include="Reader.cs" />
     <Compile Include="MIME\IMIME.cs" />
     <Compile Include="MIME\HttpMIME.cs" />
+    <Compile Include="ServerExceptions\ErrorServerMode.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -12,7 +12,7 @@ namespace MyWebServer.HttpHandler
 
 
         public override TypeReqest HandlerType { get{ return TypeReqest.GET;}}
-        public override string Version { get { return "HTTP/1.1"; } }
+        //public override string Version { get { return "HTTP/1.1"; } }
 
         public override void Parse(ref Reqest output, string[] reqest, string URI) {
             Match m = url_var.Match(URI);

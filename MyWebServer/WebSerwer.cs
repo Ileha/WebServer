@@ -16,15 +16,27 @@ namespace MyWebServer {
         public Func<string> workDirectory { get { return _workDirectory; } }
         public readonly string Name;
         private Func<string> _getMainfile;
-        public Func<string> getMainfile { get { return _getMainfile; } }
+        public Func<string> getMainfile { 
+            get { 
+                return _getMainfile; 
+            } 
+        }
+        public readonly bool if_file_server;
 
         public WebSerwer(IPAddress adres, int port, string work_dir, string name, string main_file) {
+            if (main_file != null) {
+                _getMainfile = () => main_file;
+                if_file_server = false;
+            }
+            else {
+                _getMainfile = () => null;
+                if_file_server = true;
+            }
             Name = name;
             _workDirectory = () => work_dir;
             ipEndPoint = new IPEndPoint(adres, port);
             sListener = new Socket(adres.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             is_work = true;
-            _getMainfile = () => main_file;
             Thread st = new Thread(this.ThreadFunc);
             st.Start();
         }
@@ -54,7 +66,6 @@ namespace MyWebServer {
             try {
                 sListener.Bind(ipEndPoint);
                 sListener.Listen(10);
-
 
                 Console.WriteLine("Запуск сервера");
                 while (is_work) {

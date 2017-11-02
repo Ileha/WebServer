@@ -10,17 +10,17 @@ using MyWebServer.MIME;
 
 namespace MyWebServer {
     class MainProgramm {
-        public static Dictionary<string, IHttpHandler> ReqestsHandlers;
+        public static Dictionary<TypeReqest, IHttpHandler> ReqestsHandlers;
         public static Dictionary<string, IMIME> DataHandlers;
         public static Dictionary<string, WebSerwer> hosts;
 
         public static void ConfigureHttpHandlers() {
             Type ourtype = typeof(IHttpHandler);
-            ReqestsHandlers = new Dictionary<string, IHttpHandler>();
+            ReqestsHandlers = new Dictionary<TypeReqest, IHttpHandler>();
             IEnumerable<Type> list = Assembly.GetAssembly(ourtype).GetTypes().Where(type => type.IsSubclassOf(ourtype));
             foreach (Type t in list) {
                 IHttpHandler h = (IHttpHandler)Activator.CreateInstance(t);
-                ReqestsHandlers.Add(h.Identification, h);
+                ReqestsHandlers.Add(h.HandlerType, h);
             }
         }
 
@@ -39,12 +39,28 @@ namespace MyWebServer {
             ConfigureDataHandlers();
 
             XDocument doc = XDocument.Load("../../../config.xml");
+            int i = 0;
             foreach (XElement el in doc.Root.Elements()) {
+                string name = "";
+                try {
+                    name = el.Element("name").Value;
+                }
+                catch (Exception err) {
+                    name = "server_" + i;
+                }
+                string target_name = "";
+                try {
+                    target_name = el.Element("default_file").Value;
+                }
+                catch (Exception err) {
+                    target_name = null;
+                }
                 new WebSerwer(el.Element("ip_adress").Value,
                               Convert.ToInt32(el.Element("port").Value),
                               el.Element("root_dir").Value,
-                              el.Element("name").Value,
-                              el.Element("default_file").Value);
+                              name,
+                              target_name);
+                i++;
             }
 
             //IPHostEntry ipHost = Dns.GetHostEntry("localhost");

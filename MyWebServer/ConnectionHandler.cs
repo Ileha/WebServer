@@ -39,31 +39,22 @@ namespace MyWebServer {
             }
 
             try {
-                obj_request = Reqest.CreateNewReqest(request, out handler);
+                obj_request = Reqest.CreateNewReqest(request, GetHTTPHandler);
                 reads_bytes = new Reader(obj_request, ParentServer.workDirectory());
             }
             catch (ExceptionCode err) {
                 code = err;
             }
             response = new Response(code);
-            //re.Write(Html);
-            //Console.WriteLine(re.GetData());
-            // Необходимые заголовки: ответ сервера, тип и длина содержимого. После двух пустых строк - само содержимое
-            //string Str = "HTTP/1.1 200 OK\nContent-type: text/html\nContent-Length:" + Html.Length.ToString() + "\n\n" + Html;
-            // Приведем строку к виду массива байт
-            //Encoding.UTF8.GetBytes(re.GetData());
-            // Отправим его клиенту
             connection.Send(response.GetData(GetIMIMEHandler, obj_request, reads_bytes));
-            // Закроем соединение
             connection.Close();
         }
 
         public IMIME GetIMIMEHandler(string extension) {
-            Console.WriteLine("key "+extension);
-            foreach (KeyValuePair<string, IMIME> k in MainProgramm.DataHandlers) {
-                Console.WriteLine("{0} -> {1}", k.Key, k.Value);
-            }
             return MainProgramm.DataHandlers[extension];
+        }
+        public IHttpHandler GetHTTPHandler(TypeReqest RqType) {
+            return MainProgramm.ReqestsHandlers[RqType];
         }
 
     }
