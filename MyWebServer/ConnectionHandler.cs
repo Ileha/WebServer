@@ -45,7 +45,7 @@ namespace MyWebServer {
             catch (ExceptionCode err) {
                 code = err;
             }
-            response = new Response(code, handler);
+            response = new Response(code);
             //re.Write(Html);
             //Console.WriteLine(re.GetData());
             // Необходимые заголовки: ответ сервера, тип и длина содержимого. После двух пустых строк - само содержимое
@@ -53,7 +53,7 @@ namespace MyWebServer {
             // Приведем строку к виду массива байт
             //Encoding.UTF8.GetBytes(re.GetData());
             // Отправим его клиенту
-            connection.Send(response.GetData(this));
+            connection.Send(response.GetData(GetIMIMEHandler, obj_request, reads_bytes));
             // Закроем соединение
             connection.Close();
         }
