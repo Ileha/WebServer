@@ -38,7 +38,7 @@ namespace MyWebServer {
             ConfigureHttpHandlers();
             ConfigureDataHandlers();
 
-            XDocument doc = XDocument.Load("config.xml");
+            XDocument doc = XDocument.Load("../../../config.xml");
             foreach (XElement el in doc.Root.Elements()) {
                 new WebSerwer(el.Element("ip_adress").Value,
                               Convert.ToInt32(el.Element("port").Value),
