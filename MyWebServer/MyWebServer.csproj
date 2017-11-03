@@ -47,11 +47,16 @@
     <Compile Include="Reader.cs" />
     <Compile Include="MIME\IMIME.cs" />
     <Compile Include="MIME\HttpMIME.cs" />
-    <Compile Include="ServerExceptions\ErrorServerMode.cs" />
+    <Compile Include="WebServerConfig\WebServerConfig.cs" />
+    <Compile Include="WebServerConfig\ErrorServerConfig.cs" />
+    <Compile Include="WebServerConfig\IConfigRead.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
     <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="WebServerConfig\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

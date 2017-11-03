@@ -6,11 +6,12 @@ using System.Text;
 using MyWebServer.ServerExceptions;
 using MyWebServer.HttpHandler;
 using MyWebServer.MIME;
+using MyWebServer.WebServerConfigure;
 
 namespace MyWebServer {
     public class ConnectionHandler {
         public readonly Socket connection;
-        public readonly WebSerwer ParentServer;
+        public readonly IConfigRead ParentServerConfig;
 
         public ExceptionCode code;
         public IHttpHandler handler;
@@ -18,9 +19,9 @@ namespace MyWebServer {
         public Reqest obj_request;
         public Response response;
 
-        public ConnectionHandler(Socket Connection, WebSerwer myServer) {
+        public ConnectionHandler(Socket Connection, IConfigRead myServerConfig) {
             connection = Connection;
-            ParentServer = myServer;
+            ParentServerConfig = myServerConfig;
             code = ExceptionCode.OK();
             handler = null;
             obj_request = null;
@@ -40,7 +41,7 @@ namespace MyWebServer {
 
             try {
                 obj_request = Reqest.CreateNewReqest(request, GetHTTPHandler);
-                reads_bytes = new Reader(obj_request, ParentServer.workDirectory());
+                reads_bytes = new Reader(obj_request, ParentServerConfig["root_dir"]);
             }
             catch (ExceptionCode err) {
                 code = err;

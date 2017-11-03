@@ -7,6 +7,7 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Reflection;
 using MyWebServer.MIME;
+using MyWebServer.WebServerConfigure;
 
 namespace MyWebServer {
     class MainProgramm {
@@ -39,30 +40,29 @@ namespace MyWebServer {
             ConfigureDataHandlers();
 
             XDocument doc = XDocument.Load("../../../config.xml");
-            int i = 0;
             foreach (XElement el in doc.Root.Elements()) {
-                string name = "";
-                try {
-                    name = el.Element("name").Value;
-                }
-                catch (Exception err) {
-                    name = "server_" + i;
-                }
-                string target_name = "";
-                try {
-                    target_name = el.Element("default_file").Value;
-                }
-                catch (Exception err) {
-                    target_name = null;
-                }
-                new WebSerwer(el.Element("ip_adress").Value,
-                              Convert.ToInt32(el.Element("port").Value),
-                              el.Element("root_dir").Value,
-                              name,
-                              target_name);
-                i++;
+                new WebSerwer(new WebServerConfig(el));
+                //string name = "";
+                //try {
+                //    name = el.Element("name").Value;
+                //}
+                //catch (Exception err) {
+                //    name = "server_" + i;
+                //}
+                //string target_name = "";
+                //try {
+                //    target_name = el.Element("default_file").Value;
+                //}
+                //catch (Exception err) {
+                //    target_name = null;
+                //}
+                //new WebSerwer(el.Element("ip_adress").Value,
+                //              Convert.ToInt32(el.Element("port").Value),
+                //              el.Element("root_dir").Value,
+                //              name,
+                //              target_name);
+                //i++;
             }
-
             //IPHostEntry ipHost = Dns.GetHostEntry("localhost");
             //IPAddress ipAddr = ipHost.AddressList[0];
             //new WebSerwer(ipAddr, 11000, "/Users/Alexey/Documents/Programm Projects/C#/WebServer/Resourses");
