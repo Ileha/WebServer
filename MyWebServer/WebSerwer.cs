@@ -14,16 +14,6 @@ namespace MyWebServer {
         private IPEndPoint ipEndPoint;
         private bool is_work;
         private WebServerConfig configuration;
-        //private Func<string> _workDirectory;
-        //public Func<string> workDirectory { get { return _workDirectory; } }
-        //public readonly string Name;
-        //private Func<string> _getMainfile;
-        //public Func<string> getMainfile { 
-        //    get { 
-        //        return _getMainfile; 
-        //    } 
-        //}
-        //public readonly bool if_file_server;
 
         public WebSerwer(WebServerConfig config) {
             configuration = config;
@@ -35,44 +25,44 @@ namespace MyWebServer {
             st.Start();
         }
 
-        //public WebSerwer(IPAddress adres, int port, string work_dir, string name, string main_file) {
-        //    if (main_file != null) {
-        //        _getMainfile = () => main_file;
-        //        if_file_server = false;
-        //    }
-        //    else {
-        //        _getMainfile = () => null;
-        //        if_file_server = true;
-        //    }
-        //    Name = name;
-        //    _workDirectory = () => work_dir;
-        //    ipEndPoint = new IPEndPoint(adres, port);
-        //    sListener = new Socket(adres.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-        //    is_work = true;
-        //    Thread st = new Thread(this.ThreadFunc);
-        //    st.Start();
-        //}
-
-        //public WebSerwer(string adres, int port, string work_dir, string name, string main_file) : this(IPAddress.Parse(adres), 
-        //                                                                                               port, work_dir, name, main_file) {
-            
-        //}
-
         private void ThreadFunc() {
-            string m_file = configuration["default_file"];
-            if (!Regex.IsMatch(m_file, "[^\\.]\\.[^\\.]")) {
-                if (Regex.IsMatch(m_file, "\\.")) { 
-                    m_file += "*"; 
+            DirectoryInfo dir = null;
+            try {
+                dir = new DirectoryInfo(configuration["root_dir"]);
+                configuration["root_dir"] = dir.FullName;
+            }
+            catch (ErrorServerConfig err) {
+                return; //here may be cast to log file -> fatal error
+            }
+            try {
+                string m_file = configuration["default_file"];
+                if (!Regex.IsMatch(m_file, ".+\\.[^\\.]+")) {
+                    if (Regex.IsMatch(m_file, "\\.")) {
+                        m_file += "*";
+                    }
+                    else {
+                        m_file += ".*";
+                    }
                 }
-                else {
-                    m_file += ".*";
+
+                try {
+                    FileInfo inf = dir.GetFiles(m_file, SearchOption.AllDirectories)[0];
+                    configuration["default_file"] = inf.FullName.Replace(configuration["root_dir"] + "/", "");
+                }
+                catch (Exception err) {
+                    configuration.Remove("default_file");
                 }
             }
-            DirectoryInfo dir = new DirectoryInfo(configuration["root_dir"]);
-            configuration["root_dir"] = dir.FullName;
-            FileInfo inf = dir.GetFiles(m_file, SearchOption.AllDirectories)[0];
-            configuration["default_file"] =  inf.FullName.Replace(configuration["root_dir"]+"/", "");
-            Console.WriteLine(configuration["default_file"]);
+            catch (Exception err) {
+                //here web server work like a file server
+            }
+
+            #if DEBUG
+                try {
+                    Console.WriteLine(configuration["default_file"]);
+                }
+                catch (Exception err) { Console.WriteLine("this is file server"); }
+            #endif
 
             try {
                 sListener.Bind(ipEndPoint);
@@ -82,7 +72,9 @@ namespace MyWebServer {
                 while (is_work) {
                     // Программа приостанавливается, ожидая входящее соединение
                     Socket handler = sListener.Accept();
-                    Console.WriteLine("соединение через порт {0}", ipEndPoint);
+                    #if DEBUG
+                        Console.WriteLine("соединение через порт {0}", ipEndPoint);
+                    #endif
 
                     ConnectionHandler executor = new ConnectionHandler(handler, configuration);
                     HandlerExecutor execute = executor.Execute;
