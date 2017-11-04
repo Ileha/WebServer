@@ -26,43 +26,43 @@ namespace MyWebServer {
         }
 
         private void ThreadFunc() {
-            DirectoryInfo dir = null;
-            try {
-                dir = new DirectoryInfo(configuration["root_dir"]);
-                configuration["root_dir"] = dir.FullName;
-            }
-            catch (ErrorServerConfig err) {
-                return; //here may be cast to log file -> fatal error
-            }
-            try {
-                string m_file = configuration["default_file"];
-                if (!Regex.IsMatch(m_file, ".+\\.[^\\.]+")) {
-                    if (Regex.IsMatch(m_file, "\\.")) {
-                        m_file += "*";
-                    }
-                    else {
-                        m_file += ".*";
-                    }
-                }
+            //DirectoryInfo dir = null;
+            //try {
+            //    dir = new DirectoryInfo(configuration["root_dir"]);
+            //    configuration["root_dir"] = dir.FullName;
+            //}
+            //catch (ErrorServerConfig err) {
+            //    return; //here may be cast to log file -> fatal error
+            //}
+            //try {
+            //    string m_file = configuration["default_file"];
+            //    if (!Regex.IsMatch(m_file, ".+\\.[^\\.]+")) {
+            //        if (Regex.IsMatch(m_file, "\\.")) {
+            //            m_file += "*";
+            //        }
+            //        else {
+            //            m_file += ".*";
+            //        }
+            //    }
 
-                try {
-                    FileInfo inf = dir.GetFiles(m_file, SearchOption.AllDirectories)[0];
-                    configuration["default_file"] = inf.FullName.Replace(configuration["root_dir"] + "/", "");
-                }
-                catch (Exception err) {
-                    configuration.Remove("default_file");
-                }
-            }
-            catch (Exception err) {
-                //here web server work like a file server
-            }
+            //    try {
+            //        FileInfo inf = dir.GetFiles(m_file, SearchOption.AllDirectories)[0];
+            //        configuration["default_file"] = inf.FullName.Replace(configuration["root_dir"] + "/", "");
+            //    }
+            //    catch (Exception err) {
+            //        configuration.Remove("default_file");
+            //    }
+            //}
+            //catch (Exception err) {
+            //    //here web server work like a file server
+            //}
 
-            #if DEBUG
-                try {
-                    Console.WriteLine(configuration["default_file"]);
-                }
-                catch (Exception err) { Console.WriteLine("this is file server"); }
-            #endif
+            //#if DEBUG
+            //    try {
+            //        Console.WriteLine(configuration["default_file"]);
+            //    }
+            //    catch (Exception err) { Console.WriteLine("this is file server"); }
+            //#endif
 
             try {
                 sListener.Bind(ipEndPoint);

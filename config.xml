@@ -6,6 +6,8 @@
 		<port>11000</port><!--порт хоста-->
 		<root_dir>../../../Resourses</root_dir><!--корневой каталог хоста-->
 		<!--<root_dir>/Users/Alexey/Documents/Programm Projects/C#/WebServer/Resourses</root_dir>-->
-		<default_file>index</default_file><!--файл открывающийся по умолчанию (если нет то будет работать как файловый сервер)-->
+		<redirect_table>
+			<element path="/" target="index.html"></element>
+		</redirect_table>
 	</server>
 </root>

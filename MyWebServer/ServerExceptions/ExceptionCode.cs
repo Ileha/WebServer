@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace MyWebServer.ServerExceptions
 {
     public class ExceptionCode : Exception
@@ -34,5 +35,12 @@ namespace MyWebServer.ServerExceptions
             res.Code = "500 Internal Server Error";
             return res;
         }
+        public static ExceptionCode MovedPermanently(string new_url, string host) {
+            ExceptionCode res = new ExceptionCode(true);
+            res.Code = @"HTTP/1.1 301 Moved Permanently
+Location: "+host+new_url;
+            return res;
+        }
+
     }
 }

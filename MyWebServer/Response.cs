@@ -4,6 +4,7 @@ using MyWebServer.ServerExceptions;
 using MyWebServer.MIME;
 using System.Collections.Generic;
 using System.Text;
+using MyWebServer.WebServerConfigure;
 
 namespace MyWebServer
 {
@@ -35,7 +36,7 @@ Content-Type: {2}; charset=UTF-8
             data = new List<byte>();
         }
 
-        public byte[] GetData(Func<string, IMIME> MimeHandler, Reqest _reqest, Reader _read) {
+        public byte[] GetData(Func<string, IMIME> MimeHandler, Reqest _reqest, Reader _read, IConfigRead config) {
             string MIMEType = "";
             data.Clear();
             if (IsBad) {
@@ -46,12 +47,17 @@ Content-Type: {2}; charset=UTF-8
                 try {
                     IMIME dataHandle = MimeHandler(_read.file_extension);
                     MIMEType = dataHandle.MIME_Type;
-                    dataHandle.handle(this, _reqest, _read);
+                    dataHandle.handle(this, _reqest, _read, config);//here may be execute anything code
                 }
                 catch (Exception err) {
+                    if (err is ExceptionCode) {
+                        code = err as ExceptionCode;
+                    }
+                    else {
+                        code = ExceptionCode.InternalServerError();
+                    }
                     Console.WriteLine(err.ToString());
-                    code = ExceptionCode.InternalServerError();
-                    return GetData(MimeHandler, _reqest, _read);
+                    return GetData(MimeHandler, _reqest, _read, config);
                 }
             }
             data.InsertRange(0, Encoding.UTF8.GetBytes(string.Format(bolvanka, code.ToString(), data.Count.ToString(), MIMEType)));

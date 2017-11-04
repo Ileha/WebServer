@@ -12,6 +12,7 @@ namespace MyWebServer {
     public class ConnectionHandler {
         public readonly Socket connection;
         public readonly IConfigRead ParentServerConfig;
+        public readonly IConfigRead RedirectTable;
 
         public ExceptionCode code;
         public IHttpHandler handler;
@@ -19,9 +20,10 @@ namespace MyWebServer {
         public Reqest obj_request;
         public Response response;
 
-        public ConnectionHandler(Socket Connection, IConfigRead myServerConfig) {
+        public ConnectionHandler(Socket Connection, WebServerConfig myServerConfig) {
             connection = Connection;
             ParentServerConfig = myServerConfig;
+            RedirectTable = myServerConfig.RedirectConfigure;
             code = ExceptionCode.OK();
             handler = null;
             obj_request = null;
@@ -38,16 +40,16 @@ namespace MyWebServer {
                     break;
                 }
             }
-
+            Console.WriteLine(request);
             try {
-                obj_request = Reqest.CreateNewReqest(request, GetHTTPHandler);
-                reads_bytes = new Reader(obj_request, ParentServerConfig["root_dir"]);
+                obj_request = Reqest.CreateNewReqest(request, GetHTTPHandler, ParentServerConfig);
+                reads_bytes = new Reader(obj_request, ParentServerConfig);
             }
             catch (ExceptionCode err) {
                 code = err;
             }
             response = new Response(code);
-            connection.Send(response.GetData(GetIMIMEHandler, obj_request, reads_bytes));
+            connection.Send(response.GetData(GetIMIMEHandler, obj_request, reads_bytes, ParentServerConfig));
             connection.Close();
         }
 

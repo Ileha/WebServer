@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using MyWebServer.ServerExceptions;
+using MyWebServer.WebServerConfigure;
 
 namespace MyWebServer.HttpHandler
 {
@@ -14,7 +15,7 @@ namespace MyWebServer.HttpHandler
         public override TypeReqest HandlerType { get{ return TypeReqest.GET;}}
         //public override string Version { get { return "HTTP/1.1"; } }
 
-        public override void Parse(ref Reqest output, string[] reqest, string URI) {
+        public override void Parse(ref Reqest output, string[] reqest, string URI, IConfigRead redirectTable) {
             Match m = url_var.Match(URI);
             output.URL = m.Groups["url"].Value;
             if (TwoPoints.IsMatch(output.URL)) {//проверить на наличие двух точек подряд
@@ -29,6 +30,10 @@ namespace MyWebServer.HttpHandler
                     output.preferens.Add(m_pref.Groups["name"].Value, m_pref.Groups["val"].Value);
                 }
             }
+            //try {
+            //    throw ExceptionCode.MovedPermanently(redirectTable[output.URL], output.preferens["Host"]);
+            //}
+            //catch (ErrorServerConfig) { }
         }
     }
 }
