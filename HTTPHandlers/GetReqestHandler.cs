@@ -1,9 +1,11 @@
-﻿using System;
+﻿//using System;
 using System.Text.RegularExpressions;
-using MyWebServer.ServerExceptions;
-using MyWebServer.WebServerConfigure;
+using Host.ServerExceptions;
+using Host;
+using Host.HttpHandler;
+using Config;
 
-namespace MyWebServer.HttpHandler
+namespace HttpHandlers
 {
     public class GetReqestHandler : IHttpHandler {
         Regex url_var = new Regex("^/(?<url>[\\w/\\.]+)(\\?(?<var>[\\w=&]+))?");
@@ -11,11 +13,9 @@ namespace MyWebServer.HttpHandler
         Regex pref_val = new Regex("(?<name>[\\w-]+):[ ]?(?<val>.+)");
         Regex TwoPoints = new Regex("\\.{2}");
 
+        public TypeReqest HandlerType { get{ return TypeReqest.GET;}}
 
-        public override TypeReqest HandlerType { get{ return TypeReqest.GET;}}
-        //public override string Version { get { return "HTTP/1.1"; } }
-
-        public override void Parse(ref Reqest output, string[] reqest, string URI, IConfigRead redirectTable) {
+        public void Parse(ref Reqest output, string[] reqest, string URI, IConfigRead redirectTable) {
             Match m = url_var.Match(URI);
             output.URL = m.Groups["url"].Value;
             if (TwoPoints.IsMatch(output.URL)) {//проверить на наличие двух точек подряд
@@ -35,5 +35,10 @@ namespace MyWebServer.HttpHandler
             //}
             //catch (ErrorServerConfig) { }
         }
-    }
+
+		public void Info()
+		{
+			//Console.WriteLine("Extension 1 from " + AppDomain.CurrentDomain.FriendlyName);
+		}
+	}
 }

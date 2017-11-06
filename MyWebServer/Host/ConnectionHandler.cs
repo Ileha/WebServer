@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Net;
 using System.Net.Sockets;
-using System.Collections.Generic;
 using System.Text;
-using MyWebServer.ServerExceptions;
-using MyWebServer.HttpHandler;
-using MyWebServer.MIME;
-using MyWebServer.WebServerConfigure;
+using Host.ServerExceptions;
+using Config;
+using Host.HttpHandler;
+using Host.MIME;
 
-namespace MyWebServer {
+namespace Host {
     public class ConnectionHandler {
         public readonly Socket connection;
         public readonly IConfigRead ParentServerConfig;
@@ -54,10 +52,10 @@ namespace MyWebServer {
         }
 
         public IMIME GetIMIMEHandler(string extension) {
-            return MainProgramm.DataHandlers[extension];
+            return Repository.DataHandlers[extension];
         }
         public IHttpHandler GetHTTPHandler(TypeReqest RqType) {
-            return MainProgramm.ReqestsHandlers[RqType];
+            return Repository.ReqestsHandlers[RqType];
         }
 
     }

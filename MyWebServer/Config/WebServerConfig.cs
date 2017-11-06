@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace MyWebServer.WebServerConfigure
+namespace Config
 {
     class RedirectConfig : IConfigRead {
         private Dictionary<string, string> _body_redirect;

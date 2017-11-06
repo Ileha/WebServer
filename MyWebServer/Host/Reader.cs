@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
-using MyWebServer.ServerExceptions;
-using MyWebServer.WebServerConfigure;
+using Host.ServerExceptions;
+using Config;
 
-namespace MyWebServer
+namespace Host
 {
     public class Reader
     {

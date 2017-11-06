@@ -8,6 +8,7 @@
     <AssemblyName>MyWebServer</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile />
+    <SynchReleaseVersion>false</SynchReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,28 +37,30 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WebServerConfig\WebServerConfig.cs" />
-    <Compile Include="WebServerConfig\ErrorServerConfig.cs" />
-    <Compile Include="WebServerConfig\IConfigRead.cs" />
-    <Compile Include="ConnectionHandler.cs" />
-    <Compile Include="Reader.cs" />
-    <Compile Include="Reqest.cs" />
-    <Compile Include="Response.cs" />
-    <Compile Include="WebSerwer.cs" />
-    <Compile Include="ServerExceptions\ExceptionCode.cs" />
-    <Compile Include="HttpHandler\GetReqestHandler.cs" />
-    <Compile Include="MIME\HttpMIME.cs" />
-    <Compile Include="MIME\IMIME.cs" />
-    <Compile Include="HttpHandler\IHttpHandler.cs" />
+    <Compile Include="Host\ConnectionHandler.cs" />
+    <Compile Include="Host\Reader.cs" />
+    <Compile Include="Host\Repository.cs" />
+    <Compile Include="Host\Reqest.cs" />
+    <Compile Include="Host\Response.cs" />
+    <Compile Include="Host\WebSerwer.cs" />
+    <Compile Include="Host\HttpHandler\IHttpHandler.cs" />
+    <Compile Include="Host\MIME\HttpMIME.cs" />
+    <Compile Include="Host\MIME\IMIME.cs" />
+    <Compile Include="Host\ServerExceptions\ExceptionCode.cs" />
+    <Compile Include="Config\ErrorServerConfig.cs" />
+    <Compile Include="Config\IConfigRead.cs" />
+    <Compile Include="Config\WebServerConfig.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="WebServerConfig\" />
-    <Folder Include="ServerExceptions\" />
-    <Folder Include="MIME\" />
+    <Folder Include="Host\" />
+    <Folder Include="Host\HttpHandler\" />
+    <Folder Include="Host\MIME\" />
+    <Folder Include="Host\ServerExceptions\" />
+    <Folder Include="Config\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

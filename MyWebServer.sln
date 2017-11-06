@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWebServer", "MyWebServer\MyWebServer.csproj", "{6A3F8C5A-0060-450B-8AC1-431C42F85528}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HTTPHandlers", "HTTPHandlers\HTTPHandlers.csproj", "{ECDD3A13-B07A-47C2-AF7D-DDD946AC1F26}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -13,6 +15,10 @@ Global
 		{6A3F8C5A-0060-450B-8AC1-431C42F85528}.Debug|x86.Build.0 = Debug|x86
 		{6A3F8C5A-0060-450B-8AC1-431C42F85528}.Release|x86.ActiveCfg = Release|x86
 		{6A3F8C5A-0060-450B-8AC1-431C42F85528}.Release|x86.Build.0 = Release|x86
+		{ECDD3A13-B07A-47C2-AF7D-DDD946AC1F26}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{ECDD3A13-B07A-47C2-AF7D-DDD946AC1F26}.Debug|x86.Build.0 = Debug|Any CPU
+		{ECDD3A13-B07A-47C2-AF7D-DDD946AC1F26}.Release|x86.ActiveCfg = Release|Any CPU
+		{ECDD3A13-B07A-47C2-AF7D-DDD946AC1F26}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection

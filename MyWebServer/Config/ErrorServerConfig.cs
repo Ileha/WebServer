@@ -1,5 +1,5 @@
 ﻿using System;
-namespace MyWebServer.WebServerConfigure {
+namespace Config {
     public class ErrorServerConfig : Exception {
         private string fiel_value;
 

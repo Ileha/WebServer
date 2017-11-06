@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MyWebServer.ServerExceptions
+namespace Host.ServerExceptions
 {
     public class ExceptionCode : Exception
     {

@@ -1,11 +1,10 @@
 ﻿using System;
-using MyWebServer.HttpHandler;
-using MyWebServer.WebServerConfigure;
-using MyWebServer.MIME;
+using Config;
+using Host.MIME;
 
-namespace MyWebServer.MIME
+namespace Host
 {
-    public class HttpMIME : IMIME {
+    public class HttpMIME : MarshalByRefObject, IMIME {
         public string MIME_Type { get { return "text/html"; } }
         public string file_extension { get { return ".html"; } }
 

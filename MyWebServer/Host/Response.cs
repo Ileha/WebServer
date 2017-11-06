@@ -1,12 +1,12 @@
 ﻿using System;
-using MyWebServer.HttpHandler;
-using MyWebServer.ServerExceptions;
-using MyWebServer.MIME;
+using Host.HttpHandler;
+using Host.ServerExceptions;
+using Host.MIME;
 using System.Collections.Generic;
 using System.Text;
-using MyWebServer.WebServerConfigure;
+using Config;
 
-namespace MyWebServer
+namespace Host
 {
     public class Response
     {

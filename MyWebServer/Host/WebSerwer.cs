@@ -4,9 +4,9 @@ using System.Net.Sockets;
 using System.Threading;
 using System.IO;
 using System.Text.RegularExpressions;
-using MyWebServer.WebServerConfigure;
+using Config;
 
-namespace MyWebServer {
+namespace Host {
     public delegate void HandlerExecutor();
 
     public class WebSerwer {

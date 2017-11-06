@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using MyWebServer.HttpHandler;
-using MyWebServer.ServerExceptions;
-using MyWebServer.WebServerConfigure;
+using Host.HttpHandler;
+using Host.ServerExceptions;
+using Config;
 
-namespace MyWebServer {
+namespace Host {
     public enum TypeReqest {
         GET,
         POST
