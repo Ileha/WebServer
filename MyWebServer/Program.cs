@@ -12,21 +12,29 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Runtime.Remoting;
 using System.Security.Policy;
+using Host;
 
 namespace MainName {
 
-	public class MyClass : MarshalByRefObject {
-		public void GetAssemblyByName(string assemblyName) {
-			Assembly.Load(assemblyName);
-		}
+	public class Resident : MarshalByRefObject {
 		public void LoadPluginFrom() {
 			FileInfo[] files = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).GetFiles("*.dll");
-			foreach (FileInfo fi in files)
-			{
-				Console.WriteLine("loading " + fi.FullName);
-				// Получаем assemly из файла
-				Assembly.LoadFrom(fi.FullName);
-			    // Ищем нужный тип
+			Type http_handler = typeof(IHttpHandler);
+            Type mime_handler = typeof(IMIME);
+            foreach (FileInfo fi in files) {
+				Console.WriteLine("loading {0}...", fi.FullName);
+				Assembly load = Assembly.LoadFrom(fi.FullName);
+                foreach (Type t in load.GetTypes()) {
+                    Type[] interfaces = t.GetInterfaces();
+                    if (interfaces.Contains(http_handler)) {
+                        IHttpHandler https = Activator.CreateInstance(t) as IHttpHandler;
+                        Repository.ReqestsHandlers.Add(https.HandlerType, https);
+                    }
+                    else if (interfaces.Contains(mime_handler)) {
+                        IMIME mime = Activator.CreateInstance(t) as IMIME;
+                        Repository.DataHandlers.Add(mime.file_extension, mime);
+                    }
+                }
 				Console.WriteLine("load");
 			}
 		}
@@ -39,21 +47,6 @@ namespace MainName {
 		//public static Dictionary<string, WebSerwer> hosts;
 
         public static void Main(string[] args) {
-			AppDomainSetup domaininfo = new AppDomainSetup();
-			domaininfo.ApplicationBase = @"../../../HTTPHandlers/bin/Debug";
-	        Evidence adevidence = AppDomain.CurrentDomain.Evidence;
-			AppDomain domain = AppDomain.CreateDomain("dynamic domain", adevidence, domaininfo);
-
-			MyClass resident = (MyClass)domain.CreateInstanceAndUnwrap(
-						typeof(MyClass).Assembly.FullName,
-						typeof(MyClass).FullName);
-			
-
-			//resident.Info();
-			//resident.GetAssemblyByName("system, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
-			resident.LoadPluginFrom();
-			//resident.GetAssembly(@"../../../add/bin/Debug/add.dll");
-
 			//DirectoryInfo dir = new DirectoryInfo(domain.BaseDirectory);
 			//IEnumerable<FileInfo> fileNames = dir.GetFiles("*.dll", SearchOption.TopDirectoryOnly);
 			//if (fileNames != null)
@@ -91,5 +84,18 @@ namespace MainName {
             //new WebSerwer(ipAddr, 11000, "/Users/Alexey/Documents/Programm Projects/C#/WebServer/Resourses");
             Console.ReadLine();
         }
+
+        public Resident CreateDomain(string _domain_name, string _base_directory) {
+            AppDomainSetup domaininfo = new AppDomainSetup();
+            domaininfo.ApplicationBase = _base_directory;//@"../../../HTTPHandlers/bin/Debug";
+            Evidence adevidence = AppDomain.CurrentDomain.Evidence;
+            AppDomain domain = AppDomain.CreateDomain(_domain_name, adevidence, domaininfo);
+
+            Resident resident = (Resident)domain.CreateInstanceAndUnwrap(
+                        typeof(Resident).Assembly.FullName,
+                        typeof(Resident).FullName);
+            resident.LoadPluginFrom();
+            return resident;
+        } 
     }
 }
