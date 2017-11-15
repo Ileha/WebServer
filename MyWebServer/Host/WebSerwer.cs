@@ -13,12 +13,10 @@ namespace Host {
         private Socket sListener;
         private IPEndPoint ipEndPoint;
         private bool is_work;
-        private WebServerConfig configuration;
 
-        public WebSerwer(WebServerConfig config) {
-            configuration = config;
-            IPAddress adres = IPAddress.Parse(config["ip_adress"]);
-            ipEndPoint = new IPEndPoint(adres, Convert.ToInt32(config["port"]));
+        public WebSerwer() {
+            IPAddress adres = IPAddress.Parse(Repository.ReadConfig["ip_adress"]);
+            ipEndPoint = new IPEndPoint(adres, Convert.ToInt32(Repository.ReadConfig["port"]));
             sListener = new Socket(adres.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             is_work = true;
             Thread st = new Thread(this.ThreadFunc);
@@ -64,6 +62,11 @@ namespace Host {
             //    catch (Exception err) { Console.WriteLine("this is file server"); }
             //#endif
 
+            #if DEBUG
+            Console.WriteLine("work {0}", Repository.ReadConfig["name"]);
+            return;
+            #endif
+
             try {
                 sListener.Bind(ipEndPoint);
                 sListener.Listen(10);
@@ -76,7 +79,7 @@ namespace Host {
                         Console.WriteLine("соединение через порт {0}", ipEndPoint);
                     #endif
 
-                    ConnectionHandler executor = new ConnectionHandler(handler, configuration);
+                    ConnectionHandler executor = new ConnectionHandler(handler, Repository.Configurate);
                     HandlerExecutor execute = executor.Execute;
                     execute.BeginInvoke(null, null);
                 }

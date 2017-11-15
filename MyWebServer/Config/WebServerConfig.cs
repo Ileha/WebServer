@@ -5,7 +5,7 @@ using System.Xml.Linq;
 
 namespace Config
 {
-    class RedirectConfig : IConfigRead {
+    class RedirectConfig : MarshalByRefObject, IConfigRead {
         private Dictionary<string, string> _body_redirect;
 
         public RedirectConfig() {
@@ -31,7 +31,7 @@ namespace Config
         }
     }
 
-    public class WebServerConfig : IConfigRead {
+    public class WebServerConfig : MarshalByRefObject, IConfigRead {
         private Dictionary<string, string> _body_conf;
         public readonly IConfigRead RedirectConfigure;
 

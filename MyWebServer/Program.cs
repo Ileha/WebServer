@@ -57,8 +57,10 @@ namespace MainProgramm {
                 Resident resident = (Resident)domain.CreateInstanceAndUnwrap(
                             typeof(Resident).Assembly.FullName,
                             typeof(Resident).FullName);
+                resident.AddConfig(new WebServerConfig(host_conf));
                 resident.LoadPluginFrom();
                 resident.GetPluginInfo();
+                resident.StartHost();
             }
             Console.ReadLine();
         }

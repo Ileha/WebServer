@@ -1,6 +1,7 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWebServer", "MyWebServer\MyWebServer.csproj", "{6A3F8C5A-0060-450B-8AC1-431C42F85528}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HTTPHandlers", "HTTPHandlers\HTTPHandlers.csproj", "{ECDD3A13-B07A-47C2-AF7D-DDD946AC1F26}"
@@ -20,6 +21,7 @@ Global
 		{ECDD3A13-B07A-47C2-AF7D-DDD946AC1F26}.Release|x86.ActiveCfg = Release|Any CPU
 		{ECDD3A13-B07A-47C2-AF7D-DDD946AC1F26}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

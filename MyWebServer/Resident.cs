@@ -9,15 +9,19 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Host;
 
 namespace MainProgramm
 {
     public class Resident : MarshalByRefObject
     {
-        public void AddConfig(WebServerConfig config)
-        {
+        public void AddConfig(WebServerConfig config) {
             Repository.Configurate = config;
         }
+        public void StartHost() {
+            new Host.WebSerwer();
+        }
+
         public void LoadPluginFrom()
         {
             FileInfo[] files = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).GetFiles("*.dll");
