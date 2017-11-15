@@ -71,15 +71,15 @@ namespace Host {
                 sListener.Bind(ipEndPoint);
                 sListener.Listen(10);
 
-                Console.WriteLine("Запуск сервера");
+                Console.WriteLine("Запуск сервера {0}", Repository.ReadConfig["name"]);
                 while (is_work) {
                     // Программа приостанавливается, ожидая входящее соединение
                     Socket handler = sListener.Accept();
                     #if DEBUG
-                        Console.WriteLine("соединение через порт {0}", ipEndPoint);
+                        Console.WriteLine("хост {1}, соединение через порт {0}", ipEndPoint, Repository.ReadConfig["name"]);
                     #endif
 
-                    ConnectionHandler executor = new ConnectionHandler(handler, Repository.Configurate);
+                    ConnectionHandler executor = new ConnectionHandler(handler);
                     HandlerExecutor execute = executor.Execute;
                     execute.BeginInvoke(null, null);
                 }

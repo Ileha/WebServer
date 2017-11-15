@@ -15,7 +15,7 @@ namespace HttpHandlers
 
         public TypeReqest HandlerType { get{ return TypeReqest.GET;}}
 
-        public void Parse(ref Reqest output, string[] reqest, string URI, IConfigRead redirectTable) {
+        public void Parse(ref Reqest output, string[] reqest, string URI) {
             Match m = url_var.Match(URI);
             output.URL = m.Groups["url"].Value;
             if (TwoPoints.IsMatch(output.URL)) {//проверить на наличие двух точек подряд

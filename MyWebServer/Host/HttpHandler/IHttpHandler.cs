@@ -6,7 +6,7 @@ namespace Host.HttpHandler {
     public interface IHttpHandler {
         TypeReqest HandlerType { get; }
 
-        void Parse(ref Reqest output, string[] reqest, string URI, IConfigRead redirectTable);
+        void Parse(ref Reqest output, string[] reqest, string URI);
 
 		void Info();
     }

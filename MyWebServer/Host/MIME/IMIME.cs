@@ -6,6 +6,6 @@ namespace Host.MIME {
         string MIME_Type { get; }
         string file_extension { get; }
 
-        Action<Response, Reqest, Reader, IConfigRead> handle { get; }
+        Action<Response, Reqest, Reader> handle { get; }
     }
 }

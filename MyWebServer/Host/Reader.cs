@@ -10,8 +10,8 @@ namespace Host
         public readonly byte[] data;
         public readonly string file_extension;
 
-        public Reader(Reqest Reqest, IConfigRead config) {
-            string path = Path.Combine(config["root_dir"], Reqest.URL);
+        public Reader(Reqest Reqest) {
+            string path = Path.Combine(Repository.ReadConfig["root_dir"], Reqest.URL);
             if (!File.Exists(path)) {
                 throw ExceptionCode.NotFound();
             }
