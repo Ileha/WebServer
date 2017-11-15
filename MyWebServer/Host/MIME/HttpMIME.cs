@@ -2,7 +2,7 @@
 using Config;
 using Host.MIME;
 
-namespace Host
+namespace Host.MIME
 {
     public class HttpMIME : MarshalByRefObject, IMIME {
         public string MIME_Type { get { return "text/html"; } }

@@ -22,8 +22,35 @@ namespace MainProgramm
             new Host.WebSerwer();
         }
 
-        public void LoadPluginFrom()
+        public void LoadPluginInternal() {
+            Console.WriteLine("loading internal plugins...");
+            Type ourtype = typeof(IHttpHandler);
+            IEnumerable<Type> list = Assembly.GetAssembly(ourtype).GetTypes().Where(type => type.GetInterfaces().Contains(ourtype) && type.IsClass);
+            foreach (Type t in list)
+            {
+                IHttpHandler h = (IHttpHandler)Activator.CreateInstance(t);
+                try
+                {
+                    Repository.ReqestsHandlers.Add(h.HandlerType, h);
+                }
+                catch (Exception err) {}
+            }
+            ourtype = typeof(IMIME);
+            list = Assembly.GetAssembly(ourtype).GetTypes().Where(type => type.GetInterfaces().Contains(ourtype) && type.IsClass);
+            foreach (Type t in list)
+            {
+                IMIME h = (IMIME)Activator.CreateInstance(t);
+                try
+                {
+                    Repository.DataHandlers.Add(h.MIME_Type, h);
+                }
+                catch (Exception err) { }
+            }
+        }
+
+        public void LoadPluginExternal()
         {
+            Console.WriteLine("loading external plugins...");
             FileInfo[] files = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).GetFiles("*.dll");
             Type http_handler = typeof(IHttpHandler);
             Type mime_handler = typeof(IMIME);

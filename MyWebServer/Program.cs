@@ -20,33 +20,6 @@ namespace MainProgramm {
 		//public static Dictionary<string, WebSerwer> hosts;
 
         public static void Main(string[] args) {
-            //foreach (XElement el in doc.Root.Elements()) {
-                //new WebSerwer(new WebServerConfig(el));
-                //string name = "";
-                //try {
-                //    name = el.Element("name").Value;
-                //}
-                //catch (Exception err) {
-                //    name = "server_" + i;
-                //}
-                //string target_name = "";
-                //try {
-                //    target_name = el.Element("default_file").Value;
-                //}
-                //catch (Exception err) {
-                //    target_name = null;
-                //}
-                //new WebSerwer(el.Element("ip_adress").Value,
-                //              Convert.ToInt32(el.Element("port").Value),
-                //              el.Element("root_dir").Value,
-                //              name,
-                //              target_name);
-                //i++;
-            //}
-            //IPHostEntry ipHost = Dns.GetHostEntry("localhost");
-            //IPAddress ipAddr = ipHost.AddressList[0];
-            //new WebSerwer(ipAddr, 11000, "/Users/Alexey/Documents/Programm Projects/C#/WebServer/Resourses");
-
             XDocument config_doc = XDocument.Load(@"../../../config.xml");
             int i = 0;
             foreach (XElement host_conf in config_doc.Root.Elements()) {
@@ -58,7 +31,8 @@ namespace MainProgramm {
                             typeof(Resident).Assembly.FullName,
                             typeof(Resident).FullName);
                 resident.AddConfig(new WebServerConfig(host_conf));
-                resident.LoadPluginFrom();
+                resident.LoadPluginExternal();
+                resident.LoadPluginInternal();
                 resident.GetPluginInfo();
                 resident.StartHost();
             }
