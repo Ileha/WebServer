@@ -8,7 +8,7 @@ using Config;
 
 namespace Host {
 	public static class Repository {
-		public static Dictionary<TypeReqest, IHttpHandler> ReqestsHandlers;
+		public static Dictionary<string, IHttpHandler> ReqestsHandlers;
 		public static Dictionary<string, IMIME> DataHandlers;
         public static WebServerConfig Configurate;
         public static IConfigRead ReadConfig {
@@ -16,7 +16,7 @@ namespace Host {
         }
 
         static Repository() {
-            ReqestsHandlers = new Dictionary<TypeReqest, IHttpHandler>();
+            ReqestsHandlers = new Dictionary<string, IHttpHandler>();
             DataHandlers = new Dictionary<string, IMIME>();
         }
 	}

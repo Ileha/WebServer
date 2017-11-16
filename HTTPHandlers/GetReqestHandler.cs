@@ -13,7 +13,7 @@ namespace HttpHandlers
         Regex pref_val = new Regex("(?<name>[\\w-]+):[ ]?(?<val>.+)");
         Regex TwoPoints = new Regex("\\.{2}");
 
-        public TypeReqest HandlerType { get{ return TypeReqest.GET;}}
+        public string HandlerType { get { return "GET"; } }
 
         public void Parse(ref Reqest output, string[] reqest, string URI) {
             Match m = url_var.Match(URI);

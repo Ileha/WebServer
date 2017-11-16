@@ -4,7 +4,7 @@ using Config;
 
 namespace Host.HttpHandler {
     public interface IHttpHandler {
-        TypeReqest HandlerType { get; }
+        string HandlerType { get; }
 
         void Parse(ref Reqest output, string[] reqest, string URI);
 
