@@ -19,12 +19,12 @@ namespace Host {
             preferens = new Dictionary<string, string>();
         }
 
-        public static Reqest CreateNewReqest(string reqest, Func<string, IHttpHandler> getHTTPHandl) {
+        public static Reqest CreateNewReqest(string reqest) {
             Reqest result = new Reqest();
             string[] elements = Regex.Split(reqest, "\r\n");
             try {
                 string[] header = elements[0].Split(' ');
-                IHttpHandler _handler = getHTTPHandl(header[0]);
+                IHttpHandler _handler = Repository.ReqestsHandlers[header[0]];
                 _handler.Parse(ref result, elements.ToList().GetRange(1, elements.Length - 1).ToArray(), header[1]);
             }
             catch (Exception err) {

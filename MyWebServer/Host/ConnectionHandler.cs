@@ -36,22 +36,15 @@ namespace Host {
             }
             Console.WriteLine(request);
             try {
-                obj_request = Reqest.CreateNewReqest(request, GetHTTPHandler);
+                obj_request = Reqest.CreateNewReqest(request);
                 reads_bytes = new Reader(obj_request);
             }
             catch (ExceptionCode err) {
                 code = err;
             }
             response = new Response(code);
-            connection.Send(response.GetData(GetIMIMEHandler, obj_request, reads_bytes));
+            connection.Send(response.GetData(obj_request, reads_bytes));
             connection.Close();
-        }
-
-        public IMIME GetIMIMEHandler(string extension) {
-            return Repository.DataHandlers[extension];
-        }
-        public IHttpHandler GetHTTPHandler(TypeReqest RqType) {
-            return Repository.ReqestsHandlers[RqType];
         }
 
     }

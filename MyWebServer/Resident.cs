@@ -42,7 +42,7 @@ namespace MainProgramm
                 IMIME h = (IMIME)Activator.CreateInstance(t);
                 try
                 {
-                    Repository.DataHandlers.Add(h.MIME_Type, h);
+                    Repository.DataHandlers.Add(h.file_extension, h);
                 }
                 catch (Exception err) { }
             }
@@ -79,7 +79,7 @@ namespace MainProgramm
         public void GetPluginInfo()
         {
             Console.WriteLine("HTTP Handlers:");
-            foreach (KeyValuePair<TypeReqest, IHttpHandler> handler in Repository.ReqestsHandlers)
+            foreach (KeyValuePair<string, IHttpHandler> handler in Repository.ReqestsHandlers)
             {
                 Console.WriteLine("HTTP type {0}", handler.Key.ToString());
             }

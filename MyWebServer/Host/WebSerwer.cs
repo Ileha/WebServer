@@ -62,10 +62,10 @@ namespace Host {
             //    catch (Exception err) { Console.WriteLine("this is file server"); }
             //#endif
 
-            #if DEBUG
-            Console.WriteLine("work {0}", Repository.ReadConfig["name"]);
-            return;
-            #endif
+            //#if DEBUG
+            //Console.WriteLine("work {0}", Repository.ReadConfig["name"]);
+            //return;
+            //#endif
 
             try {
                 sListener.Bind(ipEndPoint);

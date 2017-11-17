@@ -36,7 +36,7 @@ Content-Type: {2}; charset=UTF-8
             data = new List<byte>();
         }
 
-        public byte[] GetData(Func<string, IMIME> MimeHandler, Reqest _reqest, Reader _read) {
+        public byte[] GetData(Reqest _reqest, Reader _read) {
             string MIMEType = "";
             data.Clear();
             if (IsBad) {
@@ -45,7 +45,7 @@ Content-Type: {2}; charset=UTF-8
             }
             else {
                 try {
-                    IMIME dataHandle = MimeHandler(_read.file_extension);
+                    IMIME dataHandle = Repository.DataHandlers[_read.file_extension];
                     MIMEType = dataHandle.MIME_Type;
                     dataHandle.handle(this, _reqest, _read);//here may be execute anything code
                 }
@@ -57,7 +57,7 @@ Content-Type: {2}; charset=UTF-8
                         code = ExceptionCode.InternalServerError();
                     }
                     Console.WriteLine(err.ToString());
-                    return GetData(MimeHandler, _reqest, _read);
+                    return GetData(_reqest, _read);
                 }
             }
             data.InsertRange(0, Encoding.UTF8.GetBytes(string.Format(bolvanka, code.ToString(), data.Count.ToString(), MIMEType)));
