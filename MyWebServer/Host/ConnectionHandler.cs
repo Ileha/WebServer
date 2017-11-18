@@ -18,7 +18,7 @@ namespace Host {
 
         public ConnectionHandler(Socket Connection) {
             connection = Connection;
-            code = ExceptionCode.OK();
+			code = new OK();
             handler = null;
             obj_request = null;
             reads_bytes = null;

@@ -2,45 +2,79 @@
 
 namespace Host.ServerExceptions
 {
-    public class ExceptionCode : Exception
+    public abstract class ExceptionCode : Exception
     {
-        private string Code;
-        public readonly bool IsFatal;
+        protected string Code;
+        protected bool _IsFatal;
+		public bool IsFatal {
+			get { return _IsFatal; }
+		}
 
-        public ExceptionCode(bool is_fatal) {
-            IsFatal = is_fatal;
-        }
+		//public abstract void 
 
-        public override string ToString() {
+        public string GetExeptionCode() {
             return Code;
         }
 
-        public static ExceptionCode BadRequest() {
-            ExceptionCode res = new ExceptionCode(true);
-            res.Code = "400 Bad Request";
-            return res;
-        }
-        public static ExceptionCode OK() {
-            ExceptionCode res = new ExceptionCode(false);
-            res.Code = "200 OK";
-            return res;
-        }
-        public static ExceptionCode NotFound() {
-            ExceptionCode res = new ExceptionCode(true);
-            res.Code = "404 Not Found";
-            return res;
-        }
-        public static ExceptionCode InternalServerError() {
-            ExceptionCode res = new ExceptionCode(true);
-            res.Code = "500 Internal Server Error";
-            return res;
-        }
-        public static ExceptionCode MovedPermanently(string new_url, string host) {
-            ExceptionCode res = new ExceptionCode(true);
-            res.Code = @"HTTP/1.1 301 Moved Permanently
-Location: "+host+new_url;
-            return res;
-        }
+//        public static ExceptionCode BadRequest() {
+//            ExceptionCode res = new ExceptionCode(true);
+//            res.Code = "400 Bad Request";
+//            return res;
+//        }
+//        public static ExceptionCode OK() {
+//            ExceptionCode res = new ExceptionCode(false);
+//            res.Code = "200 OK";
+//            return res;
+//        }
+//        public static ExceptionCode NotFound() {
+//            ExceptionCode res = new ExceptionCode(true);
+//            res.Code = "404 Not Found";
+//            return res;
+//        }
+//        public static ExceptionCode InternalServerError() {
+//            ExceptionCode res = new ExceptionCode(true);
+//            res.Code = "500 Internal Server Error";
+//            return res;
+//        }
+//        public static ExceptionCode MovedPermanently(string new_url, string host) {
+//            ExceptionCode res = new ExceptionCode(true);
+//            res.Code = @"HTTP/1.1 301 Moved Permanently
+//Location: "+host+new_url;
+//            return res;
+//        }
 
     }
+
+	public class BadRequest : ExceptionCode {
+
+		public BadRequest() {
+			Code = "400 Bad Request";
+			_IsFatal = true;
+		}
+	}
+
+	public class OK : ExceptionCode {
+
+		public OK() {
+			Code = "200 OK";
+			_IsFatal = false;
+		}	
+	}
+
+	public class NotFound : ExceptionCode {
+
+		public NotFound() {
+			Code = "404 Not Found";
+			_IsFatal = true;
+		}	
+	}
+
+	public class InternalServerError : ExceptionCode {
+
+	public InternalServerError() {
+			Code = "500 Internal Server Error";
+			_IsFatal = true;
+		}	
+	}
+
 }

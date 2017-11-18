@@ -32,7 +32,7 @@ namespace Host {
                     throw err;
                 }
                 else {
-                    throw ExceptionCode.BadRequest();
+					throw new BadRequest();
                 }
             } 
             return result;
