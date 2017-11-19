@@ -13,14 +13,14 @@ namespace Host
         public Reader(Reqest Reqest) {
             string path = Path.Combine(Repository.ReadConfig["root_dir"], Reqest.URL);
             if (!File.Exists(path)) {
-                throw ExceptionCode.NotFound();
+                throw new NotFound();
             }
             try {
                 file_extension = Path.GetExtension(path);
                 data = File.ReadAllBytes(path);
             }
             catch(Exception err) {
-                throw ExceptionCode.InternalServerError();
+                throw new InternalServerError();
             }
         }
     }

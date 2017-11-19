@@ -27,10 +27,6 @@ Content-Type: {2}; charset=UTF-8
         private ExceptionCode code;
         public readonly List<byte> data;
 
-        public bool IsBad {
-            get { return code.IsFatal; }
-        }
-
         public Response(ExceptionCode code) {
             this.code = code;
             data = new List<byte>();
@@ -39,7 +35,7 @@ Content-Type: {2}; charset=UTF-8
         public byte[] GetData(Reqest _reqest, Reader _read) {
             string MIMEType = "";
             data.Clear();
-            if (IsBad) {
+            if (code.IsFatal) {
                 data.AddRange(GetExceptionData());
                 MIMEType = "text/html";
             }
@@ -54,19 +50,19 @@ Content-Type: {2}; charset=UTF-8
                         code = err as ExceptionCode;
                     }
                     else {
-                        code = ExceptionCode.InternalServerError();
+                        code = new InternalServerError();
                     }
                     Console.WriteLine(err.ToString());
                     return GetData(_reqest, _read);
                 }
             }
-            data.InsertRange(0, Encoding.UTF8.GetBytes(string.Format(bolvanka, code.ToString(), data.Count.ToString(), MIMEType)));
+            data.InsertRange(0, Encoding.UTF8.GetBytes(string.Format(bolvanka, code.GetExeptionCode(), data.Count.ToString(), MIMEType)));
             Console.WriteLine(Encoding.UTF8.GetString(data.ToArray()));
             return data.ToArray();
         }
 
         private byte[] GetExceptionData() {
-            return Encoding.UTF8.GetBytes("<html><body><h2>An error has occurred code of error " + code.ToString() + "</h2></body></html>");
+			return Encoding.UTF8.GetBytes("<html><body><h2>An error has occurred code of error " + code.GetExeptionCode() + "</h2></body></html>");
         }
     }
 }

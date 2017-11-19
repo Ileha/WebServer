@@ -19,7 +19,7 @@ namespace HttpHandlers
             Match m = url_var.Match(URI);
             output.URL = m.Groups["url"].Value;
             if (TwoPoints.IsMatch(output.URL)) {//проверить на наличие двух точек подряд
-                throw ExceptionCode.BadRequest();
+                throw new BadRequest();
             }
             foreach (Match s in name_val.Matches(m.Groups["var"].Value)) {
                 output.varibles.Add(s.Groups["name"].Value, s.Groups["val"].Value);
