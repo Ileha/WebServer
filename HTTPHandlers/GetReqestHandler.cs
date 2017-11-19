@@ -35,10 +35,5 @@ namespace HttpHandlers
             //}
             //catch (ErrorServerConfig) { }
         }
-
-		public void Info()
-		{
-			//Console.WriteLine("Extension 1 from " + AppDomain.CurrentDomain.FriendlyName);
-		}
 	}
 }

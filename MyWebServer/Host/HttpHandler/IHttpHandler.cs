@@ -7,7 +7,5 @@ namespace Host.HttpHandler {
         string HandlerType { get; }
 
         void Parse(ref Reqest output, string[] reqest, string URI);
-
-		void Info();
     }
 }

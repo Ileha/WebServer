@@ -43,7 +43,8 @@ Content-Type: {2}; charset=UTF-8
                 try {
                     IMIME dataHandle = Repository.DataHandlers[_read.file_extension];
                     MIMEType = dataHandle.MIME_Type;
-                    dataHandle.handle(this, _reqest, _read);//here may be execute anything code
+					Response resp = this;
+                    dataHandle.Handle(ref resp, ref _reqest, ref _read);//here may be execute anything code
                 }
                 catch (Exception err) {
                     if (err is ExceptionCode) {
