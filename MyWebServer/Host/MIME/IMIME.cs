@@ -8,6 +8,6 @@ namespace Host.MIME {
         string MIME_Type { get; }
         string file_extension { get; }
 
-		void Handle(ref Response response, ref Reqest reqest, ref Reader read);
+		byte[] Handle(ref Response response, ref Reqest reqest, ref Reader read);
     }
 }

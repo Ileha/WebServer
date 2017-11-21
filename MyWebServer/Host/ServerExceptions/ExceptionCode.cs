@@ -101,7 +101,7 @@ namespace Host.ServerExceptions
 
 		protected override string GetAddingToHeader()
 		{
-			throw new NotImplementedException();(
+			throw new NotImplementedException();
 		}
 	}
 

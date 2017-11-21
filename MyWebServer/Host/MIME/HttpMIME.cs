@@ -8,7 +8,7 @@ namespace Host.MIME
         public string MIME_Type { get { return "text/html"; } }
         public string file_extension { get { return ".html"; } }
 
-		public void Handle(ref Response response, ref Reqest reqest, ref Reader read) {
+		public byte[] Handle(ref Response response, ref Reqest reqest, ref Reader read) {
 			response.data.AddRange(read.data);
 		}
 	}
