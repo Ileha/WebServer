@@ -9,7 +9,7 @@ namespace Host.MIME
         public string file_extension { get { return ".html"; } }
 
 		public byte[] Handle(ref Response response, ref Reqest reqest, ref Reader read) {
-			response.data.AddRange(read.data);
+			return read.data;
 		}
 	}
 }

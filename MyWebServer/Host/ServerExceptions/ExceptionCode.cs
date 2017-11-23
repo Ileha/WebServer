@@ -12,17 +12,13 @@ namespace Host.ServerExceptions
 			get { return _IsFatal; }
 		}
 
-		public byte[] GetAddingBytesToHeader()
-		{
-			return Encoding.UTF8.GetBytes(GetAddingToHeader());
-		}
-		public byte[] GetAddingBytesToData()
-		{
-			return Encoding.UTF8.GetBytes(GetAddingToData());
-		}
-
-		protected abstract string GetAddingToHeader();
-		protected virtual string GetAddingToData() {
+        public virtual void GetAddingToHeader(Action<string, string> add_to_header) {
+            add_to_header("Content-Type", "text/html; charset=UTF-8");
+        }
+        public byte[] GetByteData() {
+            return Encoding.UTF8.GetBytes(GetDataString());
+        }
+		protected virtual string GetDataString() {
 			return "<html><body><h2>An error has occurred code of error " + Code + "</h2></body></html>";
 		}
 
@@ -68,11 +64,6 @@ namespace Host.ServerExceptions
 			Code = "400 Bad Request";
 			_IsFatal = true;
 		}
-
-		protected override string GetAddingToHeader()
-		{
-			throw new NotImplementedException();
-		}
 	}
 
 	public class OK : ExceptionCode
@@ -82,11 +73,6 @@ namespace Host.ServerExceptions
 		{
 			Code = "200 OK";
 			_IsFatal = false;
-		}
-
-		protected override string GetAddingToHeader()
-		{
-			throw new NotImplementedException();
 		}
 	}
 
@@ -98,11 +84,6 @@ namespace Host.ServerExceptions
 			Code = "404 Not Found";
 			_IsFatal = true;
 		}
-
-		protected override string GetAddingToHeader()
-		{
-			throw new NotImplementedException();
-		}
 	}
 
 	public class InternalServerError : ExceptionCode
@@ -111,10 +92,6 @@ namespace Host.ServerExceptions
 		public InternalServerError() {
 			Code = "500 Internal Server Error";
 			_IsFatal = true;
-		}
-
-		protected override string GetAddingToHeader() {
-			throw new NotImplementedException();
 		}
 	}
 				

@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using Host.HttpHandler;
 using Host.ServerExceptions;
 using Config;
+using System.Reflection;
 
 namespace Host {
 
@@ -28,7 +29,8 @@ namespace Host {
                 _handler.Parse(ref result, elements.ToList().GetRange(1, elements.Length - 1).ToArray(), header[1]);
             }
             catch (Exception err) {
-                if (err is ExceptionCode) {
+                //typeof(ExceptionCode)
+                if (err.GetType().IsSubclassOf(typeof(ExceptionCode))) {
                     throw err;
                 }
                 else {
