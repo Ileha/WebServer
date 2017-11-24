@@ -116,9 +116,5 @@ namespace Host
      //       Console.WriteLine(Encoding.UTF8.GetString(data.ToArray()));
      //       return data.ToArray();
         }
-
-        private byte[] GetExceptionData() {
-			return Encoding.UTF8.GetBytes("<html><body><h2>An error has occurred code of error " + code.GetExeptionCode() + "</h2></body></html>");
-        }
     }
 }

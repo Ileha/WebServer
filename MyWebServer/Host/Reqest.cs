@@ -20,6 +20,18 @@ namespace Host {
             preferens = new Dictionary<string, string>();
         }
 
+        public void Redirect(string targeURL) {
+            throw new MovedPermanently(targeURL);
+        }
+
+        public void CheckTabelOfRedirect() {
+            try {
+                string new_url = Repository.Configurate.RedirectConfigure.GetTargetRedirect(URL);
+                throw new MovedPermanently(new_url);
+            }
+            catch (Exception err) {}
+        }
+
         public static Reqest CreateNewReqest(string reqest) {
             Reqest result = new Reqest();
             string[] elements = Regex.Split(reqest, "\r\n");

@@ -94,5 +94,20 @@ namespace Host.ServerExceptions
 			_IsFatal = true;
 		}
 	}
-				
+    public class MovedPermanently : ExceptionCode {
+        private string targeURL;
+
+        public MovedPermanently(string targeURL)
+        {
+            Code = "301 Moved Permanently";
+            _IsFatal = true;
+            this.targeURL = targeURL;
+        }
+        protected override string GetDataString() {
+            return "";
+        }
+        public override void GetAddingToHeader(Action<string, string> add_to_header) {
+            add_to_header("Location", targeURL);
+        }
+    }			
 }
