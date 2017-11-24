@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,8 +16,11 @@ namespace MainProgramm
 {
     public class Resident : MarshalByRefObject
     {
-        public void AddConfig(WebServerConfig config) {
-            Repository.Configurate = config;
+        public void AddConfig(string puth, int num)
+        {
+            XDocument doc = XDocument.Load(puth);
+            Repository.Configurate = new WebServerConfig(doc.Root.Elements().ElementAt(num));
+            //Repository.Configurate = new WebServerConfig(XElement.Parse(_data));
         }
         public void StartHost() {
             new Host.WebSerwer();

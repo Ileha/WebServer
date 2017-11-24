@@ -2,46 +2,59 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using System.Text.RegularExpressions;
 
 namespace Config
 {
-    class RedirectConfig : MarshalByRefObject, IConfigRead {
-        private Dictionary<string, string> _body_redirect;
+    class ReactionValue {
+        public readonly Regex Reactor;
+        public readonly string ReturnValue;
+
+        public ReactionValue(string reaction, string target_value) {
+            Reactor = new Regex(reaction);
+            ReturnValue = target_value;
+        }
+    }
+    public class RedirectConfig {
+        //private Dictionary<Regex, string> _body_redirect;
+        private List<ReactionValue> _list_of_redirect;
 
         public RedirectConfig() {
-            _body_redirect = new Dictionary<string, string>();
+            //_body_redirect = new Dictionary<Regex, string>();
+            _list_of_redirect = new List<ReactionValue>();
+        }
+
+        public string GetTargetRedirect(string url) {
+            foreach (ReactionValue RV in _list_of_redirect) {
+                if (RV.Reactor.IsMatch(url)) {
+                    return RV.ReturnValue;
+                }
+            }
+            throw new RedirectNotFound(url);
+        }
+
+        public void AddRule(string reaction, string target_value) {
+            _list_of_redirect.Add(new ReactionValue(reaction, target_value));
         }
 
         public void Configure(XElement body) {
-            _body_redirect = new Dictionary<string, string>();
             foreach (XElement el in body.Elements()) {
-                _body_redirect.Add(el.Attribute("path").Value, el.Attribute("target").Value);
-            }
-        }
-
-        public string this[string index] {
-            get {
-                try {
-                    return _body_redirect[index];
-                }
-                catch (Exception err) {
-                    throw new ErrorServerConfig(index);
-                }
+                //_body_redirect.Add(new Regex(el.Attribute("path").Value), el.Attribute("target").Value);
+                _list_of_redirect.Add(new ReactionValue(el.Attribute("path").Value, el.Attribute("target").Value));
             }
         }
     }
 
-    public class WebServerConfig : MarshalByRefObject, IConfigRead {
+    public class WebServerConfig : IConfigRead {
         private Dictionary<string, string> _body_conf;
-        public readonly IConfigRead RedirectConfigure;
+        public readonly RedirectConfig RedirectConfigure;
 
         public WebServerConfig(XElement body) {
             _body_conf = new Dictionary<string, string>();
-            RedirectConfig r = new RedirectConfig();
-            RedirectConfigure = r;
+            RedirectConfigure = new RedirectConfig();
             foreach (XElement el in body.Elements()) {
                 if (el.Name.LocalName == "redirect_table") {
-                    r.Configure(el);
+                    RedirectConfigure.Configure(el);
                 }
                 else if (!el.HasElements) {
                     _body_conf.Add(el.Name.LocalName, el.Value);

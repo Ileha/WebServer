@@ -37,6 +37,7 @@ namespace Host {
             Console.WriteLine(request);
             try {
                 obj_request = Reqest.CreateNewReqest(request);
+                obj_request.CheckTabelOfRedirect();
                 reads_bytes = new Reader(obj_request);
             }
             catch (ExceptionCode err) {

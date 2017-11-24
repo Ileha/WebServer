@@ -21,6 +21,7 @@ namespace MainProgramm {
 
         public static void Main(string[] args) {
             XDocument config_doc = XDocument.Load(@"../../../config.xml");
+            string doc_path = Path.GetFullPath(@"../../../config.xml");
             int i = 0;
             foreach (XElement host_conf in config_doc.Root.Elements()) {
                 AppDomainSetup domaininfo = new AppDomainSetup();
@@ -30,11 +31,12 @@ namespace MainProgramm {
                 Resident resident = (Resident)domain.CreateInstanceAndUnwrap(
                             typeof(Resident).Assembly.FullName,
                             typeof(Resident).FullName);
-                resident.AddConfig(new WebServerConfig(host_conf));
+                resident.AddConfig(doc_path, i);
                 resident.LoadPluginExternal();
                 resident.LoadPluginInternal();
                 resident.GetPluginInfo();
                 resident.StartHost();
+                i++;
             }
             Console.ReadLine();
         }
