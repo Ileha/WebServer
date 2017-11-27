@@ -5,6 +5,7 @@ using System.Threading;
 using System.IO;
 using System.Text.RegularExpressions;
 using Config;
+using System.Threading.Tasks;
 
 namespace Host {
     public delegate void HandlerExecutor();
@@ -15,12 +16,19 @@ namespace Host {
         private bool is_work;
 
         public WebSerwer() {
+            Task outer = Task.Factory.StartNew(() =>
+            {
+                Configure();
+                var inner = Task.Factory.StartNew(ThreadFunc);
+            });
+        }
+
+        public void Configure()
+        {
             IPAddress adres = IPAddress.Parse(Repository.ReadConfig["ip_adress"]);
             ipEndPoint = new IPEndPoint(adres, Convert.ToInt32(Repository.ReadConfig["port"]));
             sListener = new Socket(adres.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             is_work = true;
-            Thread st = new Thread(this.ThreadFunc);
-            st.Start();
         }
 
         private void ThreadFunc() {
