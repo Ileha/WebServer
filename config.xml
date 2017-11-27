@@ -8,6 +8,8 @@
 		<!--<root_dir>/Users/Alexey/Documents/Programm Projects/C#/WebServer/Resourses</root_dir>-->
 		<redirect_table><!--now not work-->
 			<element path="/" target="/index.html"></element>
+			<element path="/index.\w+" target="/index.html"></element>
+			<element path="/index" target="/index.html"></element>
 		</redirect_table>
 	</server>
 	<server>
@@ -18,6 +20,8 @@
 		<!--<root_dir>/Users/Alexey/Documents/Programm Projects/C#/WebServer/Resourses</root_dir>-->
 		<redirect_table><!--now not work-->
 			<element path="/" target="/index.html"></element>
+			<element path="/index.\w+" target="/index.html"></element>
+			<element path="/index" target="/index.html"></element>
 		</redirect_table>
 	</server>
 </root>

@@ -26,7 +26,7 @@ namespace Config
 
         public string GetTargetRedirect(string url) {
             foreach (ReactionValue RV in _list_of_redirect) {
-                if (RV.Reactor.IsMatch(url)) {
+                if (RV.Reactor.IsMatch(url) && url != RV.ReturnValue) {
                     return RV.ReturnValue;
                 }
             }
