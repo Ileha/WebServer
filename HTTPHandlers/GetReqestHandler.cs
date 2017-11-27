@@ -8,7 +8,7 @@ using Config;
 namespace HttpHandlers
 {
     public class GetReqestHandler : IHttpHandler {
-        Regex url_var = new Regex("^/(?<url>[\\w/\\.]+)(\\?(?<var>[\\w=&]+))?");
+        Regex url_var = new Regex("^(?<url>[\\w/\\.]+)(\\?(?<var>[\\w=&]+))?");
         Regex name_val = new Regex("(?<name>[\\w]+)=(?<val>[\\w]+)");
         Regex pref_val = new Regex("(?<name>[\\w-]+):[ ]?(?<val>.+)");
         Regex TwoPoints = new Regex("\\.{2}");

@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using System.Runtime.Remoting;
 using System.Security.Policy;
 using Host;
+using System.Text.RegularExpressions;
 
 namespace MainProgramm {
 
@@ -20,10 +21,14 @@ namespace MainProgramm {
 		//public static Dictionary<string, WebSerwer> hosts;
 
         public static void Main(string[] args) {
+            //Regex r = new Regex("/");
+            //Console.WriteLine(r.IsMatch("/"));
+
             XDocument config_doc = XDocument.Load(@"../../../config.xml");
             string doc_path = Path.GetFullPath(@"../../../config.xml");
             int i = 0;
-            foreach (XElement host_conf in config_doc.Root.Elements()) {
+            foreach (XElement host_conf in config_doc.Root.Elements())
+            {
                 AppDomainSetup domaininfo = new AppDomainSetup();
                 domaininfo.ApplicationBase = @"../../../HTTPHandlers/bin/Debug";
                 Evidence adevidence = AppDomain.CurrentDomain.Evidence;

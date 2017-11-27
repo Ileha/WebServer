@@ -25,11 +25,15 @@ namespace Host {
         }
 
         public void CheckTabelOfRedirect() {
+            string new_url;
             try {
-                string new_url = Repository.Configurate.RedirectConfigure.GetTargetRedirect(URL);
-                throw new MovedPermanently(new_url);
+                new_url = Repository.Configurate.RedirectConfigure.GetTargetRedirect(URL);
             }
-            catch (Exception err) {}
+            catch (Exception err) { 
+                return;
+            }
+            throw new MovedPermanently(new_url);
+            //Console.WriteLine();
         }
 
         public static Reqest CreateNewReqest(string reqest) {

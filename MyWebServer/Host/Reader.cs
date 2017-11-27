@@ -11,7 +11,8 @@ namespace Host
         public readonly string file_extension;
 
         public Reader(Reqest Reqest) {
-            string path = Path.Combine(Repository.ReadConfig["root_dir"], Reqest.URL);
+            string target = Reqest.URL.Substring(1, Reqest.URL.Length - 1);
+            string path = Path.Combine(Repository.ReadConfig["root_dir"], target);
             if (!File.Exists(path)) {
                 throw new NotFound();
             }

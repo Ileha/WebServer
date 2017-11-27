@@ -40,8 +40,9 @@ namespace Config
         public void Configure(XElement body) {
             foreach (XElement el in body.Elements()) {
                 //_body_redirect.Add(new Regex(el.Attribute("path").Value), el.Attribute("target").Value);
-                _list_of_redirect.Add(new ReactionValue(el.Attribute("path").Value, el.Attribute("target").Value));
+                _list_of_redirect.Add(new ReactionValue("^"+el.Attribute("path").Value+"$", el.Attribute("target").Value));
             }
+            Console.WriteLine();
         }
     }
 
