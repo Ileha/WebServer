@@ -86,7 +86,7 @@ namespace Host
                 httpbody += vord.Key + ": " + vord.Value + "\r\n";
             }
             string req_header_string = string.Format(bolvanka, code.GetExeptionCode(), httpbody);
-            Console.WriteLine(req_header_string);
+            //Console.WriteLine(req_header_string);
             data.InsertRange(0, Encoding.UTF8.GetBytes(req_header_string));
             return data.ToArray();
 

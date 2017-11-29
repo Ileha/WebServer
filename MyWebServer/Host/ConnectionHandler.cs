@@ -5,10 +5,11 @@ using Host.ServerExceptions;
 using Config;
 using Host.HttpHandler;
 using Host.MIME;
+using System.Threading;
 
 namespace Host {
     public class ConnectionHandler {
-        public readonly Socket connection;
+        public readonly TcpClient connection;
 
         public ExceptionCode code;
         public IHttpHandler handler;
@@ -16,7 +17,8 @@ namespace Host {
         public Reqest obj_request;
         public Response response;
 
-        public ConnectionHandler(Socket Connection) {
+        public ConnectionHandler(TcpClient Connection)
+        {
             connection = Connection;
 			code = new OK();
             handler = null;
@@ -27,14 +29,13 @@ namespace Host {
         public void Execute() {
             byte[] buffer = new byte[1024];
             string request = "";
-            while (true) {
-                int bytesRec = connection.Receive(buffer);
-                request += Encoding.UTF8.GetString(buffer, 0, bytesRec);
+            int count;
+            while ((count = connection.GetStream().Read(buffer, 0, buffer.Length)) > 0) {
+                request += Encoding.UTF8.GetString(buffer, 0, count);
                 if (request.IndexOf("\r\n\r\n") >= 0) { //Запрос обрывается \r\n\r\n последовательностью
                     break;
                 }
             }
-            //Console.WriteLine(request);
             try {
                 obj_request = Reqest.CreateNewReqest(request);
                 obj_request.CheckTabelOfRedirect();
@@ -44,8 +45,14 @@ namespace Host {
                 code = err;
             }
             response = new Response(code);
-            connection.Send(response.GetData(obj_request, reads_bytes));
-            connection.Close();
+            try {
+                byte[] send_data = response.GetData(obj_request, reads_bytes);
+                connection.GetStream().Write(send_data, 0, send_data.Length);
+            }
+            catch (Exception err) {}
+            finally {
+                connection.Close();
+            }
         }
 
     }
