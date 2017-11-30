@@ -3,9 +3,18 @@ using Host;
 using Config;
 
 namespace Host.HttpHandler {
-    public interface IHttpHandler {
-        string HandlerType { get; }
+    public abstract class IHttpHandler {
+        public abstract string HandlerType { get; }
+		public abstract string HandlerVersion { get; }
+		private string _id;
 
-        void Parse(ref Reqest output, string[] reqest, string URI);
+		public IHttpHandler() {
+			_id = HandlerType + HandlerVersion;
+		}
+
+        public abstract void Parse(ref Reqest output, string[] reqest, string URI);
+		public string IDHandler() {
+			return _id;
+		}
     }
 }

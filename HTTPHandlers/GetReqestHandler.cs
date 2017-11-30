@@ -4,6 +4,7 @@ using Host.ServerExceptions;
 using Host;
 using Host.HttpHandler;
 using Config;
+using System;
 
 namespace HttpHandlers
 {
@@ -13,9 +14,10 @@ namespace HttpHandlers
         Regex pref_val = new Regex("(?<name>[\\w-]+):[ ]?(?<val>.+)");
         Regex TwoPoints = new Regex("\\.{2}");
 
-        public string HandlerType { get { return "GET"; } }
+        public override string HandlerType { get { return "GET"; } }
+		public override string HandlerVersion { get { return "HTTP/1.1"; } }
 
-        public void Parse(ref Reqest output, string[] reqest, string URI) {
+		public override void Parse(ref Reqest output, string[] reqest, string URI) {
             Match m = url_var.Match(URI);
             output.URL = m.Groups["url"].Value;
             if (TwoPoints.IsMatch(output.URL)) {//проверить на наличие двух точек подряд
@@ -30,10 +32,6 @@ namespace HttpHandlers
                     output.preferens.Add(m_pref.Groups["name"].Value, m_pref.Groups["val"].Value);
                 }
             }
-            //try {
-            //    throw ExceptionCode.MovedPermanently(redirectTable[output.URL], output.preferens["Host"]);
-            //}
-            //catch (ErrorServerConfig) { }
         }
 	}
 }

@@ -41,7 +41,7 @@ namespace Host {
             string[] elements = Regex.Split(reqest, "\r\n");
             try {
                 string[] header = elements[0].Split(' ');
-                IHttpHandler _handler = Repository.ReqestsHandlers[header[0]];
+                IHttpHandler _handler = Repository.ReqestsHandlers[header[0]+header[2]];
                 _handler.Parse(ref result, elements.ToList().GetRange(1, elements.Length - 1).ToArray(), header[1]);
             }
             catch (Exception err) {

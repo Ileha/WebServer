@@ -27,7 +27,6 @@ namespace Host {
         {
             IPAddress adres = IPAddress.Parse(Repository.ReadConfig["ip_adress"]);
             ipEndPoint = new IPEndPoint(adres, Convert.ToInt32(Repository.ReadConfig["port"]));
-            //sListener = new Socket(adres.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             sListener = new TcpListener(ipEndPoint);
             is_work = true;
         }

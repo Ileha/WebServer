@@ -8,9 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Host;
 
 namespace MainProgramm
 {
@@ -29,13 +26,13 @@ namespace MainProgramm
         public void LoadPluginInternal() {
             Console.WriteLine("loading internal plugins...");
             Type ourtype = typeof(IHttpHandler);
-            IEnumerable<Type> list = Assembly.GetAssembly(ourtype).GetTypes().Where(type => type.GetInterfaces().Contains(ourtype) && type.IsClass);
+			IEnumerable<Type> list = Assembly.GetAssembly(ourtype).GetTypes().Where(type => type.IsSubclassOf(ourtype) && type.IsClass);
             foreach (Type t in list)
             {
                 IHttpHandler h = (IHttpHandler)Activator.CreateInstance(t);
                 try
                 {
-                    Repository.ReqestsHandlers.Add(h.HandlerType, h);
+					Repository.ReqestsHandlers.Add(h.IDHandler(), h);
                 }
                 catch (Exception err) {}
             }
@@ -62,20 +59,22 @@ namespace MainProgramm
             {
                 Console.WriteLine("loading {0}...", fi.FullName);
                 Assembly load = Assembly.LoadFrom(fi.FullName);
-                foreach (Type t in load.GetTypes())
-                {
-                    Type[] interfaces = t.GetInterfaces();
-                    if (interfaces.Contains(http_handler))
-                    {
-                        IHttpHandler https = Activator.CreateInstance(t) as IHttpHandler;
-                        Repository.ReqestsHandlers.Add(https.HandlerType, https);
-                    }
-                    else if (interfaces.Contains(mime_handler))
-                    {
-                        IMIME mime = Activator.CreateInstance(t) as IMIME;
-                        Repository.DataHandlers.Add(mime.file_extension, mime);
-                    }
-                }
+				IEnumerable<Type> list = load.GetTypes().Where(type => type.IsSubclassOf(http_handler) && type.IsClass);
+	            foreach (Type t in list) {
+	                IHttpHandler h = (IHttpHandler)Activator.CreateInstance(t);
+	                try {
+						Repository.ReqestsHandlers.Add(h.IDHandler(), h);
+	                }
+	                catch (Exception err) {}
+	            }
+				list = load.GetTypes().Where(type => type.GetInterfaces().Contains(mime_handler) && type.IsClass);
+	            foreach (Type t in list) {
+	                IMIME h = (IMIME)Activator.CreateInstance(t);
+	                try {
+	                    Repository.DataHandlers.Add(h.file_extension, h);
+	                }
+	                catch (Exception err) { }
+	            }
                 Console.WriteLine("load");
             }
         }
