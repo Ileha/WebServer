@@ -36,7 +36,6 @@ namespace Host {
                     break;
                 }
             }
-			Console.WriteLine(request);
             try {
                 obj_request = Reqest.CreateNewReqest(request);
                 obj_request.CheckTabelOfRedirect();

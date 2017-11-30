@@ -14,10 +14,12 @@ namespace Host {
         public string URL;
         public Dictionary<string, string> varibles;
         public Dictionary<string, string> preferens;
+		public Dictionary<string, string> cookies;
 
         public Reqest() {
             varibles = new Dictionary<string, string>();
             preferens = new Dictionary<string, string>();
+			cookies = new Dictionary<string, string>();
         }
 
         public void Redirect(string targeURL) {
@@ -33,7 +35,6 @@ namespace Host {
                 return;
             }
             throw new MovedPermanently(new_url);
-            //Console.WriteLine();
         }
 
         public static Reqest CreateNewReqest(string reqest) {

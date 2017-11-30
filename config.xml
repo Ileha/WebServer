@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
 	<server>
-	    <name>first host</name><!--имя хоста (необязательный пункт)-->
-	    <ip_adress>10.0.1.6</ip_adress><!--адрес хоста-->
+	  <name>first host</name><!--имя хоста-->
+	  <ip_adress>10.0.1.2</ip_adress><!--адрес хоста-->
 		<port>11000</port><!--порт хоста-->
-		<root_dir>../../../Resourses/host_01/</root_dir><!--корневой каталог хоста-->
-		<!--<root_dir>/Users/Alexey/Documents/Programm Projects/C#/WebServer/Resourses</root_dir>-->
-		<redirect_table><!--now not work-->
+		<root_dir>../../../Resourses/host_01</root_dir><!--корневой каталог хоста-->
+		<redirect_table>
 			<element path="/" target="/index.html"></element>
 			<element path="/index.\w+" target="/index.html"></element>
 			<element path="/index" target="/index.html"></element>
 		</redirect_table>
 	</server>
+
 	<server>
-	    <name>second host</name><!--имя хоста (необязательный пункт)-->
-	    <ip_adress>127.0.0.1</ip_adress><!--адрес хоста-->
+	  <name>second host</name><!--имя хоста-->
+	  <ip_adress>10.0.1.2</ip_adress><!--адрес хоста-->
 		<port>11001</port><!--порт хоста-->
 		<root_dir>../../../Resourses/host_02</root_dir><!--корневой каталог хоста-->
-		<!--<root_dir>/Users/Alexey/Documents/Programm Projects/C#/WebServer/Resourses</root_dir>-->
-		<redirect_table><!--now not work-->
+		<redirect_table>
 			<element path="/" target="/index.html"></element>
 			<element path="/index.\w+" target="/index.html"></element>
 			<element path="/index" target="/index.html"></element>
