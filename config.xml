@@ -5,6 +5,7 @@
 	  <ip_adress>10.0.1.2</ip_adress><!--адрес хоста-->
 		<port>11000</port><!--порт хоста-->
 		<root_dir>../../../Resourses/host_01</root_dir><!--корневой каталог хоста-->
+		<modules_dir>../../../HTTPHandlers/bin/Debug</modules_dir><!--Сборка(сборки) с модулями-->
 		<redirect_table>
 			<element path="/" target="/index.html"></element>
 			<element path="/index.\w+" target="/index.html"></element>
@@ -17,6 +18,7 @@
 	  <ip_adress>10.0.1.2</ip_adress><!--адрес хоста-->
 		<port>11001</port><!--порт хоста-->
 		<root_dir>../../../Resourses/host_02</root_dir><!--корневой каталог хоста-->
+		<modules_dir>../../../HTTPHandlers/bin/Debug</modules_dir><!--Сборка(сборки) с модулями-->
 		<redirect_table>
 			<element path="/" target="/index.html"></element>
 			<element path="/index.\w+" target="/index.html"></element>
