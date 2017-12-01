@@ -10,8 +10,9 @@ namespace MIMEHandlers
 {
     class JPGMIME : IMIME
     {
+		private string[] _file_extensions = { ".jpg" };
         public string MIME_Type { get { return "image/jpg"; } }
-        public string file_extension { get { return ".jpg"; } }
+        public string[] file_extensions { get { return _file_extensions; } }
 
         public byte[] Handle(ref Response response, ref Reqest reqest, ref Reader read)
         {

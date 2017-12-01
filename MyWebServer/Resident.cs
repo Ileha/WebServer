@@ -41,11 +41,14 @@ namespace MainProgramm
             foreach (Type t in list)
             {
                 IMIME h = (IMIME)Activator.CreateInstance(t);
-                try
-                {
-                    Repository.DataHandlers.Add(h.file_extension, h);
-                }
-                catch (Exception err) { }
+				foreach (string extensions in h.file_extensions)
+				{
+					try
+					{
+						Repository.DataHandlers.Add(extensions, h);
+					}
+					catch (Exception err) { }
+				}
             }
         }
 
@@ -70,10 +73,13 @@ namespace MainProgramm
 				list = load.GetTypes().Where(type => type.GetInterfaces().Contains(mime_handler) && type.IsClass);
 	            foreach (Type t in list) {
 	                IMIME h = (IMIME)Activator.CreateInstance(t);
-	                try {
-	                    Repository.DataHandlers.Add(h.file_extension, h);
-	                }
-	                catch (Exception err) { }
+	                foreach (string extensions in h.file_extensions) {
+						try
+						{
+							Repository.DataHandlers.Add(extensions, h);
+						}
+						catch (Exception err) { }
+					}
 	            }
                 Console.WriteLine("load");
             }
