@@ -13,15 +13,37 @@ namespace Host
         public Reader(Reqest Reqest) {
             string target = Reqest.URL.Substring(1, Reqest.URL.Length - 1);
             string path = Path.Combine(Repository.ReadConfig["root_dir"], target);
-            if (!File.Exists(path)) {
-                throw new NotFound();
-            }
             try {
-                file_extension = Path.GetExtension(path);
-                data = File.ReadAllBytes(path);
+                if (File.Exists(path)) {
+                    try {
+                        file_extension = Path.GetExtension(path);
+                        data = File.ReadAllBytes(path);
+                    }
+                    catch (Exception err) {
+                        throw new InternalServerError();
+                    }
+                }
+                else if (Directory.Exists(path)) {
+                    DirectoryInfo dir = new DirectoryInfo(path);
+                    foreach (DirectoryInfo enemy in dir.GetDirectories()) {
+                        Repository.DirReader.DirPars(enemy);
+                    }
+                    foreach (FileInfo enemy in dir.GetFiles())
+                    {
+                        Repository.DirReader.FilePars(enemy);
+                    }
+                }
+                else {
+                    throw new NotFound();
+                }
             }
-            catch(Exception err) {
-                throw new InternalServerError();
+            catch (Exception err) {
+                if (err.GetType().IsSubclassOf(typeof(ExceptionCode))) {
+                    throw err;
+                }
+                else {
+                    throw new InternalServerError();
+                }
             }
         }
     }
