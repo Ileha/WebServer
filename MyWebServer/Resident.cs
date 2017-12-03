@@ -8,6 +8,8 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using System.Reflection;
+using Host.DirReader;
+using System.Text.RegularExpressions;
 
 namespace MainProgramm
 {
@@ -22,6 +24,31 @@ namespace MainProgramm
         public void StartHost() {
             new Host.WebSerwer();
         }
+
+		public void FileBrowser() {
+			Regex name;
+			try {
+				if (Repository.Configurate["allow_browse_folders"].Attribute("is_work").Value != "true") { return; }
+				name = new Regex(Repository.Configurate["allow_browse_folders"].Attribute("browser").Value);
+			}
+			catch (Exception err) {
+				return;
+			}
+			AppDomain currentDomain = AppDomain.CurrentDomain;
+			Assembly[] assems = currentDomain.GetAssemblies();
+			Console.WriteLine("loading Browser");
+			Type ourtype = typeof(IDirectoryReader);
+			foreach (Assembly assem in assems) {
+				//Console.WriteLine("find assembly: {0}", assem.ToString());
+				IEnumerable<Type> list = assem.GetTypes().Where((arg) => arg.GetInterfaces().Contains(ourtype) && arg.IsClass);
+				foreach (Type t in list) {
+					if (name.IsMatch(t.ToString())) {
+						Repository.DirReader = (IDirectoryReader)Activator.CreateInstance(t);
+						break;
+					}
+				}
+			}
+		}
 
         public void LoadPluginInternal() {
             Console.WriteLine("loading internal plugins...");
@@ -97,6 +124,8 @@ namespace MainProgramm
             {
                 Console.WriteLine("MIME handler extension {0}", handler.Key);
             }
+
+			Console.WriteLine("Browser module: {0}", Repository.DirReader == null ? "" : Repository.DirReader.GetType().ToString());
         }
         public void Info()
         {

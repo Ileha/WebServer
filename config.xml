@@ -2,7 +2,7 @@
 <root>
 	<server>
 	  <name>first host</name><!--имя хоста-->
-	  <ip_adress>10.0.1.2</ip_adress><!--адрес хоста-->
+	  <ip_adress>127.0.0.1</ip_adress><!--адрес хоста-->
 		<port>11000</port><!--порт хоста-->
 		<root_dir>../../../Resourses/host_01</root_dir><!--корневой каталог хоста-->
 		<modules_dir>../../../HTTPHandlers/bin/Debug</modules_dir><!--Сборка(сборки) с модулями-->
@@ -15,10 +15,11 @@
 
 	<server>
 	  <name>second host</name><!--имя хоста-->
-	  <ip_adress>10.0.1.2</ip_adress><!--адрес хоста-->
+	  <ip_adress>127.0.0.1</ip_adress><!--адрес хоста-->
 		<port>11001</port><!--порт хоста-->
 		<root_dir>../../../Resourses/host_02</root_dir><!--корневой каталог хоста-->
 		<modules_dir>../../../HTTPHandlers/bin/Debug</modules_dir><!--Сборка(сборки) с модулями-->
+		<allow_browse_folders is_work="true" browser="StandartViewer" data_folder="../../../Resourses/WebServerResourses"></allow_browse_folders>
 		<redirect_table>
 			<element path="/" target="/index.html"></element>
 			<element path="/index.\w+" target="/index.html"></element>

@@ -25,8 +25,8 @@ namespace Host {
 
         public void Configure()
         {
-            IPAddress adres = IPAddress.Parse(Repository.ReadConfig["ip_adress"]);
-            ipEndPoint = new IPEndPoint(adres, Convert.ToInt32(Repository.ReadConfig["port"]));
+			IPAddress adres = IPAddress.Parse(Repository.Configurate["ip_adress"].Value);
+			ipEndPoint = new IPEndPoint(adres, Convert.ToInt32(Repository.Configurate["port"].Value));
             sListener = new TcpListener(ipEndPoint);
             is_work = true;
         }
@@ -35,12 +35,12 @@ namespace Host {
             try {
                 sListener.Start();
 
-                Console.WriteLine("Запуск сервера {0}", Repository.ReadConfig["name"]);
+				Console.WriteLine("Запуск сервера {0}", Repository.Configurate["name"].Value);
                 while (is_work) {
                     // Программа приостанавливается, ожидая входящее соединение
                     TcpClient handler = sListener.AcceptTcpClient();
                     #if DEBUG
-                        Console.WriteLine("хост {1}, соединение через порт {0}", ipEndPoint, Repository.ReadConfig["name"]);
+                        Console.WriteLine("хост {1}, соединение через порт {0}", ipEndPoint, Repository.Configurate["name"].Value);
                     #endif
 
                     ConnectionHandler executor = new ConnectionHandler(handler);

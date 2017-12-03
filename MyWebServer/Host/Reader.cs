@@ -12,7 +12,7 @@ namespace Host
 
         public Reader(Reqest Reqest) {
             string target = Reqest.URL.Substring(1, Reqest.URL.Length - 1);
-            string path = Path.Combine(Repository.ReadConfig["root_dir"], target);
+			string path = Path.Combine(Repository.Configurate["root_dir"].Value, target);
             try {
                 if (File.Exists(path)) {
                     try {
@@ -23,7 +23,7 @@ namespace Host
                         throw new InternalServerError();
                     }
                 }
-                else if (Directory.Exists(path)) {
+                else if (Directory.Exists(path)) { //add check to null and working module
                     DirectoryInfo dir = new DirectoryInfo(path);
                     foreach (DirectoryInfo enemy in dir.GetDirectories()) {
                         Repository.DirReader.DirPars(enemy);

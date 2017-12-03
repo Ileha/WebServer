@@ -40,6 +40,7 @@
     <Compile Include="JSIMIME.cs" />
     <Compile Include="CSSIMIME.cs" />
     <Compile Include="PHPIMIME.cs" />
+    <Compile Include="StandartViewer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MyWebServer\MyWebServer.csproj">

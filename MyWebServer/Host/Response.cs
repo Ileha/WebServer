@@ -89,33 +89,6 @@ namespace Host
             //Console.WriteLine(req_header_string);
             data.InsertRange(0, Encoding.UTF8.GetBytes(req_header_string));
             return data.ToArray();
-
-
-     //       if (code.IsFatal) {
-     //           data.AddRange(GetExceptionData());
-     //           MIMEType = "text/html";
-     //       }
-     //       else {
-     //           try {
-     //               IMIME dataHandle = Repository.DataHandlers[_read.file_extension];
-     //               MIMEType = dataHandle.MIME_Type;
-					//Response resp = this;
-     //               dataHandle.Handle(ref resp, ref _reqest, ref _read);//here may be execute anything code
-     //           }
-     //           catch (Exception err) {
-     //               if (err is ExceptionCode) {
-     //                   code = err as ExceptionCode;
-     //               }
-     //               else {
-     //                   code = new InternalServerError();
-     //               }
-     //               Console.WriteLine(err.ToString());
-     //               return GetData(_reqest, _read);
-     //           }
-     //       }
-     //       data.InsertRange(0, Encoding.UTF8.GetBytes(string.Format(bolvanka, code.GetExeptionCode(), data.Count.ToString(), MIMEType)));
-     //       Console.WriteLine(Encoding.UTF8.GetString(data.ToArray()));
-     //       return data.ToArray();
         }
     }
 }

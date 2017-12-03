@@ -46,6 +46,7 @@ namespace MainProgramm {
                 resident.AddConfig(doc_path, i);
 				if (has_modules) resident.LoadPluginExternal();
                 resident.LoadPluginInternal();
+				resident.FileBrowser();
                 resident.GetPluginInfo();
                 resident.StartHost();
                 i++;
