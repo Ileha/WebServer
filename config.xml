@@ -18,8 +18,12 @@
 	  <ip_adress>127.0.0.1</ip_adress><!--адрес хоста-->
 		<port>11001</port><!--порт хоста-->
 		<root_dir>../../../Resourses/host_02</root_dir><!--корневой каталог хоста-->
+		<additive_dirs>
+			<element>../../../Resourses/WebServerResourses</element>
+			<element>../../../Resourses/host_01/banana.gif</element>
+		</additive_dirs>
 		<modules_dir>../../../HTTPHandlers/bin/Debug</modules_dir><!--Сборка(сборки) с модулями-->
-		<allow_browse_folders is_work="true" browser="StandartViewer" data_folder="../../../Resourses/WebServerResourses"></allow_browse_folders>
+		<allow_browse_folders is_work="true" browser="StandartViewer"></allow_browse_folders>
 		<redirect_table>
 			<element path="/" target="/index.html"></element>
 			<element path="/index.\w+" target="/index.html"></element>

@@ -26,10 +26,10 @@ namespace MainProgramm
         }
 
 		public void FileBrowser() {
-			Regex name;
+			string name;
 			try {
 				if (Repository.Configurate["allow_browse_folders"].Attribute("is_work").Value != "true") { return; }
-				name = new Regex(Repository.Configurate["allow_browse_folders"].Attribute("browser").Value);
+				name = Repository.Configurate["allow_browse_folders"].Attribute("browser").Value;
 			}
 			catch (Exception err) {
 				return;
@@ -42,7 +42,7 @@ namespace MainProgramm
 				//Console.WriteLine("find assembly: {0}", assem.ToString());
 				IEnumerable<Type> list = assem.GetTypes().Where((arg) => arg.GetInterfaces().Contains(ourtype) && arg.IsClass);
 				foreach (Type t in list) {
-					if (name.IsMatch(t.ToString())) {
+					if (name == t.Name) {
 						Repository.DirReader = (IDirectoryReader)Activator.CreateInstance(t);
 						break;
 					}

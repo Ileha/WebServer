@@ -11,9 +11,13 @@ namespace Host
         public readonly string file_extension;
 
         public Reader(Reqest Reqest) {
-            string target = Reqest.URL.Substring(1, Reqest.URL.Length - 1);
-			string path = Path.Combine(Repository.Configurate["root_dir"].Value, target);
+            string target = "";
             try {
+                target = Reqest.URL.Substring(1, Reqest.URL.Length - 1);
+            }
+            catch (Exception err) { throw new BadRequest(); }
+            try {
+                string path = Path.Combine(Repository.Configurate._resourses.GetTargetRedirect(target), target);
                 if (File.Exists(path)) {
                     try {
                         file_extension = Path.GetExtension(path);
@@ -23,13 +27,12 @@ namespace Host
                         throw new InternalServerError();
                     }
                 }
-                else if (Directory.Exists(path)) { //add check to null and working module
+                else if (Repository.DirReader != null && Directory.Exists(path)) { //add check to null and working module
                     DirectoryInfo dir = new DirectoryInfo(path);
                     foreach (DirectoryInfo enemy in dir.GetDirectories()) {
                         Repository.DirReader.DirPars(enemy);
                     }
-                    foreach (FileInfo enemy in dir.GetFiles())
-                    {
+                    foreach (FileInfo enemy in dir.GetFiles()) {
                         Repository.DirReader.FilePars(enemy);
                     }
                 }
