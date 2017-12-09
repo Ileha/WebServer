@@ -10,8 +10,10 @@ namespace Config
     public class ResoursePull : ReactorPull
     {
         private string _def;
+        private Regex path;
         public ResoursePull(string def_path) : base() {
             _def = def_path;
+            path = new Regex(@"^/");
         }
         public override string GetDefaultValue() {
             return _def;
@@ -24,6 +26,13 @@ namespace Config
             }
             else if (File.Exists(item.Value)) {
                 FileInfo inf = new FileInfo(item.Value);
+                //string on_add = "";
+                //try {
+                //    on_add = item.Attribute("virtual_path").Value;
+                //    on_add = path.Replace(on_add, "");
+                //}
+                //catch (Exception err) { }
+                //Console.WriteLine(Path.Combine(on_add, inf.Name));
                 return new ReactionValue("^" + inf.Name, inf.DirectoryName);
             }
             else {

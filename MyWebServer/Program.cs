@@ -18,12 +18,8 @@ using System.Text.RegularExpressions;
 namespace MainProgramm {
 
     class MainProgramm {
-		//public static Dictionary<string, WebSerwer> hosts;
 
         public static void Main(string[] args) {
-            //Regex r = new Regex("/");
-            //Console.WriteLine(r.IsMatch("/"));
-
             XDocument config_doc = XDocument.Load(@"../../../config.xml");
             string doc_path = Path.GetFullPath(@"../../../config.xml");
             int i = 0;
