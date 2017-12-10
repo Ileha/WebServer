@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config\ReactorPull.cs" />
+    <Compile Include="Config\ResourseManager.cs" />
     <Compile Include="Host\IDirectoryReader.cs" />
     <Compile Include="Host\IHostEvents.cs" />
     <Compile Include="Program.cs" />

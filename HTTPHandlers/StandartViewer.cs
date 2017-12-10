@@ -12,17 +12,15 @@ namespace DirViewer
 		}
 
         public void OnStart() {
-            Console.WriteLine("Start!!!");
+            Repository.Configurate._resourses.AddReaction(Repository.Configurate["allow_browse_folders"].Attribute("reourse_path").Value);
         }
-        public void OnStop() {
-            Console.WriteLine("Stop!!!");
-        }
+        public void OnStop() {}
 		public string DirPars(DirectoryInfo sub_dir) {
-			throw new NotImplementedException();
+            return "<p><a href=\"WebServerResourses/folder.png\"><img src=\"WebServerResourses/folder.png\" height=\"20\"></img>"+sub_dir.Name+"</a>";
 		}
 
 		public string FilePars(FileInfo file) {
-			throw new NotImplementedException();
+            return "<p><a href=\"WebServerResourses/file.png\"><img src=\"WebServerResourses/file.png\" height=\"20\"></img>" + file.Name + "</a>";
 		}
 	}
 }

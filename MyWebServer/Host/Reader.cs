@@ -2,6 +2,7 @@
 using System.IO;
 using Host.ServerExceptions;
 using Config;
+using System.Text;
 
 namespace Host
 {
@@ -29,12 +30,15 @@ namespace Host
                 }
                 else if (Repository.DirReader != null && Directory.Exists(path)) { //add check to null and working module
                     DirectoryInfo dir = new DirectoryInfo(path);
+                    string str = "";
                     foreach (DirectoryInfo enemy in dir.GetDirectories()) {
-                        Repository.DirReader.DirPars(enemy);
+                        str += Repository.DirReader.DirPars(enemy);
                     }
                     foreach (FileInfo enemy in dir.GetFiles()) {
-                        Repository.DirReader.FilePars(enemy);
+                        str += Repository.DirReader.FilePars(enemy);
                     }
+                    data = Encoding.UTF8.GetBytes(str);
+                    file_extension = ".html";
                 }
                 else {
                     throw new NotFound();

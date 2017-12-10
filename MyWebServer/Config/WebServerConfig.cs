@@ -7,43 +7,7 @@ using System.IO;
 
 namespace Config
 {
-    public class ResoursePull : ReactorPull
-    {
-        private string _def;
-        private Regex path;
-        public ResoursePull(string def_path) : base() {
-            _def = def_path;
-            path = new Regex(@"^/");
-        }
-        public override string GetDefaultValue() {
-            return _def;
-        }
-        public override ReactionValue Adder(XElement item)
-        {
-            if (Directory.Exists(item.Value)) {
-                DirectoryInfo inf = new DirectoryInfo(item.Value);
-                return new ReactionValue("^"+inf.Name, inf.Parent.FullName);
-            }
-            else if (File.Exists(item.Value)) {
-                FileInfo inf = new FileInfo(item.Value);
-                //string on_add = "";
-                //try {
-                //    on_add = item.Attribute("virtual_path").Value;
-                //    on_add = path.Replace(on_add, "");
-                //}
-                //catch (Exception err) { }
-                //Console.WriteLine(Path.Combine(on_add, inf.Name));
-                return new ReactionValue("^" + inf.Name, inf.DirectoryName);
-            }
-            else {
-                throw new FileNotFoundException("not found", item.Value);
-            }
-        }
-        public override bool Mather(string get_resourse, ReactionValue out_resourse)
-        {
-            return out_resourse.Reactor.IsMatch(get_resourse);
-        }
-    }
+    
 
 	public class RedirectConfig : ReactorPull
 	{
@@ -61,13 +25,13 @@ namespace Config
 
     public class WebServerConfig : IConfigRead {
         private Dictionary<string, XElement> _body_conf;
-        public ResoursePull _resourses;
+        public ResoursePullURLToPath _resourses;
         public readonly RedirectConfig RedirectConfigure;
 
         public WebServerConfig(XElement body) {
             _body_conf = new Dictionary<string, XElement>();
             RedirectConfigure = new RedirectConfig();
-            _resourses = new ResoursePull(body.Element("root_dir").Value);
+            _resourses = new ResoursePullURLToPath(body.Element("root_dir").Value);
             foreach (XElement el in body.Elements()) {
                 if (el.Name.LocalName == "redirect_table") {
                     RedirectConfigure.Configure(el);

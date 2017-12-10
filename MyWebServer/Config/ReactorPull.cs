@@ -22,7 +22,7 @@ namespace Config
     }
     public abstract class ReactorPull
     {
-        private List<ReactionValue> _list_of_redirect;
+        protected List<ReactionValue> _list_of_redirect;
 
         public ReactorPull()
 		{
