@@ -12,14 +12,15 @@ namespace Host
         public readonly string file_extension;
 
         public Reader(Reqest Reqest) {
-            string target = "";
+            //string target = "";
+            //try {
+            //    target = Reqest.URL.Substring(1, Reqest.URL.Length - 1);
+            //}
+            //catch (Exception err) { throw new BadRequest(); }
             try {
-                target = Reqest.URL.Substring(1, Reqest.URL.Length - 1);
-            }
-            catch (Exception err) { throw new BadRequest(); }
-            try {
-                string path = Path.Combine(Repository.Configurate._resourses.GetTargetRedirect(target), target);
-                if (File.Exists(path)) {
+				string path = Repository.Configurate._resourses.GetTargetRedirect(Reqest.URL);//Path.Combine(Repository.Configurate._resourses.GetTargetRedirect(target), target);
+				//Console.WriteLine(path);
+				if (File.Exists(path)) {
                     try {
                         file_extension = Path.GetExtension(path);
                         data = File.ReadAllBytes(path);

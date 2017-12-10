@@ -29,20 +29,22 @@ namespace Config
 			_list_of_redirect = new List<ReactionValue>();
 		}
 
-        abstract public bool Mather(string get_resourse, ReactionValue out_resourse);
-        abstract public string GetDefaultValue();
-
+        abstract public bool Сomparer(string get_resourse, ReactionValue out_resourse);
+        abstract public string GetDefaultValue(string url);
+		public virtual string OnCompaerReturn(ReactionValue RV, string get_path) {
+			return RV.ReturnValue; 
+		}
 		public string GetTargetRedirect(string url)
 		{
 			foreach (ReactionValue RV in _list_of_redirect)
 			{
-				if (Mather(url,RV))
+				if (Сomparer(url,RV))
 				{
-					return RV.ReturnValue;
+					return OnCompaerReturn(RV, url);
 				}
 			}
             try {
-                return GetDefaultValue();
+                return GetDefaultValue(url);
             }
             catch (Exception err) { throw new RedirectNotFound(url); }
 		}

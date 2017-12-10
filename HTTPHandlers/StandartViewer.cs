@@ -16,11 +16,11 @@ namespace DirViewer
         }
         public void OnStop() {}
 		public string DirPars(DirectoryInfo sub_dir) {
-            return "<p><a href=\"WebServerResourses/folder.png\"><img src=\"WebServerResourses/folder.png\" height=\"20\"></img>"+sub_dir.Name+"</a>";
+			return "<p><a href=\""+Repository.Configurate._res_02.GetTargetRedirect(sub_dir.FullName)+"\"><img src=\"WebServerResourses/folder.png\" height=\"20\"></img>"+sub_dir.Name+"</a>";
 		}
 
 		public string FilePars(FileInfo file) {
-            return "<p><a href=\"WebServerResourses/file.png\"><img src=\"WebServerResourses/file.png\" height=\"20\"></img>" + file.Name + "</a>";
+            return "<p><a href=\""+Repository.Configurate._res_02.GetTargetRedirect(file.FullName)+"\"><img src=\"WebServerResourses/file.png\" height=\"20\"></img>" + file.Name + "</a>";
 		}
 	}
 }
