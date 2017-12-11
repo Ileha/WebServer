@@ -38,7 +38,7 @@ namespace Config
                 }
                 if (el.Name.LocalName == "additive_dirs") {
                     _resourses.Configure(el);
-					_res_02.Configure(el);
+					//_res_02.Configure(el);
                 }
                 else if (!el.HasElements) {
                     _body_conf.Add(el.Name.LocalName, el);

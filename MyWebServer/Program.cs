@@ -14,6 +14,7 @@ using System.Runtime.Remoting;
 using System.Security.Policy;
 using Host;
 using System.Text.RegularExpressions;
+using Resouces;
 
 namespace MainProgramm {
 
@@ -26,23 +27,25 @@ namespace MainProgramm {
             foreach (XElement host_conf in config_doc.Root.Elements())
             {
                 AppDomainSetup domaininfo = new AppDomainSetup();
-				bool has_modules = true;
-				try {
-					domaininfo.ApplicationBase = host_conf.Element("modules_dir").Value;
-				}
-				catch (Exception err) {
-					domaininfo.ApplicationBase = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-					has_modules = false;
-				}
+                bool has_modules = true;
+                try
+                {
+                    domaininfo.ApplicationBase = host_conf.Element("modules_dir").Value;
+                }
+                catch (Exception err)
+                {
+                    domaininfo.ApplicationBase = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                    has_modules = false;
+                }
                 Evidence adevidence = AppDomain.CurrentDomain.Evidence;
                 AppDomain domain = AppDomain.CreateDomain(host_conf.Element("name").Value, adevidence, domaininfo);
                 Resident resident = (Resident)domain.CreateInstanceAndUnwrap(
                             typeof(Resident).Assembly.FullName,
                             typeof(Resident).FullName);
                 resident.AddConfig(doc_path, i);
-				if (has_modules) resident.LoadPluginExternal();
+                if (has_modules) resident.LoadPluginExternal();
                 resident.LoadPluginInternal();
-				resident.FileBrowser();
+                resident.FileBrowser();
                 resident.GetPluginInfo();
                 resident.StartHost();
                 i++;

@@ -57,6 +57,9 @@
     <Compile Include="Config\IConfigRead.cs" />
     <Compile Include="Config\WebServerConfig.cs" />
     <Compile Include="Resident.cs" />
+    <Compile Include="Resouces\Directory.cs" />
+    <Compile Include="Resouces\File.cs" />
+    <Compile Include="Resouces\IItem.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

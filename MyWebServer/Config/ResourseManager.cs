@@ -24,13 +24,13 @@ namespace Config
 		public override string GetDefaultValue(string path)
 		{
 			//path.Substring(
-			Console.WriteLine(path);
+			//Console.WriteLine(path);
 			return path;
 		}
 		public override string OnCompaerReturn(ReactionValue RV, string get_path)
 		{
 			string s = path.Match(get_path).Value;
-			Console.WriteLine(s);
+			//Console.WriteLine(s);
 			return Path.Combine(RV.ReturnValue, s);
 		}
 		public override bool Сomparer(string get_resourse, ReactionValue out_resourse)
@@ -40,15 +40,16 @@ namespace Config
 
 		private ReactionValue GetReaction(string path)
         {
+            Console.WriteLine(path);
             if (Directory.Exists(path))
             {
                 DirectoryInfo inf = new DirectoryInfo(path);
-                return new ReactionValue("^" + inf.FullName, inf.Name);
+                return new ReactionValue("^" + inf.FullName.Replace("\\","\\\\"), inf.Name);
             }
             else if (File.Exists(path))
             {
                 FileInfo inf = new FileInfo(path);
-                return new ReactionValue("^" + inf.FullName + "$", "");
+                return new ReactionValue("^"+inf.FullName.Replace("\\","\\\\")+"$", "");
             }
             else {
                 throw new FileNotFoundException("not found", path);
