@@ -9,29 +9,29 @@ namespace Resouces
 {
     public class Directory : IItem
     {
-        public List<IItem> contain;
+        public Dictionary<string, IItem> contain;
         public DirectoryInfo Resource;
         public IItem Parent;
         private DirectoryInfo directoryInfo;
 
         public Directory(DirectoryInfo inf, IItem parent)
         {
-            contain = new List<IItem>();
+            contain = new Dictionary<string, IItem>();
             Resource = inf;
             Parent = parent;
             foreach (DirectoryInfo d in inf.GetDirectories())
             {
-                contain.Add(new Directory(d, this));
+                AddItem(new Directory(d, this));
             }
             foreach (FileInfo f in inf.GetFiles())
             {
-                contain.Add(new File(f, this));
+                AddItem(new File(f, this));
             }
         }
 
         public void AddItem(IItem adder_item)
         {
-            contain.Add(adder_item);
+            contain.Add(adder_item.GetName(), adder_item);
         }
 
         public string GetName()
@@ -51,7 +51,24 @@ namespace Resouces
 
         public void Remove(IItem rem_item)
         {
-            contain.Remove(rem_item);
+            contain.Remove(rem_item.GetName());
+        }
+
+        public IItem GetResourceByString(string path)
+        {
+            string[] path_arr = path.Split('/');
+            IItem result = this;
+            foreach (string bit in path_arr) {
+                if (bit != "") {
+                    result = result.Element(bit);
+                }
+            }
+            return result;
+        }
+
+        public IItem Element(string name)
+        {
+            return contain[name];
         }
     }
 }

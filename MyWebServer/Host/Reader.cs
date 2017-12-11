@@ -3,6 +3,7 @@ using System.IO;
 using Host.ServerExceptions;
 using Config;
 using System.Text;
+using Resouces;
 
 namespace Host
 {
@@ -18,18 +19,19 @@ namespace Host
             //}
             //catch (Exception err) { throw new BadRequest(); }
             try {
-				string path = Repository.Configurate._resourses.GetTargetRedirect(Reqest.URL);//Path.Combine(Repository.Configurate._resourses.GetTargetRedirect(target), target);
+                IItem res = Repository.Configurate.ResourceLinker.GetResourceByString(Reqest.URL);
+                string path = res.GetInfo().FullName;//Path.Combine(Repository.Configurate._resourses.GetTargetRedirect(target), target);
 				//Console.WriteLine(path);
-				if (File.Exists(path)) {
+				if (System.IO.File.Exists(path)) {
                     try {
                         file_extension = Path.GetExtension(path);
-                        data = File.ReadAllBytes(path);
+                        data = System.IO.File.ReadAllBytes(path);
                     }
                     catch (Exception err) {
                         throw new InternalServerError();
                     }
                 }
-                else if (Repository.DirReader != null && Directory.Exists(path)) { //add check to null and working module
+                else if (Repository.DirReader != null && System.IO.Directory.Exists(path)) { //add check to null and working module
                     DirectoryInfo dir = new DirectoryInfo(path);
                     string str = "";
                     foreach (DirectoryInfo enemy in dir.GetDirectories()) {

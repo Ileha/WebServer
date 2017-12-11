@@ -13,5 +13,7 @@ namespace Resouces
         void Remove(IItem rem_item);
         IItem GetParent();
         FileSystemInfo GetInfo();
+        IItem GetResourceByString(string path);
+        IItem Element(string name);
     }
 }

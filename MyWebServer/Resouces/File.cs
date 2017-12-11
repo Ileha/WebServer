@@ -41,5 +41,15 @@ namespace Resouces
         {
             throw new NotImplementedException();
         }
+
+        public IItem GetResourceByString(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IItem Element(string name)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

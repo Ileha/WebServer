@@ -4,6 +4,7 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Text.RegularExpressions;
 using System.IO;
+using Resouces;
 
 namespace Config
 {
@@ -23,22 +24,19 @@ namespace Config
 
     public class WebServerConfig : IConfigRead {
         private Dictionary<string, XElement> _body_conf;
-        public ResoursePullURLToPath _resourses;
-		public ResoursePullPathToURL _res_02;
         public readonly RedirectConfig RedirectConfigure;
+        public IItem ResourceLinker;
 
         public WebServerConfig(XElement body) {
             _body_conf = new Dictionary<string, XElement>();
+            ResourceLinker = new Resouces.Directory(new DirectoryInfo(body.Element("root_dir").Value), null);
             RedirectConfigure = new RedirectConfig();
-            _resourses = new ResoursePullURLToPath(body.Element("root_dir").Value);
-			_res_02 = new ResoursePullPathToURL(body.Element("root_dir").Value);
             foreach (XElement el in body.Elements()) {
                 if (el.Name.LocalName == "redirect_table") {
                     RedirectConfigure.Configure(el);
                 }
                 if (el.Name.LocalName == "additive_dirs") {
-                    _resourses.Configure(el);
-					//_res_02.Configure(el);
+
                 }
                 else if (!el.HasElements) {
                     _body_conf.Add(el.Name.LocalName, el);
