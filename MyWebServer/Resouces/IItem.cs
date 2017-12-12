@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Collections;
 
 namespace Resouces
 {
-    public interface IItem {
+    public interface IItem : IEnumerable
+    {
         void AddItem(IItem adder_item);
         string GetName();
         void Remove(IItem rem_item);
@@ -15,5 +17,6 @@ namespace Resouces
         FileSystemInfo GetInfo();
         IItem GetResourceByString(string path);
         IItem Element(string name);
+        string GetPath();
     }
 }

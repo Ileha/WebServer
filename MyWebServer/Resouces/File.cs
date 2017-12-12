@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Resouces
 {
-    public class File : IItem
+    public class LinkFile : IItem
     {
         private FileInfo Resource;
         public IItem Parent;
 
-        public File(FileInfo inf, IItem _parent) {
+        public LinkFile(FileInfo inf, IItem _parent) {
             Resource = inf;
             Parent = _parent;
         }
@@ -48,6 +48,21 @@ namespace Resouces
         }
 
         public IItem Element(string name)
+        {
+            throw new NotImplementedException();
+        }
+        public string GetPath()
+        {
+            IItem i = this;
+            string res = "";
+            while (i.GetParent() != null) {
+                res = "/" + i.GetName() + res;
+                i = i.GetParent();
+            }
+            return res;
+        }
+
+        public System.Collections.IEnumerator GetEnumerator()
         {
             throw new NotImplementedException();
         }

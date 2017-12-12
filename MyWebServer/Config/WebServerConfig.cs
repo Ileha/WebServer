@@ -29,14 +29,25 @@ namespace Config
 
         public WebServerConfig(XElement body) {
             _body_conf = new Dictionary<string, XElement>();
-            ResourceLinker = new Resouces.Directory(new DirectoryInfo(body.Element("root_dir").Value), null);
+            ResourceLinker = new Resouces.LinkDirectory(new DirectoryInfo(body.Element("root_dir").Value), null);
             RedirectConfigure = new RedirectConfig();
             foreach (XElement el in body.Elements()) {
                 if (el.Name.LocalName == "redirect_table") {
                     RedirectConfigure.Configure(el);
                 }
                 if (el.Name.LocalName == "additive_dirs") {
-
+                    foreach (XElement add_dir in el.Elements())
+                    {
+                        if (Directory.Exists(add_dir.Value))
+                        {
+                            ResourceLinker.AddItem(new LinkDirectory(new DirectoryInfo(add_dir.Value), ResourceLinker));
+                        }
+                        else if (File.Exists(add_dir.Value))
+                        {
+                            ResourceLinker.AddItem(new LinkFile(new FileInfo(add_dir.Value), ResourceLinker));
+                        }
+                        else {}
+                    }
                 }
                 else if (!el.HasElements) {
                     _body_conf.Add(el.Name.LocalName, el);

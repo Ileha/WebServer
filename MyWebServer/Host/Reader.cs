@@ -20,26 +20,29 @@ namespace Host
             //catch (Exception err) { throw new BadRequest(); }
             try {
                 IItem res = Repository.Configurate.ResourceLinker.GetResourceByString(Reqest.URL);
-                string path = res.GetInfo().FullName;//Path.Combine(Repository.Configurate._resourses.GetTargetRedirect(target), target);
+                //string path = res.GetInfo().FullName;//Path.Combine(Repository.Configurate._resourses.GetTargetRedirect(target), target);
 				//Console.WriteLine(path);
-				if (System.IO.File.Exists(path)) {
+                if (res.GetType() == typeof(LinkFile)) {
                     try {
-                        file_extension = Path.GetExtension(path);
-                        data = System.IO.File.ReadAllBytes(path);
+                        file_extension = Path.GetExtension(res.GetInfo().Extension);
+                        data = System.IO.File.ReadAllBytes(res.GetInfo().FullName);
                     }
                     catch (Exception err) {
                         throw new InternalServerError();
                     }
                 }
-                else if (Repository.DirReader != null && System.IO.Directory.Exists(path)) { //add check to null and working module
-                    DirectoryInfo dir = new DirectoryInfo(path);
+                else if (Repository.DirReader != null && res.GetType() == typeof(LinkDirectory)) {
+                    //DirectoryInfo dir = new DirectoryInfo(path);
                     string str = "";
-                    foreach (DirectoryInfo enemy in dir.GetDirectories()) {
-                        str += Repository.DirReader.DirPars(enemy);
+                    foreach (IItem ite in res) {
+                        str += Repository.DirReader.ItemPars(ite);
                     }
-                    foreach (FileInfo enemy in dir.GetFiles()) {
-                        str += Repository.DirReader.FilePars(enemy);
-                    }
+                    //foreach (DirectoryInfo enemy in dir.GetDirectories()) {
+                    //    str += Repository.DirReader.DirPars(enemy);
+                    //}
+                    //foreach (FileInfo enemy in dir.GetFiles()) {
+                    //    str += Repository.DirReader.FilePars(enemy);
+                    //}
                     data = Encoding.UTF8.GetBytes(str);
                     file_extension = ".html";
                 }

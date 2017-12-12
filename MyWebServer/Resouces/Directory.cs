@@ -7,25 +7,25 @@ using System.Threading.Tasks;
 
 namespace Resouces
 {
-    public class Directory : IItem
+    public class LinkDirectory : IItem
     {
         public Dictionary<string, IItem> contain;
         public DirectoryInfo Resource;
         public IItem Parent;
         private DirectoryInfo directoryInfo;
 
-        public Directory(DirectoryInfo inf, IItem parent)
+        public LinkDirectory(DirectoryInfo inf, IItem parent)
         {
             contain = new Dictionary<string, IItem>();
             Resource = inf;
             Parent = parent;
             foreach (DirectoryInfo d in inf.GetDirectories())
             {
-                AddItem(new Directory(d, this));
+                AddItem(new LinkDirectory(d, this));
             }
             foreach (FileInfo f in inf.GetFiles())
             {
-                AddItem(new File(f, this));
+                AddItem(new LinkFile(f, this));
             }
         }
 
@@ -41,7 +41,7 @@ namespace Resouces
 
         public IItem GetParent()
         {
-            throw new NotImplementedException();
+            return Parent;
         }
 
         public FileSystemInfo GetInfo()
@@ -62,6 +62,10 @@ namespace Resouces
                 if (bit != "") {
                     result = result.Element(bit);
                 }
+                else if (bit == ".") {}
+                else if (bit == "..") {
+                    result = Parent;
+                }
             }
             return result;
         }
@@ -69,6 +73,25 @@ namespace Resouces
         public IItem Element(string name)
         {
             return contain[name];
+        }
+
+        public string GetPath()
+        {
+            IItem i = this;
+            string res = "";
+
+            while (i.GetParent() != null)
+            {
+                res = "/" + i.GetName() + res;
+                i = i.GetParent();
+            }
+            return res;
+        }
+
+
+        public System.Collections.IEnumerator GetEnumerator()
+        {
+            return contain.Values.GetEnumerator();
         }
     }
 }

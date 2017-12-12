@@ -2,6 +2,7 @@
 using System.IO;
 using Host.DirReader;
 using Host;
+using Resouces;
 
 namespace DirViewer
 {
@@ -12,15 +13,19 @@ namespace DirViewer
 		}
 
         public void OnStart() {
-            //Repository.Configurate._resourses.AddReaction(Repository.Configurate["allow_browse_folders"].Attribute("reourse_path").Value);
+            Repository.Configurate.ResourceLinker.AddItem(new LinkDirectory(new DirectoryInfo(Repository.Configurate["allow_browse_folders"].Attribute("reourse_path").Value), Repository.Configurate.ResourceLinker));
         }
         public void OnStop() {}
-		public string DirPars(DirectoryInfo sub_dir) {
-			return "<p><a href=\""+"\"><img src=\"WebServerResourses/folder.png\" height=\"20\"></img>"+sub_dir.Name+"</a>";
-		}
-
-		public string FilePars(FileInfo file) {
-            return "<p><a href=\""+"\"><img src=\"WebServerResourses/file.png\" height=\"20\"></img>" + file.Name + "</a>";
-		}
-	}
+        public string ItemPars(IItem file)
+        {
+            if (file.GetType() == typeof(LinkDirectory))
+            {
+                return "<p><a href=\"" + file.GetPath() + "\"><img src=\"WebServerResourses/folder.png\" height=\"20\"></img>" + file.GetName() + "</a>";
+            }
+            else if (file.GetType() == typeof(LinkFile)) {
+                return "<p><a href=\""+file.GetPath()+"\"><img src=\"WebServerResourses/file.png\" height=\"20\"></img>" + file.GetName() + "</a>";
+            }
+            else { throw new InvalidDataException(); }
+        }
+    }
 }
