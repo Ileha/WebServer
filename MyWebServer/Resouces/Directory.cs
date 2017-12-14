@@ -13,6 +13,7 @@ namespace Resouces
         public DirectoryInfo Resource;
         public IItem Parent;
         private DirectoryInfo directoryInfo;
+        private FileSystemWatcher watcher;
 
         public LinkDirectory(DirectoryInfo inf, IItem parent)
         {
@@ -27,6 +28,58 @@ namespace Resouces
             {
                 AddItem(new LinkFile(f, this));
             }
+            watcher = new FileSystemWatcher();
+            watcher.Path = Resource.FullName;
+            watcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName;
+            watcher.Created += new FileSystemEventHandler(OnCreated);
+            watcher.Deleted += new FileSystemEventHandler(OnDeleted);
+            watcher.Renamed += new RenamedEventHandler(OnRenamed);
+            watcher.EnableRaisingEvents = true;
+        }
+
+        private void OnCreated(object source, FileSystemEventArgs e)
+        {
+            try {
+                if (IsFile(e.FullPath)) {
+                    AddItem(new LinkFile(new FileInfo(e.FullPath), this));
+                }
+                else {
+                    AddItem(new LinkDirectory(new DirectoryInfo(e.FullPath), this));
+                }
+            }
+            catch (Exception err) {return;}
+        }
+        private void OnDeleted(object source, FileSystemEventArgs e)
+        {
+            contain.Remove(e.Name);
+        }
+        private void OnRenamed(object source, RenamedEventArgs e)
+        {
+            FileSystemInfo f = null;
+            try {
+                if (IsFile(e.FullPath)) {
+                    f = new FileInfo(e.FullPath);
+                }
+                else {
+                    f = new DirectoryInfo(e.FullPath);
+                }
+            }
+            catch (Exception err) {return;}
+            IItem t = contain[e.OldName];
+            t.SetInfo(f, this);
+            contain.Remove(e.OldName);
+            AddItem(t);
+        }
+
+        private bool IsFile(string path) {
+            if (File.Exists(path)) {
+                return true;
+            }
+            else if (System.IO.Directory.Exists(path))
+            {
+                return false;
+            }
+            throw new FileNotFoundException(path);
         }
 
         public void AddItem(IItem adder_item)
@@ -92,6 +145,18 @@ namespace Resouces
         public System.Collections.IEnumerator GetEnumerator()
         {
             return contain.Values.GetEnumerator();
+        }
+
+
+        public void SetInfo(FileSystemInfo target, IItem New_parent)
+        {
+            if (target is DirectoryInfo) {
+                directoryInfo = target as DirectoryInfo;
+                Parent = New_parent;
+            }
+            else {
+                throw new FormatException(target.FullName);
+            }
         }
     }
 }

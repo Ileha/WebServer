@@ -66,5 +66,19 @@ namespace Resouces
         {
             throw new NotImplementedException();
         }
+
+
+        public void SetInfo(FileSystemInfo target, IItem New_parent)
+        {
+            if (target is FileInfo)
+            {
+                Resource = target as FileInfo;
+                Parent = New_parent;
+            }
+            else
+            {
+                throw new FormatException(target.FullName);
+            }
+        }
     }
 }

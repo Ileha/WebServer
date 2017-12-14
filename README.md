@@ -1,7 +1,7 @@
 *Внесение изменений*  
 git add .  
 git commit -m "Сообщение о том, что сделали"  
-git push origin master.  
+git push origin muster.  
 git pull origin master - получить последние изменения других контрибьютеров  
 git log - Вся история проекта  
 git log -u - Вся история проекта + изменения в коде  
@@ -12,7 +12,7 @@ git reset --hard origin/имя_ветки
 
 ###About  
 This is web server on C#  
-In this web server can add your own modules like http handlers, mime handlers, exception and resource viewer. All of this you mast write compile and copy in directory which written in config.  
+In this web server can add your own modules like http handlers, mime handlers, exception and resource viewer. All of this you must write compile and copy in directory which written in config.  
 
 For adding http handler necessary implement abstract class Host.HttpHandler.IHttpHandler this class inform program about http version, type of request handle and it consist logic which handle request string.  
 *code example for http handler*
@@ -32,7 +32,7 @@ public class AnythingHttpHandler : IHttpHandler {
       public override void Parse(ref Reqest output, string[] request, string URL) {
         //in this block you write your logic of http handle. URL this is url of resource,
         //request - http headers
-        //output this is object of Reqest(just created). In this object you mast fill next variables:
+        //output this is object of Reqest(just created). In this object you must fill next variables:
         //  varibles - this is parameters which stay after url (in GET requests for example). Add like this: output.varibles.Add(var_name, var var_val);
         //  cookies on this moment is not using
         //  preferens - all remaining variables in http headers perhaps you use their in any place
@@ -54,7 +54,7 @@ public class HttpMIME : IMIME {
 }
 ```
 
-For adding exception you mast implement abstract class Host.ServerExceptions.ExceptionCode. It inform program about Exception code, fatal is it and also it can implement two methods: first of their can add headers into headers of request, second can add data to message body(in default first of this nothing do and the second return error code)
+For adding exception you must implement abstract class Host.ServerExceptions.ExceptionCode. It inform program about Exception code, fatal is it and also it can implement two methods: first of their can add headers into headers of request, second can add data to message body(in default first of this nothing do and the second return error code)
 *code example for exceptions*
 ```cs
 public class OK : ExceptionCode
@@ -67,7 +67,7 @@ public class OK : ExceptionCode
 }
 ```
 
-For adding resource viewer you mast implement interface Host.DirReader.IDirectoryReader and in config write next row:
+For adding resource viewer you must implement interface Host.DirReader.IDirectoryReader and in config write next row:
 ```xml
 <allow_browse_folders is_work="true" browser="NameOfResourceViewer"></allow_browse_folders>
 <!--NameOfResourceViewer - name of your class-->
