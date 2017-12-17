@@ -12,7 +12,7 @@ git reset --hard origin/имя_ветки
 
 ###About  
 This is web server on C#  
-In this web server can add your own modules like http handlers, mime handlers, exception and resource viewer. All of this you must write compile and copy in directory which written in config.  
+In this web server you can add your own modules like http handlers, mime handlers, exception and resource viewer. All of this you must write compile and copy in directory which written in config.  
 
 For adding http handler necessary implement abstract class Host.HttpHandler.IHttpHandler this class inform program about http version, type of request handle and it consist logic which handle request string.  
 *code example for http handler*
@@ -48,13 +48,13 @@ public class HttpMIME : IMIME {
     public string MIME_Type { get { return "text/html"; } } //type of data for response
     public string[] file_extensions { get { return _file_extensions; } }
 
-    public byte[] Handle(ref Response response, ref Reqest request, ref Reader read) {//this method can include anything logic of handling data. In example it return data from reader of data. But also it can read somehow data handle it anything and return. This method is invoke in before formation of http response.
+    public byte[] Handle(ref Response response, ref Reqest request, ref Reader read) {//this method can include anything logic of handling data. In example it return data from reader of data. But also it can read somehow data, handle it anything and return. This method is invoke before formation of http response.
       return read.data;
     }
 }
 ```
 
-For adding exception you must implement abstract class Host.ServerExceptions.ExceptionCode. It inform program about Exception code, fatal is it and also it can implement two methods: first of their can add headers into headers of request, second can add data to message body(in default first of this nothing do and the second return error code)
+For adding exception you must implement abstract class Host.ServerExceptions.ExceptionCode. It inform program about Exception code, fatal is it and also it can implement two methods: first of their can add headers into headers of request, second can add data to message body(in default first of this nothing do and the second return html page with error code)
 *code example for exceptions*
 ```cs
 public class OK : ExceptionCode

@@ -112,12 +112,21 @@ namespace Resouces
             string[] path_arr = path.Split('/');
             IItem result = this;
             foreach (string bit in path_arr) {
-                if (bit != "") {
-                    result = result.Element(bit);
+                try
+                {
+                    if (bit == ".") { }
+                    else if (bit == "..")
+                    {
+                        result = Parent;
+                    }
+                    else if (bit != "")
+                    {
+                        result = result.Element(bit);
+                    }
                 }
-                else if (bit == ".") {}
-                else if (bit == "..") {
-                    result = Parent;
+                catch (Exception err)
+                {
+                    throw new FileNotFoundException(path_arr[path_arr.Length - 1]);
                 }
             }
             return result;
