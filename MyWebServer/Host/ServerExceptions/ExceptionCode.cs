@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Text;
+using Host.DataHeaderInterfaces;
 
 namespace Host.ServerExceptions
 {
-	public abstract class ExceptionCode : Exception
+	public abstract class ExceptionCode : Exception, IAddData, IAddHeader
 	{
 		protected string Code;
 		protected bool _IsFatal;
@@ -18,7 +19,7 @@ namespace Host.ServerExceptions
         public byte[] GetByteData() {
             return Encoding.UTF8.GetBytes(GetDataString());
         }
-		protected virtual string GetDataString() {
+		public virtual string GetDataString() {
 			return "<html><body><h2>An error has occurred code of error " + Code + "</h2></body></html>";
 		}
 
@@ -26,34 +27,6 @@ namespace Host.ServerExceptions
 		{
 			return Code;
 		}
-
-		//        public static ExceptionCode BadRequest() {
-		//            ExceptionCode res = new ExceptionCode(true);
-		//            res.Code = "400 Bad Request";
-		//            return res;
-		//        }
-		//        public static ExceptionCode OK() {
-		//            ExceptionCode res = new ExceptionCode(false);
-		//            res.Code = "200 OK";
-		//            return res;
-		//        }
-		//        public static ExceptionCode NotFound() {
-		//            ExceptionCode res = new ExceptionCode(true);
-		//            res.Code = "404 Not Found";
-		//            return res;
-		//        }
-		//        public static ExceptionCode InternalServerError() {
-		//            ExceptionCode res = new ExceptionCode(true);
-		//            res.Code = "500 Internal Server Error";
-		//            return res;
-		//        }
-		//        public static ExceptionCode MovedPermanently(string new_url, string host) {
-		//            ExceptionCode res = new ExceptionCode(true);
-		//            res.Code = @"HTTP/1.1 301 Moved Permanently
-		//Location: "+host+new_url;
-		//            return res;
-		//        }
-
 	}
 
 	public class BadRequest : ExceptionCode
@@ -103,7 +76,7 @@ namespace Host.ServerExceptions
             _IsFatal = true;
             this.targeURL = targeURL;
         }
-        protected override string GetDataString() {
+        public override string GetDataString() {
             return "";
         }
         public override void GetAddingToHeader(Action<string, string> add_to_header) {
