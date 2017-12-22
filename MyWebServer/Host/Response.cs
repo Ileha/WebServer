@@ -26,6 +26,7 @@ namespace Host
 //";
         private string bolvanka = "HTTP/1.1 {0}\r\n{1}\r\n";
         private ExceptionCode code;
+		private Dictionary<string, string> http_body;
 
         private bool IsFatal {
             get { return code.IsFatal; }
@@ -33,10 +34,16 @@ namespace Host
 
         public Response(ExceptionCode code) {
             this.code = code;
+			http_body = new Dictionary<string, string>();
         }
 
+		public void SetCookie(string name, string value) {
+			//Set-Cookie: name=valuee
+			http_body.Add("Set-Cookie", string.Format("{0}={1}",name,value));
+		}
+
         public byte[] GetData(Reqest _reqest, Reader _read) {
-            Dictionary<string, string> http_body = new Dictionary<string, string>();
+			http_body.Clear();
             http_body.Add("Server", "MyWebServer(0.0.0.1) (Unix) (Red-Hat/Linux)");
             http_body.Add("Connection", "close");
             List<byte> data = new List<byte>();
@@ -49,6 +56,7 @@ namespace Host
                     http_body.Add("Content-Type", dataHandle.MIME_Type + "; charset=UTF-8");
                     Response resp = this;
                     data.AddRange(dataHandle.Handle(ref resp, ref _reqest, ref _read));//here may be execute anything code
+					//SetCookie("test", "code");
                 }
             }
             catch (Exception err) {
@@ -85,6 +93,7 @@ namespace Host
             foreach (KeyValuePair<string, string> vord in http_body) {
                 httpbody += vord.Key + ": " + vord.Value + "\r\n";
             }
+			//Console.WriteLine(httpbody);
             string req_header_string = string.Format(bolvanka, code.GetExeptionCode(), httpbody);
             //Console.WriteLine(req_header_string);
             data.InsertRange(0, Encoding.UTF8.GetBytes(req_header_string));

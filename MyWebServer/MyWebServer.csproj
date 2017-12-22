@@ -59,11 +59,16 @@
     <Compile Include="Resouces\Directory.cs" />
     <Compile Include="Resouces\File.cs" />
     <Compile Include="Resouces\IItem.cs" />
+    <Compile Include="Host\DataHeadersInterfaces\IAddHeader.cs" />
+    <Compile Include="Host\DataHeadersInterfaces\IAddData.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Host\DataHeadersInterfaces\" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
