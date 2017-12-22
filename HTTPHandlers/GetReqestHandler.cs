@@ -13,6 +13,7 @@ namespace HttpHandlers
         Regex name_val = new Regex("(?<name>[\\w]+)=(?<val>[\\w]+)");
         Regex pref_val = new Regex("(?<name>[\\w-]+):[ ]?(?<val>.+)");
         Regex TwoPoints = new Regex("\\.{2}");
+        Regex for_cookie = new Regex("(?<name>[^=;])=(?<val>[^=;])");
 
         public override string HandlerType { get { return "GET"; } }
 		public override string HandlerVersion { get { return "HTTP/1.1"; } }
@@ -28,7 +29,14 @@ namespace HttpHandlers
             }
             foreach (string s in reqest) {
                 Match m_pref = pref_val.Match(s);
-                if (m_pref.Groups["name"].Value != "") {
+                string head = m_pref.Groups["name"].Value;
+                if (head == "Cookie") {
+                    MatchCollection elements = for_cookie.Matches(m_pref.Groups["val"].Value);
+                    foreach (Match element_of_elements in elements) {
+                        output.cookies.Add(element_of_elements.Groups["name"].Value, element_of_elements.Groups["val"].Value);
+                    }
+                }
+                else if (m_pref.Groups["name"].Value != "") {
                     output.preferens.Add(m_pref.Groups["name"].Value, m_pref.Groups["val"].Value);
                 }
             }
