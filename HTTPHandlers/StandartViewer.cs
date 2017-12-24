@@ -27,5 +27,5 @@ namespace DirViewer
             }
             else { throw new InvalidDataException(); }
         }
-    }
+	}
 }

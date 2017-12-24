@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Resouces;
+using Host.DataHeaderInterfaces;
 
 namespace Host.DirReader
 {

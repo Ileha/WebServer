@@ -6,6 +6,7 @@ using Host.HttpHandler;
 using Host.MIME;
 using Config;
 using Host.DirReader;
+using Host.Session;
 
 namespace Host {
 	public static class Repository {

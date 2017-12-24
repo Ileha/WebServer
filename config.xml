@@ -6,6 +6,7 @@
 		<port>11000</port><!--порт хоста-->
 		<root_dir>../../../Resourses/host_01</root_dir><!--корневой каталог хоста-->
 		<modules_dir>../../../HTTPHandlers/bin/Debug</modules_dir><!--Сборка(сборки) с модулями-->
+		<session_collector time_of_life="60000" time_of_collect="10000"></session_collector>
 		<redirect_table>
 			<element path="/" target="/index.html"></element>
 			<element path="/index.\w+" target="/index.html"></element>
@@ -23,6 +24,7 @@
 		</additive_dirs>
 		<modules_dir>../../../HTTPHandlers/bin/Debug</modules_dir><!--Сборка(сборки) с модулями-->
 		<allow_browse_folders is_work="true" browser="StandartViewer" reourse_path="../../../Resourses/WebServerResourses"></allow_browse_folders>
+		<session_collector time_of_life="60000" time_of_collect="10000"></session_collector>
 		<redirect_table>
 			<!-- <element path="/" target="/index.html"></element>
 			<element path="/index.\w+" target="/index.html"></element>

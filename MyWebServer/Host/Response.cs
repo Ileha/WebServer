@@ -55,7 +55,7 @@ namespace Host
                     IMIME dataHandle = Repository.DataHandlers[_read.file_extension];
                     http_body.Add("Content-Type", dataHandle.MIME_Type + "; charset=UTF-8");
                     Response resp = this;
-                    data.AddRange(dataHandle.Handle(ref resp, ref _reqest, ref _read));//here may be execute anything code
+                    data.AddRange(dataHandle.Handle(ref resp, ref _reqest, ref _read));//here may be execute anything codee
 					//SetCookie("test", "code");
                 }
             }
@@ -66,7 +66,7 @@ namespace Host
                 else {
                     code = new InternalServerError();
                 }
-                Console.WriteLine(err.ToString());
+                //Console.WriteLine(err.ToString());
                 return GetData(_reqest, _read);
             }
 
