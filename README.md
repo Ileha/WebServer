@@ -11,10 +11,9 @@ git fetch --all
 git reset --hard origin/имя_ветки  
 
 ### About  
-This is web server on C#  
-In this web server you can add your own modules like http handlers, mime handlers, exception and resource viewer. All of this you must write compile and copy in directory which written in config.  
+There is a web-server written on C#, you can easily extend this server through your own modules, like HTTP or mime handlers, exception and resource viewer. Each of these modules should be compiled, and copied onto the directory, specified in the config
 
-For adding http handler necessary implement abstract class Host.HttpHandler.IHttpHandler this class inform program about http version, type of request handle and it consist logic which handle request string.  
+It's necessary to implement abstract class Host.HttpHandler.IHttpHandler to add a new HTTP handler. This class will notify program with the needed HTTP version and method. Moreover, it contains the actual logic which is supposed to handle request headers and parameters.  
 *code example for http handler*
 ```cs
 public class AnythingHttpHandler : IHttpHandler {
@@ -40,7 +39,7 @@ public class AnythingHttpHandler : IHttpHandler {
 }
 ```
 
-For adding mime handler necessary implement interface Host.MIME.IMIME. This interface inform program about mime type(for response), file extension and also consist code which handle data from file.
+Then we could set up a mime handle. this handler implements the  Host.MIME.IMIME interface. the mentioned interface should inform the main program about mime type(for response), file extension and also consist code which handles data from the file.  
 *code example for mime handler*
 ```cs
 public class HttpMIME : IMIME {
