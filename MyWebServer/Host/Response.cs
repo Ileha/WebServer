@@ -5,6 +5,7 @@ using Host.MIME;
 using System.Collections.Generic;
 using System.Text;
 using Config;
+using Host.Session;
 
 namespace Host
 {
@@ -55,6 +56,11 @@ namespace Host
                     IMIME dataHandle = Repository.DataHandlers[_read.file_extension];
                     http_body.Add("Content-Type", dataHandle.MIME_Type + "; charset=UTF-8");
                     Response resp = this;
+                    
+                    try {
+                        string guid = _reqest.cookies["id"];
+                    }
+                    catch(KeyNotFoundException err) {}
                     data.AddRange(dataHandle.Handle(ref resp, ref _reqest, ref _read));//here may be execute anything codee
 					//SetCookie("test", "code");
                 }
