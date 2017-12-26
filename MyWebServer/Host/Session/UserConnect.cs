@@ -12,9 +12,9 @@ namespace Host.Session {
 
 		static UserConnect() {
 			SessionInfo = new Dictionary<string, UserConnect>();
-			_long_live = Convert.ToInt64(Repository.Configurate["session_collector"].Attribute("time_of_life").ToString());
+			_long_live = Convert.ToInt64(Repository.Configurate["session_collector"].Attribute("time_of_life").Value.ToString());
 			TimerCallback time = new TimerCallback(Collect);
-			t = new Timer(time, null, 0, Convert.ToInt32(Repository.Configurate["session_collector"].Attribute("time_of_collect").ToString()));
+			t = new Timer(time, null, 0, Convert.ToInt32(Repository.Configurate["session_collector"].Attribute("time_of_collect").Value.ToString()));
             deleting_queue = new Queue<UserConnect>();
         }
 		public static UserConnect GetUserDataFromID(string id) {
@@ -29,7 +29,6 @@ namespace Host.Session {
 		}
 
 		private static void Collect(object obj) {
-            Console.WriteLine(Repository.Configurate["name"].Value+" tick !!!");
             if (deleting_queue.Count == 0) { return; }
             UserConnect curr_delete = deleting_queue.Peek();
             while (curr_delete.timeOfLife.CompareTo(DateTime.Now) == -1) {
@@ -38,6 +37,7 @@ namespace Host.Session {
                 if (deleting_queue.Count == 0) { break; }
                 curr_delete = deleting_queue.Peek();
             }
+			//Console.WriteLine(string.Format("{0} tick !!!\r\nCollect count {1}\r\nQueue count {2}", Repository.Configurate["name"].Value, SessionInfo.Count, deleting_queue.Count));
 		}
 
         private string _id;

@@ -25,6 +25,8 @@ namespace Host
 //Content-Type: {2}; charset=UTF-8
 //
 //";
+		public UserConnect UserData;
+
         private string bolvanka = "HTTP/1.1 {0}\r\n{1}\r\n";
         private ExceptionCode code;
 		private Dictionary<string, string> http_body;
@@ -56,13 +58,14 @@ namespace Host
                     IMIME dataHandle = Repository.DataHandlers[_read.file_extension];
                     http_body.Add("Content-Type", dataHandle.MIME_Type + "; charset=UTF-8");
                     Response resp = this;
-                    
                     try {
-                        string guid = _reqest.cookies["id"];
+						UserData = UserConnect.GetUserDataFromID(_reqest.cookies["id"]);
                     }
-                    catch(KeyNotFoundException err) {}
-                    data.AddRange(dataHandle.Handle(ref resp, ref _reqest, ref _read));//here may be execute anything codee
-					//SetCookie("test", "code");
+                    catch(Exception err) {
+						UserData = new UserConnect();
+					}
+                    data.AddRange(dataHandle.Handle(ref resp, ref _reqest, ref _read));//here may be execute anything code
+					SetCookie("id", UserData.ID);
                 }
             }
             catch (Exception err) {

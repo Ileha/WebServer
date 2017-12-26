@@ -1,6 +1,5 @@
 ﻿using System;
 using Config;
-using Host.MIME;
 
 namespace Host.MIME
 {
