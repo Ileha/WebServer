@@ -35,7 +35,7 @@ namespace HttpHandlers
 			data_sourse.Client.ReceiveTimeout = 10000;
 			data_sourse.Client.Receive(buffer);
 			output.varibles.Add("data", Encoding.UTF8.GetString(buffer, 0, lenght));
-			Console.WriteLine("data : {0}", output.varibles["data"]);
+			//Console.WriteLine("data : {0}", output.varibles["data"]);
 		}
 
 		public override void ParseHeaders(ref Reqest output, string[] reqest, string URI)
