@@ -1,8 +1,23 @@
 <html>
+  <script type="text/javascript" src="jquery-3.2.1.min.js"></script>
+  <script type="text/javascript">
+    function myFunction() {
+      $.ajax({
+            type:'post',//тип запроса: get,post либо head
+            url:'post_test.html',//url адрес файла обработчика
+            data:{'z':'1', 'nano':'10^-9'},//параметры запроса
+            //response:'text',//тип возвращаемого ответа text либо xml
+            success:function (data) {//возвращаемый результат от сервера
+              alert(data);
+            }
+        });
+      }
+  </script>
   <body>
     <h1>It works!</h1>
+    <button onclick="myFunction()">push me</button><br/>
 	from first host
-	<br/>  
+	<br/>
 	image png<br/>
     <img src="/image.png"></img><br/>
 	image jpg<br/>
