@@ -17,7 +17,7 @@ namespace HttpHandlers
         public override string HandlerType { get { return "GET"; } }
 		public override string HandlerVersion { get { return "HTTP/1.1"; } }
 
-		public override void Parse(ref Reqest output, string[] reqest, string URI) {
+		public override void ParseHeaders(ref Reqest output, string[] reqest, string URI) {
             Match m = url_var.Match(URI);
             output.URL = m.Groups["url"].Value;
             if (TwoPoints.IsMatch(output.URL)) {//проверить на наличие двух точек подряд
@@ -36,11 +36,14 @@ namespace HttpHandlers
 						//Console.WriteLine("{0} : {1}", element_of_elements.Groups["name"].Value, element_of_elements.Groups["val"].Value);
                     }
                 }
-                else if (m_pref.Groups["name"].Value != "") {
+                else if (head != "") {
                     output.preferens.Add(m_pref.Groups["name"].Value, m_pref.Groups["val"].Value);
                 }
             }
-
         }
+		public override void ParseData(ref Reqest output, System.Net.Sockets.TcpClient data_sourse)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

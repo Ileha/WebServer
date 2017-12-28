@@ -28,17 +28,29 @@ namespace Host {
 
         public void Execute() {
             byte[] buffer = new byte[1024];
-            string request = "";
-            int count;
-            while ((count = connection.GetStream().Read(buffer, 0, buffer.Length)) > 0) {
-                request += Encoding.UTF8.GetString(buffer, 0, count);
+			string request = "";
+			while (true) {
+                int bytesRec = connection.Client.Receive(buffer);
+				request += Encoding.UTF8.GetString(buffer, 0, bytesRec);
                 if (request.IndexOf("\r\n\r\n") >= 0) { //Запрос обрывается \r\n\r\n последовательностью
                     break;
                 }
             }
+			// = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+			//while ((count = connection.GetStream().Read(buffer, 0, buffer.Length)) > 0) {
+			//	request += Encoding.UTF8.GetString(buffer, 0, count);
+			//	Console.WriteLine(Encoding.UTF8.GetString(buffer, 0, count));
+			//	if (request.IndexOf("\r\n\r\n") >= 0) { //Запрос обрывается \r\n\r\n последовательностью
+			//	break;
+			//	}
+			//}   }
+			//buffer = new byte[1024];
 			//Console.WriteLine(request);
+			//connection.Client.Receive(buffer);
+			//request = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+			Console.WriteLine(request);
             try {
-                obj_request = Reqest.CreateNewReqest(request);
+                obj_request = Reqest.CreateNewReqest(request, connection);
                 obj_request.CheckTabelOfRedirect();
                 reads_bytes = new Reader(obj_request);
             }

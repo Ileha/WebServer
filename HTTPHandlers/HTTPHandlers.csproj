@@ -43,6 +43,7 @@
     <Compile Include="CSSIMIME.cs" />
     <Compile Include="PHPIMIME.cs" />
     <Compile Include="StandartViewer.cs" />
+    <Compile Include="POSTReqestHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MyWebServer\MyWebServer.csproj">

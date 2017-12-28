@@ -7,6 +7,7 @@ using Host.HttpHandler;
 using Host.ServerExceptions;
 using Config;
 using System.Reflection;
+using System.Net.Sockets;
 
 namespace Host {
 
@@ -37,13 +38,17 @@ namespace Host {
             throw new MovedPermanently(new_url);
         }
 
-        public static Reqest CreateNewReqest(string reqest) {
+        public static Reqest CreateNewReqest(string reqest, TcpClient client) {
             Reqest result = new Reqest();
             string[] elements = Regex.Split(reqest, "\r\n");
             try {
                 string[] header = elements[0].Split(' ');
                 IHttpHandler _handler = Repository.ReqestsHandlers[header[0]+header[2]];
-                _handler.Parse(ref result, elements.ToList().GetRange(1, elements.Length - 1).ToArray(), header[1]);
+                _handler.ParseHeaders(ref result, elements.ToList().GetRange(1, elements.Length - 1).ToArray(), header[1]);
+				try {
+					_handler.ParseData(ref result, client);
+				}
+				catch (NotImplementedException err) {}
             }
             catch (Exception err) {
                 //typeof(ExceptionCode)
