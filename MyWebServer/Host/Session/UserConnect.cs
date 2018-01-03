@@ -1,22 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Collections.Concurrent;
+using System.Linq;
 
 namespace Host.Session {
 	public class UserConnect
 	{
-		private static Dictionary<string, UserConnect> SessionInfo;
-        private static Queue<UserConnect> deleting_queue;
+		private static ConcurrentDictionary<string, UserConnect> SessionInfo;
+        //private static ConcurrentBag<UserConnect> deleting_queue;
 		private static long _long_live;
 		private static Timer t;
 
 		static UserConnect() {
-			SessionInfo = new Dictionary<string, UserConnect>();
+			SessionInfo = new ConcurrentDictionary<string, UserConnect>();
 			_long_live = Convert.ToInt64(Repository.Configurate["session_collector"].Attribute("time_of_life").Value.ToString());
 			TimerCallback time = new TimerCallback(Collect);
 			t = new Timer(time, null, 0, Convert.ToInt32(Repository.Configurate["session_collector"].Attribute("time_of_collect").Value.ToString()));
-            deleting_queue = new Queue<UserConnect>();
-        }
+			//deleting_queue = new ConcurrentBag<UserConnect>();        
+		}
 		public static UserConnect GetUserDataFromID(string id) {
 			try {
 				UserConnect session = SessionInfo[id];
@@ -29,15 +31,14 @@ namespace Host.Session {
 		}
 
 		private static void Collect(object obj) {
-            if (deleting_queue.Count == 0) { return; }
-            UserConnect curr_delete = deleting_queue.Peek();
-            while (curr_delete.timeOfLife.CompareTo(DateTime.Now) == -1) {
-                SessionInfo.Remove(curr_delete.ID);
-                deleting_queue.Dequeue();
-                if (deleting_queue.Count == 0) { break; }
-                curr_delete = deleting_queue.Peek();
-            }
-			//Console.WriteLine(string.Format("{0} tick !!!\r\nCollect count {1}\r\nQueue count {2}", Repository.Configurate["name"].Value, SessionInfo.Count, deleting_queue.Count));
+			UserConnect[] res = SessionInfo.Select(x => x.Value).ToArray();
+			UserConnect out_rem;
+			foreach (UserConnect s in res) {
+				if (s.timeOfLife.CompareTo(DateTime.Now) == -1) {
+					SessionInfo.TryRemove(s.ID, out out_rem);
+				}
+			}
+			Console.WriteLine(string.Format("{0} tick !!!\r\nCollect count {1}", Repository.Configurate["name"].Value, SessionInfo.Count));
 		}
 
         private string _id;
@@ -48,12 +49,15 @@ namespace Host.Session {
 		private DateTime timeOfLife;
 
 		public UserConnect()
-		{
-			_id = Guid.NewGuid().ToString("N");
+		{			
 			Data = new Dictionary<string, object>();
 			SetDeletingTime();
-			SessionInfo.Add(ID, this);
-            deleting_queue.Enqueue(this);
+			bool is_exists = false;
+			do {
+				_id = Guid.NewGuid().ToString("N");
+				is_exists = SessionInfo.TryAdd(ID, this);
+			} while (is_exists == false);
+			//deleting_queue.Add(this);
 		}
 		private void SetDeletingTime() {
 			timeOfLife = new DateTime(DateTime.Now.Ticks+10000*_long_live);
@@ -73,5 +77,12 @@ namespace Host.Session {
 				throw new UserDataNotFound(name);
 			}
 		}
+		//public static bool operator ==(UserConnect obj1, UserConnect obj2) {
+		//	return obj1.ID == obj2.ID;
+		//}
+		//public static bool operator !=(UserConnect obj1, UserConnect obj2)
+		//{
+		//	return obj1.ID != obj2.ID;
+		//}
 	}
 }
