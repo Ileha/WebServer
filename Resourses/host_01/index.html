@@ -10,19 +10,50 @@
             success:function (data) {//возвращаемый результат от сервера
               alert(data);
             }
-        });
-      }
+      });
+    }
+    function writeMeSubmit(form){
+    	//создаем экземпляр класс FormData, тут будем хранить всю информацию для отправки
+    	var formData = new FormData(form);
+
+    	//присоединяем наш файл
+      jQuery.each($('#file_v')[0].files, function(i, file) {
+    		formData.append('file_v', file);
+    	});
+
+    	//отправляем через ajax
+    	$.ajax({
+    		url: "/ajax_form.php",
+    		type: "POST",
+    		dataType : "json",
+    		cache: false,
+    		contentType: false,
+    		processData: false,
+    		data: formData, //указываем что отправляем
+    		success: function(data){
+
+    		}
+    	});
+
+    	return false;
+    }
   </script>
   <body>
     <h1>It works!</h1>
     <button onclick="myFunction()">push me</button><br/>
-	from first host
-	<br/>
-	image png<br/>
+    <form action="" onsubmit="return writeMeSubmit(this);">
+      <input name="name" value="Имя">
+      <input name="surname" value="Фамилия">
+    	<input id="file_v" type="file" />
+    	<input type="submit" value="send">
+    </form>
+  	from first host
+  	<br/>
+  	image png<br/>
     <img src="/image.png"></img><br/>
-	image jpg<br/>
+  	image jpg<br/>
     <img src="/photo.jpg"></img><br/>
-	gif image<br/>
-	<image src="banana.gif"></image>
+  	gif image<br/>
+  	<image src="banana.gif"></image>
   </body>
 </html>
