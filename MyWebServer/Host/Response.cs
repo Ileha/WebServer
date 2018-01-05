@@ -63,9 +63,9 @@ namespace Host
                     }
                     catch(Exception err) {
 						UserData = new UserConnect();
+                        SetCookie("id", UserData.ID);
 					}
                     data.AddRange(dataHandle.Handle(ref resp, ref _reqest, ref _read));//here may be execute anything code
-					SetCookie("id", UserData.ID);
                 }
             }
             catch (Exception err) {

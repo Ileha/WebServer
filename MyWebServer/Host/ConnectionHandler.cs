@@ -29,14 +29,13 @@ namespace Host {
         public void Execute() {
             byte[] buffer = new byte[1024];
 			string request = "";
-			while (true) {
-                int bytesRec = connection.Client.Receive(buffer);
-				request += Encoding.UTF8.GetString(buffer, 0, bytesRec);
+			int count = 0;
+			while ((count = connection.GetStream().Read(buffer, 0, buffer.Length)) > 0) {
+                request += Encoding.UTF8.GetString(buffer, 0, count);
                 if (request.IndexOf("\r\n\r\n") >= 0) { //Запрос обрывается \r\n\r\n последовательностью
                     break;
                 }
             }
-			//Console.WriteLine(request);
             try {
                 obj_request = Reqest.CreateNewReqest(request, connection);
                 obj_request.CheckTabelOfRedirect();
@@ -53,6 +52,9 @@ namespace Host {
             catch (Exception err) {}
             finally {
                 connection.Close();
+				Repository.threads_count-=1;
+				Console.WriteLine("закрытие соединения web server {0}", Repository.Configurate["name"].Value);
+				Console.WriteLine("threads count : {0}", Repository.threads_count);
             }
         }
 

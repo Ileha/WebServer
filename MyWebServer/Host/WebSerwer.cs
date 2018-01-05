@@ -20,13 +20,19 @@ namespace Host {
         private bool is_work;
         public event HostEvent onStartHost;
         public event HostEvent onStopHost;
+		private Task thread;
 
         public WebSerwer() {
-            Task outer = Task.Factory.StartNew(() =>
-            {
-                Configure();
-                var inner = Task.Factory.StartNew(ThreadFunc);
-            });
+			//Task outer = Task.Factory.StartNew(() =>
+			//{
+			//    Configure();
+			//    var inner = Task.Factory.StartNew(ThreadFunc);
+			//});
+			thread = new Task(() => {
+				Configure();
+				ThreadFunc();
+			});
+			thread.Start();
         }
 
         public void Configure()
@@ -72,10 +78,10 @@ namespace Host {
                 while (is_work) {
                     // Программа приостанавливается, ожидая входящее соединение
                     TcpClient handler = sListener.AcceptTcpClient();
-                    #if DEBUG
-                        Console.WriteLine("хост {1}, соединение через порт {0}", ipEndPoint, Repository.Configurate["name"].Value);
-                    #endif
-
+					#if DEBUG
+					    Console.WriteLine("хост {1}, соединение через порт {0}", ipEndPoint, Repository.Configurate["name"].Value);
+					#endif
+					Repository.threads_count+=1;
                     ConnectionHandler executor = new ConnectionHandler(handler);
                     Task handle = new Task(executor.Execute);
                     handle.Start();
