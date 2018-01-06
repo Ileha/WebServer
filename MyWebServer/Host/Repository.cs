@@ -14,6 +14,7 @@ namespace Host {
 		public static Dictionary<string, IMIME> DataHandlers;
         public static WebServerConfig Configurate;
         public static IDirectoryReader DirReader;
+		public static int threads_count;
 
         public static IConfigRead ReadConfig {
             get { return Configurate; }
@@ -22,6 +23,7 @@ namespace Host {
         static Repository() {
             ReqestsHandlers = new Dictionary<string, IHttpHandler>();
             DataHandlers = new Dictionary<string, IMIME>();
+			threads_count = 0;
         }
 	}
 }
