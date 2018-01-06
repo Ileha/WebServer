@@ -5,6 +5,7 @@ using Host.HttpHandler;
 using Config;
 using System;
 using Host.DataInput;
+using Host.HeaderData;
 
 namespace HttpHandlers
 {
@@ -23,36 +24,29 @@ namespace HttpHandlers
 		{
 			Match m = url_var.Match(URI);
 			output.URL = m.Groups["url"].Value;
-			if (TwoPoints.IsMatch(output.URL))
-			{//проверить на наличие двух точек подряд
+			if (TwoPoints.IsMatch(output.URL)) {//проверить на наличие двух точек подряд
 				throw new BadRequest();
 			}
-			foreach (Match s in name_val.Matches(m.Groups["var"].Value))
-			{
+			foreach (Match s in name_val.Matches(m.Groups["var"].Value)) {//парсинг данных
 				StringData dat = new StringData(s.Groups["name"].Value, s.Groups["val"].Value);
 				output.varibles.Add(dat.Name, dat);
 			}
-			foreach (string s in reqest)
-			{
+			foreach (string s in reqest) {//парсинг заголовков
 				Match m_pref = pref_val.Match(s);
 				string head = m_pref.Groups["name"].Value;
-				if (head == "Cookie")
-				{
+				if (head == "Cookie") {
 					MatchCollection elements = for_cookie.Matches(m_pref.Groups["val"].Value);
-					foreach (Match element_of_elements in elements)
-					{
+					foreach (Match element_of_elements in elements) {
 						output.cookies.Add(element_of_elements.Groups["name"].Value, element_of_elements.Groups["val"].Value);
-						//Console.WriteLine("{0} : {1}", element_of_elements.Groups["name"].Value, element_of_elements.Groups["val"].Value);
 					}
 				}
-				else if (head != "")
-				{
-					output.preferens.Add(m_pref.Groups["name"].Value, m_pref.Groups["val"].Value);
+				else if (head != "") {
+					HeaderValueMain new_header = new HeaderValueMain(s);
+					output.preferens.Add(new_header.Name, new_header);
 				}
 			}
 		}
-		public override void ParseData(ref Reqest output, string data_sourse)
-		{
+		public override void ParseData(ref Reqest output, string data_sourse) {
 			throw new NotImplementedException();
 		}
 

@@ -9,18 +9,18 @@ using Config;
 using System.Reflection;
 using System.Net.Sockets;
 using Host.DataInput;
+using Host.HeaderData;
 
 namespace Host {
-
     public class Reqest {
         public string URL;
         public Dictionary<string, ABSReqestData> varibles;
-        public Dictionary<string, string> preferens;
+        public Dictionary<string, HeaderValueMain> preferens;
 		public Dictionary<string, string> cookies;
 
         public Reqest() {
             varibles = new Dictionary<string, ABSReqestData>();
-            preferens = new Dictionary<string, string>();
+            preferens = new Dictionary<string, HeaderValueMain>();
 			cookies = new Dictionary<string, string>();
         }
 
