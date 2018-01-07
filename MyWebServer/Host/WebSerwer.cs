@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using Host.HttpHandler;
 using Host.MIME;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Host {
     public delegate void HandlerExecutor();
@@ -39,6 +40,7 @@ namespace Host {
         {
 			IPAddress adres = IPAddress.Parse(Repository.Configurate["ip_adress"].Value);
 			ipEndPoint = new IPEndPoint(adres, Convert.ToInt32(Repository.Configurate["port"].Value));
+			Repository.Configurate.AddElement(new XElement("guid", Guid.NewGuid().ToString("N")));
             sListener = new TcpListener(ipEndPoint);
             is_work = true;
             ConfigureEvents();

@@ -8,7 +8,6 @@ namespace Host.Session {
 	public class UserConnect
 	{
 		private static ConcurrentDictionary<string, UserConnect> SessionInfo;
-        //private static ConcurrentBag<UserConnect> deleting_queue;
 		private static long _long_live;
 		private static Timer t;
 
@@ -17,7 +16,6 @@ namespace Host.Session {
 			_long_live = Convert.ToInt64(Repository.Configurate["session_collector"].Attribute("time_of_life").Value.ToString());
 			TimerCallback time = new TimerCallback(Collect);
 			t = new Timer(time, null, 0, Convert.ToInt32(Repository.Configurate["session_collector"].Attribute("time_of_collect").Value.ToString()));
-			//deleting_queue = new ConcurrentBag<UserConnect>();        
 		}
 		public static UserConnect GetUserDataFromID(string id) {
 			try {

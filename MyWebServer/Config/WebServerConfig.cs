@@ -58,6 +58,9 @@ namespace Config
         public void Remove(string index) {
             _body_conf.Remove(index);
         }
+		public void AddElement(XElement element) {
+			_body_conf.Add(element.Name.LocalName, element);
+		}
 
 		public XElement GetElement(string name)
 		{

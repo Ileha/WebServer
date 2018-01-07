@@ -40,9 +40,13 @@ namespace Host
 			http_body = new Dictionary<string, string>();
         }
 
-		public void SetCookie(string name, string value) {
+		public void SetCookie(string name, string value, params string[] settings) {
 			//Set-Cookie: name=valuee
-			http_body.Add("Set-Cookie", string.Format("{0}={1}",name,value));
+			string adding_cookie = string.Format("{0}={1}", name, value);
+			for (int i = 0; i < settings.Length; i++) {
+				adding_cookie += "; "+settings[i];
+			}
+			http_body.Add("Set-Cookie", adding_cookie);
 		}
 
         public byte[] GetData(Reqest _reqest, Reader _read) {
@@ -59,11 +63,11 @@ namespace Host
                     http_body.Add("Content-Type", dataHandle.MIME_Type + "; charset=UTF-8");
                     Response resp = this;
                     try {
-						UserData = UserConnect.GetUserDataFromID(_reqest.cookies["id"]);
+						UserData = UserConnect.GetUserDataFromID(_reqest.cookies[Repository.Configurate["guid"].Value.ToString()]);
                     }
                     catch(Exception err) {
 						UserData = new UserConnect();
-                        SetCookie("id", UserData.ID);
+                        SetCookie(Repository.Configurate["guid"].Value.ToString(), UserData.ID);
 					}
                     data.AddRange(dataHandle.Handle(ref resp, ref _reqest, ref _read));//here may be execute anything code
                 }
@@ -102,9 +106,7 @@ namespace Host
             foreach (KeyValuePair<string, string> vord in http_body) {
                 httpbody += vord.Key + ": " + vord.Value + "\r\n";
             }
-			//Console.WriteLine(httpbody);
             string req_header_string = string.Format(bolvanka, code.GetExeptionCode(), httpbody);
-            //Console.WriteLine(req_header_string);
             data.InsertRange(0, Encoding.UTF8.GetBytes(req_header_string));
             return data.ToArray();
         }

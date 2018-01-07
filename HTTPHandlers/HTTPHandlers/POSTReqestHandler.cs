@@ -38,8 +38,8 @@ namespace HttpHandlers
 				string[] data_parts = Regex.Split(data_sourse, for_split);
 				foreach (string s in data_parts) {
 					if (s == "") { continue; }
-					string[] vals = Regex.Split(s, "\r\n\r\n");
-					string[] headers = Regex.Split(vals[0], "\r\n");
+					string[] vals = Regex.Split(s, "\r\n\r\n");//первая заголовки; вторая данные
+					string[] headers = Regex.Split(vals[0], "\r\n");//заголвки
 					ABSReqestData data_to_return;
 					Dictionary<string, HeaderValueMain> val = new Dictionary<string, HeaderValueMain>();
 					for (int i = 0; i < headers.Length; i++) {
