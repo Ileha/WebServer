@@ -8,21 +8,7 @@ using Resouces;
 
 namespace Config
 {
-	public class RedirectConfig : ReactorPull
-	{
-        public RedirectConfig() : base() { }
-        public override ReactionValue Adder(XElement item)
-        {
-            return new ReactionValue("^" + item.Attribute("path").Value + "$", item.Attribute("target").Value);
-        }
-        public override string GetDefaultValue(string url) { throw new NotImplementedException(); }
-        public override bool Сomparer(string get_resourse, ReactionValue out_resourse)
-        {
-            return out_resourse.Reactor.IsMatch(get_resourse) && get_resourse != out_resourse.ReturnValue;
-        }
-	}
-
-    public class WebServerConfig : IConfigRead {
+	public class WebServerConfig : IConfigRead {
         private Dictionary<string, XElement> _body_conf;
         public readonly RedirectConfig RedirectConfigure;
         public IItem ResourceLinker;

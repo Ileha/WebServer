@@ -67,6 +67,7 @@
     <Compile Include="Host\DataInput\StringData.cs" />
     <Compile Include="Host\DataInput\FileData.cs" />
     <Compile Include="Host\HeaderData\HeaderValueMain.cs" />
+    <Compile Include="Config\RedirectConfig.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
