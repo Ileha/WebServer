@@ -53,7 +53,6 @@
     <Compile Include="Host\MIME\IMIME.cs" />
     <Compile Include="Host\ServerExceptions\ExceptionCode.cs" />
     <Compile Include="Config\ErrorServerConfig.cs" />
-    <Compile Include="Config\IConfigRead.cs" />
     <Compile Include="Config\WebServerConfig.cs" />
     <Compile Include="Resident.cs" />
     <Compile Include="Resouces\Directory.cs" />
@@ -68,6 +67,7 @@
     <Compile Include="Host\DataInput\FileData.cs" />
     <Compile Include="Host\HeaderData\HeaderValueMain.cs" />
     <Compile Include="Config\RedirectConfig.cs" />
+    <Compile Include="Config\IConfigurate.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

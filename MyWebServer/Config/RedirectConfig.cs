@@ -6,6 +6,11 @@ namespace Config
 	public class RedirectConfig : ReactorPull
 	{
 		public RedirectConfig() : base() { }
+		public override string ConfigName {
+			get {
+				return "redirect_table";
+			}
+		}
 		public override ReactionValue Adder(XElement item) {
 			return new ReactionValue("^" + item.Attribute("path").Value + "$", item.Attribute("target").Value);
 		}

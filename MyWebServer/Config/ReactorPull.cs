@@ -20,11 +20,17 @@ namespace Config
             ReturnValue = target_value;
         }
     }
-    public abstract class ReactorPull
+    public abstract class ReactorPull : IConfigurate
     {
         protected List<ReactionValue> _list_of_redirect;
 
-        public ReactorPull()
+		public virtual string ConfigName {
+			get {
+				throw new NotImplementedException();
+			}
+		}
+
+		public ReactorPull()
 		{
 			_list_of_redirect = new List<ReactionValue>();
 		}
@@ -51,9 +57,9 @@ namespace Config
 
         abstract public ReactionValue Adder(XElement item);
 
-		public void Configure(XElement body)
+		public void Configurate(XElement data)
 		{
-			foreach (XElement el in body.Elements())
+			foreach (XElement el in data.Elements())
 			{
                 try
                 {
@@ -62,5 +68,5 @@ namespace Config
                 catch (FileNotFoundException err) { continue; }
 			}
 		}
-    }
+	}
 }
