@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Config;
+using System.Xml.Linq;
 
 namespace Resouces
 {
-    public class LinkDirectory : IItem
+    public class LinkDirectory : IItem, IConfigurate
     {
         public Dictionary<string, IItem> contain;
         public DirectoryInfo Resource;
@@ -15,27 +14,39 @@ namespace Resouces
         private DirectoryInfo directoryInfo;
         private FileSystemWatcher watcher;
 
-        public LinkDirectory(DirectoryInfo inf, IItem parent)
+		public string ConfigName {
+			get {
+				return "linker";
+			}
+		}
+
+		public LinkDirectory() {}
+
+		public LinkDirectory(DirectoryInfo inf, IItem parent)
         {
-            contain = new Dictionary<string, IItem>();
+			ConstructHelp(inf, parent);
+        }
+
+		private void ConstructHelp(DirectoryInfo inf, IItem parent) {
+			contain = new Dictionary<string, IItem>();
             Resource = inf;
             Parent = parent;
-            foreach (DirectoryInfo d in inf.GetDirectories())
-            {
-                AddItem(new LinkDirectory(d, this));
+            foreach (DirectoryInfo d in inf.GetDirectories()) {
+
+				AddItem(new LinkDirectory(d, this));
             }
-            foreach (FileInfo f in inf.GetFiles())
-            {
-                AddItem(new LinkFile(f, this));
+            foreach (FileInfo f in inf.GetFiles()) {
+
+				AddItem(new LinkFile(f, this));
             }
             watcher = new FileSystemWatcher();
-            watcher.Path = Resource.FullName;
+			watcher.Path = Resource.FullName;
             watcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName;
             watcher.Created += new FileSystemEventHandler(OnCreated);
-            watcher.Deleted += new FileSystemEventHandler(OnDeleted);
-            watcher.Renamed += new RenamedEventHandler(OnRenamed);
-            watcher.EnableRaisingEvents = true;
-        }
+			watcher.Deleted += new FileSystemEventHandler(OnDeleted);
+			watcher.Renamed += new RenamedEventHandler(OnRenamed);
+			watcher.EnableRaisingEvents = true;
+		} 
 
         private void OnCreated(object source, FileSystemEventArgs e)
         {
@@ -167,5 +178,22 @@ namespace Resouces
                 throw new FormatException(target.FullName);
             }
         }
-    }
+
+		public void Configurate(XElement data) {
+			DirectoryInfo inf = new DirectoryInfo(data.Element("root_dir").Value);
+            ConstructHelp(inf, null);
+			try {
+				XElement el = data.Element("additive_dirs");
+				foreach (XElement add_dir in el.Elements()) {
+					if (Directory.Exists(add_dir.Value)) {
+						AddItem(new LinkDirectory(new DirectoryInfo(add_dir.Value), this));
+					}
+					else if (File.Exists(add_dir.Value)) {
+						AddItem(new LinkFile(new FileInfo(add_dir.Value), this));
+					}
+				}
+			}
+			catch (Exception err) {}
+		}
+	}
 }

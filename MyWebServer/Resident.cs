@@ -15,12 +15,11 @@ namespace MainProgramm
 {
     public class Resident : MarshalByRefObject
     {
-        public void AddConfig(string puth, int num)
-        {
-            XDocument doc = XDocument.Load(puth);
-            Repository.Configurate = new WebServerConfig(doc.Root.Elements().ElementAt(num));
-            //Repository.Configurate = new WebServerConfig(XElement.Parse(_data));
-        }
+        public void AddConfig(string data) {
+			XElement doc = XElement.Parse(data);
+			Repository.RepositoryConstruct();
+            Repository.Configurate = new WebServerConfig(doc);
+		}
         public void StartHost() {
             new Host.WebSerwer();
         }

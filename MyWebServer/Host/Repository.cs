@@ -16,11 +16,7 @@ namespace Host {
         public static IDirectoryReader DirReader;
 		public static int threads_count;
 
-        public static IConfigRead ReadConfig {
-            get { return Configurate; }
-        }
-
-        static Repository() {
+        public static void RepositoryConstruct() {
             ReqestsHandlers = new Dictionary<string, IHttpHandler>();
             DataHandlers = new Dictionary<string, IMIME>();
 			threads_count = 0;
