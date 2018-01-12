@@ -38,8 +38,8 @@ namespace Host {
 
         public void ConfigureEvents() {
             Type target = typeof(IHostEvents);
-            if (Repository.DirReader != null && Repository.DirReader.GetType().GetInterfaces().Contains(target)) {
-                AddEvents(Repository.DirReader as IHostEvents);
+            if (Repository.Configurate.DirReader != null && Repository.Configurate.DirReader.GetType().GetInterfaces().Contains(target)) {
+                AddEvents(Repository.Configurate.DirReader as IHostEvents);
             }
             foreach (KeyValuePair<string, IHttpHandler> el in Repository.ReqestsHandlers) {
                 if (el.Value.GetType().GetInterfaces().Contains(target)) {

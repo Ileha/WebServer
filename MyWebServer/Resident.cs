@@ -13,15 +13,27 @@ using System.Text.RegularExpressions;
 
 namespace MainProgramm
 {
+	public delegate void OnResidentLoadEvent();
+	public delegate void ForAddEvent(OnResidentLoadEvent new_event);
+
     public class Resident : MarshalByRefObject
     {
+		private event OnResidentLoadEvent OnEndLoad;
+
         public void AddConfig(string data) {
 			XElement doc = XElement.Parse(data);
 			Repository.RepositoryConstruct();
-            Repository.Configurate = new WebServerConfig(doc);
+            Repository.Configurate = new WebServerConfig(doc, AddToLoad);
+		}
+
+		private void AddToLoad(OnResidentLoadEvent new_event) {
+			OnEndLoad += new_event;
 		}
         public void StartHost() {
-            new Host.WebSerwer();
+			if (OnEndLoad != null) {
+				OnEndLoad();
+			}
+			Repository.Configurate.Host.Start();
         }
 
 		public void FileBrowser() {
@@ -42,7 +54,7 @@ namespace MainProgramm
 				IEnumerable<Type> list = assem.GetTypes().Where((arg) => arg.GetInterfaces().Contains(ourtype) && arg.IsClass);
 				foreach (Type t in list) {
 					if (name == t.Name) {
-						Repository.DirReader = (IDirectoryReader)Activator.CreateInstance(t);
+						Repository.Configurate.DirReader = (IDirectoryReader)Activator.CreateInstance(t);
 						break;
 					}
 				}
@@ -124,7 +136,7 @@ namespace MainProgramm
                 Console.WriteLine("MIME handler extension {0}", handler.Key);
             }
 
-			Console.WriteLine("Browser module: {0}", Repository.DirReader == null ? "" : Repository.DirReader.GetType().ToString());
+			Console.WriteLine("Browser module: {0}", Repository.Configurate.DirReader == null ? "" : Repository.Configurate.DirReader.GetType().ToString());
         }
         public void Info()
         {

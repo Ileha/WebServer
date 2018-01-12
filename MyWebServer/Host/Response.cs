@@ -63,11 +63,11 @@ namespace Host
                     http_body.Add("Content-Type", dataHandle.MIME_Type + "; charset=UTF-8");
                     Response resp = this;
                     try {
-						UserData = UserConnect.GetUserDataFromID(_reqest.cookies[Repository.Configurate["guid"].Value.ToString()]);
+						UserData = UserConnect.GetUserDataFromID(_reqest.cookies[Repository.Configurate["webserver"].Element("guid").Value.ToString()]);
                     }
                     catch(Exception err) {
 						UserData = new UserConnect();
-                        SetCookie(Repository.Configurate["guid"].Value.ToString(), UserData.ID);
+                        SetCookie(Repository.Configurate["webserver"].Element("guid").Value.ToString(), UserData.ID);
 					}
                     data.AddRange(dataHandle.Handle(ref resp, ref _reqest, ref _read));//here may be execute anything code
                 }

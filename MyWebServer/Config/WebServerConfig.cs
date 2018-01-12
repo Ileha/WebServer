@@ -2,33 +2,28 @@
 using System.Xml.Linq;
 using Resouces;
 using Host;
+using Host.DirReader;
+using MainProgramm;
 
 namespace Config
 {
 	public class WebServerConfig {
         private XElement _body_conf;
-		public XElement ConfigBody { 
+		public XElement ConfigBody {
 			get {
 				return _body_conf;	
 			} 
 		}
-        public readonly RedirectConfig RedirectConfigure;
+
+		public RedirectConfig RedirectConfigure;
         public IItem ResourceLinker;
 		public WebSerwer Host;
+		public IDirectoryReader DirReader;
 
-        public WebServerConfig(XElement body) {
-			_body_conf = body;
-
-            LinkDirectory d = new LinkDirectory();
-			ResourceLinker = d;
-			d.Configurate(body.Element(d.ConfigName));
-
-            RedirectConfigure = new RedirectConfig();
-			RedirectConfigure.Configurate(body.Element(RedirectConfigure.ConfigName));
-
-			Host = new WebSerwer();
-			Host.Configurate(body.Element(Host.ConfigName));
-        }
+        public WebServerConfig(XElement data, ForAddEvent start) {
+			_body_conf = data;
+			start(Configurate);
+		}
 
 		public XElement this[string index] {
 			get {
@@ -40,5 +35,21 @@ namespace Config
 				}
 			}
 		}
-    }
+
+		private void Configurate() {
+            LinkDirectory d = new LinkDirectory();
+			ResourceLinker = d;
+			d.Configurate(_body_conf.Element(d.ConfigName));
+
+            RedirectConfigure = new RedirectConfig();
+			RedirectConfigure.Configurate(_body_conf.Element(RedirectConfigure.ConfigName));
+
+			Host = new WebSerwer();
+			Host.Configurate(_body_conf.Element(Host.ConfigName));
+
+			if (DirReader != null) {
+				DirReader.Configurate(_body_conf.Element(DirReader.ConfigName));
+			}
+		}
+	}
 }
