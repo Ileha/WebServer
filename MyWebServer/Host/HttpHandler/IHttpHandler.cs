@@ -16,6 +16,7 @@ namespace Host.HttpHandler {
         public abstract void ParseHeaders(ref Reqest output, string[] reqest, string URI);
 		public abstract void ParseData(ref Reqest output, string string_data);
 		public abstract bool CanHasData(Reqest output);
+		public abstract int GetDataLenght(Reqest output);
 
 		public string IDHandler() {
 			if (_id == null) { _id = HandlerType + HandlerVersion; }

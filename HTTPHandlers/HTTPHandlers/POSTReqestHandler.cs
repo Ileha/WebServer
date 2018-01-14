@@ -24,6 +24,8 @@ namespace HttpHandlers
 
 		public override void ParseData(ref Reqest output, string data_sourse)
 		{
+			Console.WriteLine(data_sourse);
+			//Regex.Replace(data_sourse,  ;
 			string data_type = output.preferens["Content-Type"].Value["0"];
 			if (data_type == "application/x-www-form-urlencoded") {
 				//login=Petya%20Vasechkin&password=qq
@@ -85,8 +87,7 @@ namespace HttpHandlers
             }
 		}
 
-		public override bool CanHasData(Reqest output)
-		{
+		public override bool CanHasData(Reqest output) {
 			try {
 				if (Convert.ToInt32(output.preferens["Content-Length"].Value["0"]) != 0) {
 					return true;
@@ -98,6 +99,10 @@ namespace HttpHandlers
 			catch (Exception err) {
 				return false;
 			}
+		}
+
+		public override int GetDataLenght(Reqest output) {
+			return Convert.ToInt32(output.preferens["Content-Length"].Value["0"]);
 		}
 	}
 }

@@ -39,17 +39,10 @@ namespace Host {
             throw new MovedPermanently(new_url);
         }
 
-		private static string Receive(TcpClient client) {
-			byte[] buffer = new byte[1024];
-			string request = "";
-			int count;
-
-            while ((count = client.GetStream().Read(buffer, 0, buffer.Length)) > 0) {
-                request += Encoding.UTF8.GetString(buffer, 0, count);
-                if (request.IndexOf("\r\n\r\n") >= 0) { //Запрос обрывается \r\n\r\n последовательностью
-                    break;
-                }
-            }
+		private static string Receive(TcpClient client, IHttpHandler handle, Reqest _reqest) {
+			byte[] buffer = new byte[handle.GetDataLenght(_reqest)];
+			client.GetStream().Read(buffer, 0, buffer.Length);
+			string request = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
 			return request;
 		}
 
@@ -67,11 +60,11 @@ namespace Host {
 							_handler.ParseData(ref result, headers_data[1]);
 						}
 						else {
-							_handler.ParseData(ref result, Receive(client));
+							_handler.ParseData(ref result, Receive(client, _handler, result));
 						}
 					}
 					catch(IndexOutOfRangeException err) {
-						_handler.ParseData(ref result, Receive(client));
+						_handler.ParseData(ref result, Receive(client, _handler, result));
 					}
 				}
             }

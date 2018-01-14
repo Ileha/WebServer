@@ -53,5 +53,10 @@ namespace HttpHandlers
 		public override bool CanHasData(Reqest output) {
 			return false;
 		}
+
+		public override int GetDataLenght(Reqest output)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
