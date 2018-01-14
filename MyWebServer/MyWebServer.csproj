@@ -68,6 +68,7 @@
     <Compile Include="Host\HeaderData\HeaderValueMain.cs" />
     <Compile Include="Config\RedirectConfig.cs" />
     <Compile Include="Config\IConfigurate.cs" />
+    <Compile Include="Host\Session\SessionCollect.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

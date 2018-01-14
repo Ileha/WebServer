@@ -4,6 +4,7 @@ using Resouces;
 using Host;
 using Host.DirReader;
 using MainProgramm;
+using Host.Session;
 
 namespace Config
 {
@@ -19,6 +20,7 @@ namespace Config
         public IItem ResourceLinker;
 		public WebSerwer Host;
 		public IDirectoryReader DirReader;
+		public SessionCollect Collector;
 
         public WebServerConfig(XElement data, ForAddEvent start) {
 			_body_conf = data;
@@ -46,6 +48,9 @@ namespace Config
 
 			Host = new WebSerwer();
 			Host.Configurate(_body_conf.Element(Host.ConfigName));
+
+			Collector = new SessionCollect();
+			Collector.Configurate(_body_conf.Element(Collector.ConfigName));
 
 			if (DirReader != null) {
 				DirReader.Configurate(_body_conf.Element(DirReader.ConfigName));
