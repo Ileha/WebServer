@@ -24,7 +24,7 @@ namespace HttpHandlers
 
 		public override void ParseData(ref Reqest output, string data_sourse)
 		{
-			Console.WriteLine(data_sourse);
+			//Console.WriteLine(data_sourse);
 			//Regex.Replace(data_sourse,  ;
 			string data_type = output.preferens["Content-Type"].Value["0"];
 			if (data_type == "application/x-www-form-urlencoded") {
@@ -39,7 +39,7 @@ namespace HttpHandlers
 				string for_split = "--" + output.preferens["Content-Type"].Value["boundary"];
 				string[] data_parts = Regex.Split(data_sourse, for_split);
 				foreach (string s in data_parts) {
-					if (s == "") { continue; }
+					if (s == "" || s == "--\r\n") { continue; }
 					string[] vals = Regex.Split(s, "\r\n\r\n");//первая заголовки; вторая данные
 					string[] headers = Regex.Split(vals[0], "\r\n");//заголвки
 					ABSReqestData data_to_return;
@@ -62,7 +62,6 @@ namespace HttpHandlers
 			else {
 				throw new BadRequest();
 			}
-			Console.WriteLine();
 		}
 
 		public override void ParseHeaders(ref Reqest output, string[] reqest, string URI)
@@ -101,8 +100,8 @@ namespace HttpHandlers
 			}
 		}
 
-		public override int GetDataLenght(Reqest output) {
-			return Convert.ToInt32(output.preferens["Content-Length"].Value["0"]);
+		public override long GetDataLenght(Reqest output) {
+			return Convert.ToInt64(output.preferens["Content-Length"].Value["0"]);
 		}
 	}
 }

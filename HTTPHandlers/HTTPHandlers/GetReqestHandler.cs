@@ -54,7 +54,7 @@ namespace HttpHandlers
 			return false;
 		}
 
-		public override int GetDataLenght(Reqest output)
+		public override long GetDataLenght(Reqest output)
 		{
 			throw new NotImplementedException();
 		}

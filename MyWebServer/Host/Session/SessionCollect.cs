@@ -34,7 +34,7 @@ namespace Host.Session
 					UserConnect.SessionInfo.TryRemove(s.ID, out out_rem);
 				}
 			}
-			Console.WriteLine(string.Format("{0} tick !!!\r\nCollect count {1}", Repository.Configurate["name"].Value, UserConnect.SessionInfo.Count));
+			//Console.WriteLine(string.Format("{0} tick !!!\r\nCollect count {1}", Repository.Configurate["name"].Value, UserConnect.SessionInfo.Count));
 		}
 	}
 }
