@@ -13,8 +13,6 @@ using Host.HeaderData;
 
 namespace Host {
     public class Reqest {
-		private static Regex doubal_new_string = new Regex("\r\n\r\n");
-
         public string URL;
         public Dictionary<string, ABSReqestData> varibles;
         public Dictionary<string, HeaderValueMain> preferens;
@@ -41,45 +39,43 @@ namespace Host {
             throw new MovedPermanently(new_url);
         }
 
-		private static string Receive(TcpClient client, long length) {
+		private static byte[] Receive(TcpClient client, long length) {
 			long max = length;
 			byte[] buffer = new byte[max];
-			string request = "";
+			List<byte> request = new List<byte>();
 			int count;
 			while (max > 0) {
 				count = client.GetStream().Read(buffer, 0, buffer.Length);
-				request += Encoding.UTF8.GetString(buffer, 0, count);
+				request.AddRange(buffer);
 				max -= count;
 			}
-			Console.WriteLine(request);
-			return request;
+			return request.ToArray();
 		}
 
-        public static Reqest CreateNewReqest(string reqest, TcpClient client) {
+        public static Reqest CreateNewReqest(List<byte> reqest, int _index, TcpClient client) {
             Reqest result = new Reqest();
-			string[] headers_data = new string[2];
-			Match m = doubal_new_string.Match(reqest);
-			headers_data[0] = reqest.Substring(0, m.Index);
-			if (m.Index + 4 < reqest.Length) {
-				headers_data[1] = reqest.Substring(m.Index + 4);
+            string headers_data = Encoding.UTF8.GetString(reqest.GetRange(0, _index).ToArray());
+            byte[] data = null;
+			if (_index + 4 < reqest.Count) {
+                data = reqest.GetRange(_index + 4, reqest.Count - _index + 4).ToArray();
 			}
-            string[] elements = Regex.Split(headers_data[0], "\r\n");
+            string[] elements = Regex.Split(headers_data, "\r\n");
             try {
                 string[] header = elements[0].Split(' ');
                 IHttpHandler _handler = Repository.ReqestsHandlers[header[0]+header[2]];
                 _handler.ParseHeaders(ref result, elements.ToList().GetRange(1, elements.Length - 1).ToArray(), header[1]);
 				if (_handler.CanHasData(result)) {
-					if (headers_data[1] != null) {
-						long _length = _handler.GetDataLenght(result) - headers_data[1].Length;
+					if (data != null) {
+						long _length = _handler.GetDataLenght(result) - data.Length;
 						if (_length > 0) {
-							_handler.ParseData(ref result, headers_data[1]+Receive(client, _length));
+							_handler.ParseData(ref result, Encoding.UTF8.GetString(data.Concat(Receive(client, _length)).ToArray()));
 						}
 						else {
-							_handler.ParseData(ref result, headers_data[1]);
+							_handler.ParseData(ref result, Encoding.UTF8.GetString(data));
 						}
 					}
 					else {
-						_handler.ParseData(ref result, Receive(client, _handler.GetDataLenght(result)));
+						_handler.ParseData(ref result, Encoding.UTF8.GetString(Receive(client, _handler.GetDataLenght(result)).ToArray()));
 					}
 				}
             }

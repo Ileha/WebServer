@@ -15,6 +15,7 @@ using System.Security.Policy;
 using Host;
 using System.Text.RegularExpressions;
 using Resouces;
+using System.Text;
 
 namespace MainProgramm {
 
@@ -40,14 +41,16 @@ namespace MainProgramm {
                 Resident resident = (Resident)domain.CreateInstanceAndUnwrap(
                             typeof(Resident).Assembly.FullName,
                             typeof(Resident).FullName);
-				resident.AddConfig(host_conf.ToString());
+                resident.AddConfig(host_conf.ToString());
                 if (has_modules) resident.LoadPluginExternal();
                 resident.LoadPluginInternal();
                 resident.FileBrowser();
                 resident.GetPluginInfo();
                 resident.StartHost();
             }
-            
+            //string rn = "\r\n\r\n";
+            //byte[] b = Encoding.UTF8.GetBytes(rn);
+            //[13, 10, 13, 10]
             Console.ReadLine();
         }
     }
