@@ -24,11 +24,8 @@ namespace HttpHandlers
 
 		public override void ParseData(ref Reqest output, string data_sourse)
 		{
-			//Console.WriteLine(data_sourse);
-			//Regex.Replace(data_sourse,  ;
 			string data_type = output.preferens["Content-Type"].Value["0"];
 			if (data_type == "application/x-www-form-urlencoded") {
-				//login=Petya%20Vasechkin&password=qq
 				MatchCollection collect = data_type01.Matches(data_sourse);
 				foreach (Match m in collect) {
 					StringData dat = new StringData(m.Groups["name"].Value, m.Groups["val"].Value);

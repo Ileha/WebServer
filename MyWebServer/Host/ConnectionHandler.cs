@@ -42,14 +42,18 @@ namespace Host {
                 }
             }
 			//Console.WriteLine(request);
-            try {
-                obj_request = Reqest.CreateNewReqest(data, index, connection);
-                obj_request.CheckTabelOfRedirect();
-                reads_bytes = new Reader(obj_request);
-            }
-            catch (ExceptionCode err) {
-                code = err;
-            }
+			try {
+				obj_request = Reqest.CreateNewReqest(data, index, connection);
+				obj_request.CheckTabelOfRedirect();
+				reads_bytes = new Reader(obj_request);
+			}
+			catch (ExceptionCode err) {
+				code = err;
+			}
+			catch (Exception err2) {
+				Console.WriteLine(err2.ToString());
+				code = new InternalServerError();
+			}
             response = new Response(code);
             try {
                 byte[] send_data = response.GetData(obj_request, reads_bytes);
@@ -59,8 +63,7 @@ namespace Host {
             finally {
                 connection.Close();
 				Repository.threads_count-=1;
-				Console.WriteLine("закрытие соединения web server {0}", Repository.Configurate["name"].Value);
-				Console.WriteLine("threads count : {0}", Repository.threads_count);
+				Console.WriteLine("закрытие соединения web server {0}\r\nthreads count : {1}", Repository.Configurate["name"].Value, Repository.threads_count);
             }
         }
         public static bool ExistSeqeunce(byte[] sequence, IEnumerable<byte> array, out int index) {

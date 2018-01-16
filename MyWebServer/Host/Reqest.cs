@@ -57,7 +57,7 @@ namespace Host {
             string headers_data = Encoding.UTF8.GetString(reqest.GetRange(0, _index).ToArray());
             byte[] data = null;
 			if (_index + 4 < reqest.Count) {
-                data = reqest.GetRange(_index + 4, reqest.Count - _index + 4).ToArray();
+				data = reqest.GetRange(_index + 4, reqest.Count - (_index + 4)).ToArray();
 			}
             string[] elements = Regex.Split(headers_data, "\r\n");
             try {
@@ -75,7 +75,7 @@ namespace Host {
 						}
 					}
 					else {
-						_handler.ParseData(ref result, Encoding.UTF8.GetString(Receive(client, _handler.GetDataLenght(result)).ToArray()));
+						_handler.ParseData(ref result, Encoding.UTF8.GetString(Receive(client, _handler.GetDataLenght(result))));
 					}
 				}
             }
