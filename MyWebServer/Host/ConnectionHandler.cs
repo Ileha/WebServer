@@ -41,7 +41,6 @@ namespace Host {
                     break;
                 }
             }
-			//Console.WriteLine(request);
 			try {
 				obj_request = Reqest.CreateNewReqest(data, index, connection);
 				obj_request.CheckTabelOfRedirect();
@@ -51,8 +50,7 @@ namespace Host {
 				code = err;
 			}
 			catch (Exception err2) {
-				Console.WriteLine(err2.ToString());
-				code = new InternalServerError();
+				code = Repository.ExceptionFabrics["Internal Server Error"].Create(null);
 			}
             response = new Response(code);
             try {
@@ -66,6 +64,7 @@ namespace Host {
 				Console.WriteLine("закрытие соединения web server {0}\r\nthreads count : {1}", Repository.Configurate["name"].Value, Repository.threads_count);
             }
         }
+
         public static bool ExistSeqeunce(byte[] sequence, IEnumerable<byte> array, out int index) {
             int seq_i = 0;
             for (int i = 0; i < array.Count(); i++)

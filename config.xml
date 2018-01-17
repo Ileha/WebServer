@@ -9,6 +9,9 @@
 		</webserver>
 		<linker>
 			<root_dir>../../../Resourses/host_01</root_dir><!--корневой каталог хоста-->
+			<additive_dirs>
+				<element>../../../README.md</element>
+			</additive_dirs>
 		</linker>
 		<session_collector time_of_life="60000" time_of_collect="10000"></session_collector>
 		<redirect_table>
@@ -29,6 +32,7 @@
 			<root_dir>../../../Resourses/host_02</root_dir><!--корневой каталог хоста-->
 			<additive_dirs>
 				<element>../../../Resourses/host_01/banana.gif</element>
+				<element>../../../README.md</element>
 			</additive_dirs>
 		</linker>
 		<allow_browse_folders is_work="true" browser="StandartViewer" reourse_path="../../../Resourses/WebServerResourses"></allow_browse_folders>

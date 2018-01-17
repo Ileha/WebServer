@@ -77,9 +77,8 @@ namespace Host
                     code = err as ExceptionCode;
                 }
                 else {
-                    code = new InternalServerError();
+                    code = Repository.ExceptionFabrics["Internal Server Error"].Create(null);
                 }
-                //Console.WriteLine(err.ToString());
                 return GetData(_reqest, _read);
             }
 

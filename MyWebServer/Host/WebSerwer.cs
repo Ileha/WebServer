@@ -11,6 +11,7 @@ using Host.HttpHandler;
 using Host.MIME;
 using System.Linq;
 using System.Xml.Linq;
+using Host.ServerExceptions;
 
 namespace Host {
     public delegate void HandlerExecutor();
@@ -49,6 +50,11 @@ namespace Host {
             foreach (KeyValuePair<string, IMIME> el in Repository.DataHandlers) {
                 if (el.Value.GetType().GetInterfaces().Contains(target)) {
                     AddEvents(el.Value as IHostEvents);
+                }
+            }
+			foreach (KeyValuePair<string, ExceptionFabric> el in Repository.ExceptionFabrics) {
+                if (el.Value.GetType().GetInterfaces().Contains(target)) {
+					AddEvents(el.Value as IHostEvents);
                 }
             }
         }

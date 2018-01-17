@@ -8,8 +8,7 @@ namespace Host.ServerExceptions
 	{
 		protected string Code;
 		protected bool _IsFatal;
-		public bool IsFatal
-		{
+		public bool IsFatal {
 			get { return _IsFatal; }
 		}
 
@@ -27,60 +26,5 @@ namespace Host.ServerExceptions
 		{
 			return Code;
 		}
-	}
-
-	public class BadRequest : ExceptionCode
-	{
-
-		public BadRequest()
-		{
-			Code = "400 Bad Request";
-			_IsFatal = true;
-		}
-	}
-
-	public class OK : ExceptionCode
-	{
-
-		public OK()
-		{
-			Code = "200 OK";
-			_IsFatal = false;
-		}
-	}
-
-	public class NotFound : ExceptionCode
-	{
-
-		public NotFound()
-		{
-			Code = "404 Not Found";
-			_IsFatal = true;
-		}
-	}
-
-	public class InternalServerError : ExceptionCode
-	{
-
-		public InternalServerError() {
-			Code = "500 Internal Server Error";
-			_IsFatal = true;
-		}
-	}
-    public class MovedPermanently : ExceptionCode {
-        private string targeURL;
-
-        public MovedPermanently(string targeURL)
-        {
-            Code = "301 Moved Permanently";
-            _IsFatal = true;
-            this.targeURL = targeURL;
-        }
-        public override string GetDataString() {
-            return "";
-        }
-        public override void GetAddingToHeader(Action<string, string> add_to_header) {
-            add_to_header("Location", targeURL);
-        }
-    }			
+	}		
 }

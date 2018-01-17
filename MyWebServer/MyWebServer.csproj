@@ -69,6 +69,12 @@
     <Compile Include="Config\RedirectConfig.cs" />
     <Compile Include="Config\IConfigurate.cs" />
     <Compile Include="Host\Session\SessionCollect.cs" />
+    <Compile Include="Host\ServerExceptions\ExceptionFabric.cs" />
+    <Compile Include="Host\ServerExceptions\Exceptions\ExceptionCodeOKFabric.cs" />
+    <Compile Include="Host\ServerExceptions\Exceptions\ExceptionCodeBadRequestFabric.cs" />
+    <Compile Include="Host\ServerExceptions\Exceptions\ExceptionCodeNotFoundFabric.cs" />
+    <Compile Include="Host\ServerExceptions\Exceptions\ExceptionCodeInternalServerErrorFabric.cs" />
+    <Compile Include="Host\ServerExceptions\Exceptions\ExceptionCodeMovedPermanentlyFabric.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -80,6 +86,7 @@
     <Folder Include="Host\Session\" />
     <Folder Include="Host\DataInput\" />
     <Folder Include="Host\HeaderData\" />
+    <Folder Include="Host\ServerExceptions\Exceptions\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

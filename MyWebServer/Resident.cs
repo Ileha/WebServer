@@ -9,6 +9,7 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Reflection;
 using Host.DirReader;
+using Host.ServerExceptions;
 using System.Text.RegularExpressions;
 
 namespace MainProgramm
@@ -88,6 +89,16 @@ namespace MainProgramm
 					catch (Exception err) { }
 				}
             }
+
+			ourtype = typeof(ExceptionFabric);
+            list = Assembly.GetAssembly(ourtype).GetTypes().Where(type => type.IsSubclassOf(ourtype) && type.IsClass);
+			foreach (Type t in list) {
+                ExceptionFabric h = (ExceptionFabric)Activator.CreateInstance(t);
+                try {
+					Repository.ExceptionFabrics.Add(h.name, h);
+                }
+                catch (Exception err) {}
+            }
         }
 
         public void LoadPluginExternal()
@@ -96,6 +107,7 @@ namespace MainProgramm
             FileInfo[] files = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).GetFiles("*.dll");
             Type http_handler = typeof(IHttpHandler);
             Type mime_handler = typeof(IMIME);
+			Type except_fabric = typeof(ExceptionFabric);
             foreach (FileInfo fi in files)
             {
                 Console.WriteLine("loading {0}...", fi.FullName);
@@ -119,6 +131,14 @@ namespace MainProgramm
 						catch (Exception err) { }
 					}
 	            }
+				list = load.GetTypes().Where(type => type.IsSubclassOf(except_fabric) && type.IsClass);
+	            foreach (Type t in list) {
+	                ExceptionFabric h = (ExceptionFabric)Activator.CreateInstance(t);
+					try {
+						Repository.ExceptionFabrics.Add(h.name, h);
+					}
+					catch (Exception err) { }
+	            }
                 Console.WriteLine("load");
             }
         }
@@ -135,7 +155,11 @@ namespace MainProgramm
             {
                 Console.WriteLine("MIME handler extension {0}", handler.Key);
             }
-
+			Console.WriteLine("Available exceptions");
+            foreach (KeyValuePair<string, ExceptionFabric> handler in Repository.ExceptionFabrics)
+            {
+                Console.WriteLine("Exception: {0}", handler.Key);
+            }
 			Console.WriteLine("Browser module: {0}", Repository.Configurate.DirReader == null ? "" : Repository.Configurate.DirReader.GetType().ToString());
         }
         public void Info()

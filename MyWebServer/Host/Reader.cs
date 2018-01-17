@@ -19,7 +19,7 @@ namespace Host
                     res = Repository.Configurate.ResourceLinker.GetResourceByString(Reqest.URL);
                 }
                 catch (FileNotFoundException err) {
-                    throw new NotFound();
+					throw Repository.ExceptionFabrics["Not Found"].Create(null);
                 }
                 if (res.GetType() == typeof(LinkFile)) {
                     try {
@@ -27,7 +27,7 @@ namespace Host
                         data = System.IO.File.ReadAllBytes(res.GetInfo().FullName);
                     }
                     catch (Exception err) {
-                        throw new InternalServerError();
+                        throw Repository.ExceptionFabrics["Internal Server Error"].Create(null);
                     }
                 }
                 else if (Repository.Configurate.DirReader != null && res.GetType() == typeof(LinkDirectory)) {
@@ -39,7 +39,7 @@ namespace Host
                     file_extension = ".html";
                 }
                 else {
-                    throw new NotFound();
+                    throw Repository.ExceptionFabrics["Not Found"].Create(null);
                 }
             }
             catch (Exception err) {
@@ -47,7 +47,7 @@ namespace Host
                     throw err;
                 }
                 else {
-                    throw new InternalServerError();
+                    throw Repository.ExceptionFabrics["Internal Server Error"].Create(null);
                 }
             }
         }

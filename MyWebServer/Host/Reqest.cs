@@ -24,10 +24,6 @@ namespace Host {
 			cookies = new Dictionary<string, string>();
         }
 
-        public void Redirect(string targeURL) {
-            throw new MovedPermanently(targeURL);
-        }
-
         public void CheckTabelOfRedirect() {
             string new_url;
             try {
@@ -36,7 +32,7 @@ namespace Host {
             catch (Exception err) { 
                 return;
             }
-            throw new MovedPermanently(new_url);
+			throw Repository.ExceptionFabrics["Moved Permanently"].Create(new_url);
         }
 
 		private static byte[] Receive(TcpClient client, long length) {
@@ -84,7 +80,7 @@ namespace Host {
                     throw err;
                 }
                 else {
-					throw new BadRequest();
+					throw Repository.ExceptionFabrics["Bad Request"].Create(null);
                 }
             } 
             return result;
