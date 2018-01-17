@@ -22,8 +22,7 @@ namespace Host.ServerExceptions
 			return "<html><body><h2>An error has occurred code of error " + Code + "</h2></body></html>";
 		}
 
-		public string GetExeptionCode()
-		{
+		public string GetExeptionCode() {
 			return Code;
 		}
 	}		
