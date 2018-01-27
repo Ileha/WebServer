@@ -5,6 +5,7 @@ using Host;
 using Host.DirReader;
 using MainProgramm;
 using Host.Session;
+using Host.Users;
 
 namespace Config
 {
@@ -21,6 +22,7 @@ namespace Config
 		public WebSerwer Host;
 		public IDirectoryReader DirReader;
 		public SessionCollect Collector;
+		public UserBank Users;
 
         public WebServerConfig(XElement data, ForAddEvent start) {
 			_body_conf = data;
@@ -55,6 +57,9 @@ namespace Config
 			if (DirReader != null) {
 				DirReader.Configurate(_body_conf.Element(DirReader.ConfigName));
 			}
+
+			Users = new UserBank();
+			Users.Configurate(_body_conf.Element(Users.ConfigName));
 		}
 	}
 }

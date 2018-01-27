@@ -19,6 +19,9 @@
 			<element path="/index.\w+" target="/index.html"></element>
 			<element path="/index" target="/index.html"></element>
 		</redirect_table>
+		<users>
+
+		</users>
 	</server>
 
 	<server>
@@ -42,5 +45,8 @@
 			<element path="/index.\w+" target="/index.html"></element>
 			<element path="/index" target="/index.html"></element> -->
 		</redirect_table>
+		<users>
+
+		</users>
 	</server>
 </root>

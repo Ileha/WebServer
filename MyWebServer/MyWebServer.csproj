@@ -73,6 +73,8 @@
     <Compile Include="Host\ServerExceptions\Exceptions\ExceptionCodeInternalServerErrorFabric.cs" />
     <Compile Include="Host\ServerExceptions\Exceptions\ExceptionCodeMovedPermanentlyFabric.cs" />
     <Compile Include="Host\ServerExceptions\Exceptions\ExceptionCodeUnauthorizedFabric.cs" />
+    <Compile Include="Host\Users\UserBank.cs" />
+    <Compile Include="Host\Users\UserInfo.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
