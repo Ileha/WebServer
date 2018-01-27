@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using Config;
 using Host.Session;
+using System.Net.Sockets;
 
 namespace Host
 {
@@ -27,87 +28,80 @@ namespace Host
 //";
 		public UserConnect UserData;
 
-        private string bolvanka = "HTTP/1.1 {0}\r\n{1}\r\n";
-        private ExceptionCode code;
-		private Dictionary<string, string> http_body;
+        private string bolvanka = "HTTP/1.1 {0}\r\nServer: MyWebServer(0.0.0.1) (Unix) (Red-Hat/Linux)\r\nConnection: close{1}\r\n\r\n";
+        public ExceptionCode code;
+		private Dictionary<string, string> http_headers;
+		private Dictionary<string, string> http_cookie;
+		private List<byte[]> http_body;
+		private TcpClient Connection;
 
         private bool IsFatal {
             get { return code.IsFatal; }
         }
 
-        public Response(ExceptionCode code) {
-            this.code = code;
-			http_body = new Dictionary<string, string>();
+        public Response(TcpClient connection) {
+			http_headers = new Dictionary<string, string>();
+			http_cookie = new Dictionary<string, string>();
+			http_body = new List<byte[]>();
+			Connection = connection;
         }
 
+		public void AddToHeader(string _key, string _value) {
+			http_headers.Add(_key, _value);
+		}
+
+		public void AddToBody(string data) {
+			http_body.Add(Encoding.UTF8.GetBytes(data));
+		}
+		public void AddToBody(byte[] data) {
+			http_body.Add(data);
+		}
+
 		public void SetCookie(string name, string value, params string[] settings) {
-			//Set-Cookie: name=valuee
-			string adding_cookie = string.Format("{0}={1}", name, value);
+			//Set-Cookie: name=value
+			string adding_cookie = string.Format("={0}", value);
 			for (int i = 0; i < settings.Length; i++) {
 				adding_cookie += "; "+settings[i];
 			}
-			http_body.Add("Set-Cookie", adding_cookie);
+			http_cookie.Add(name, adding_cookie);
+			//AddToHeader("Set-Cookie", adding_cookie);
 		}
 
-        public byte[] GetData(Reqest _reqest, Reader _read) {
-			http_body.Clear();
-            http_body.Add("Server", "MyWebServer(0.0.0.1) (Unix) (Red-Hat/Linux)");
-            http_body.Add("Connection", "close");
-            List<byte> data = new List<byte>();
-            try {
-                if (IsFatal) {
-                    data.AddRange(code.GetByteData());
-                }
-                else {
-                    IMIME dataHandle = Repository.DataHandlers[_read.file_extension];
-                    http_body.Add("Content-Type", dataHandle.MIME_Type + "; charset=UTF-8");
-                    Response resp = this;
-                    try {
-						UserData = UserConnect.GetUserDataFromID(_reqest.cookies[Repository.Configurate["webserver"].Element("guid").Value.ToString()]);
-                    }
-                    catch(Exception err) {
-						UserData = new UserConnect();
-                        SetCookie(Repository.Configurate["webserver"].Element("guid").Value.ToString(), UserData.ID);
-					}
-                    data.AddRange(dataHandle.Handle(ref resp, ref _reqest, ref _read));//here may be execute anything code
-                }
-            }
-            catch (Exception err) {
-                if (err.GetType().IsSubclassOf(typeof(ExceptionCode))) {
-                    code = err as ExceptionCode;
-                }
-                else {
-                    code = Repository.ExceptionFabrics["Internal Server Error"].Create(null);
-                }
-                return GetData(_reqest, _read);
-            }
+		public void SendData(Reqest request) {
+			if (code.IsFatal) {
+				http_body.Clear();
+				http_headers.Clear();
+				http_cookie.Clear();
+			}
+			Response response = this;
+			code.ExceptionHandle(ref request, ref response);
+
+			long data_length = 0;
+			foreach (byte[] arr in http_body) {
+				data_length += arr.Length;
+			}
 
             try {
-                code.GetAddingToHeader((key, value) => {
-                    try {
-                        http_body.Add(key, value);
-                    }
-                    catch (ArgumentException is_has) {
-                        if (IsFatal) {
-                            http_body[key] = value;
-                        }
-                    }
-                });
-            }
-            catch (Exception err) {}
-            try {
-                http_body.Add("Content-Length", data.Count.ToString());
+				AddToHeader("Content-Length", data_length.ToString());
             }
             catch (ArgumentException is_has) {
-                http_body["Content-Length"] = data.Count.ToString();
+				http_headers["Content-Length"] = data_length.ToString();
             }
+
             string httpbody = "";
-            foreach (KeyValuePair<string, string> vord in http_body) {
-                httpbody += vord.Key + ": " + vord.Value + "\r\n";
+            foreach (KeyValuePair<string, string> vord in http_headers) {
+                httpbody += "\r\n" + vord.Key + ": " + vord.Value;
+            }
+			foreach (KeyValuePair<string, string> vord in http_cookie) {
+                httpbody += "\r\nSet-Cookie: " + vord.Key + vord.Value;
             }
             string req_header_string = string.Format(bolvanka, code.GetExeptionCode(), httpbody);
-            data.InsertRange(0, Encoding.UTF8.GetBytes(req_header_string));
-            return data.ToArray();
+			byte[] header = Encoding.UTF8.GetBytes(req_header_string);
+			Connection.GetStream().Write(header, 0, header.Length);
+			foreach (byte[] arr in http_body) {
+				Connection.GetStream().Write(arr, 0, arr.Length);
+			}
+			Connection.Close();
         }
     }
 }

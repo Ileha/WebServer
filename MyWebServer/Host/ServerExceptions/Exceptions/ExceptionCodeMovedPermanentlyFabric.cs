@@ -22,11 +22,8 @@ namespace Host.ServerExceptions
 			_IsFatal = true;
 			this.targeURL = targeURL;
 		}
-		public override string GetDataString() {
-			return "";
+		public override void ExceptionHandle(ref Reqest request, ref Response response) {
+			response.AddToHeader("Location", targeURL);
 		}
-		public override void GetAddingToHeader(Action<string, string> add_to_header) {
-			add_to_header("Location", targeURL);
-		} 
 	}
 }

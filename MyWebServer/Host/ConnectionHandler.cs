@@ -8,6 +8,7 @@ using Host.MIME;
 using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
+using Host.Session;
 
 namespace Host {
     public class ConnectionHandler {
@@ -18,6 +19,8 @@ namespace Host {
         public Reader reads_bytes;
         public Reqest obj_request;
         public Response response;
+		public UserConnect UserData;
+		public IMIME DataHandle;
 
         public ConnectionHandler(TcpClient Connection)
         {
@@ -26,6 +29,8 @@ namespace Host {
             handler = null;
             obj_request = null;
             reads_bytes = null;
+			UserData = null;
+			DataHandle = null;
         }
 
         public void Execute() {
@@ -41,28 +46,39 @@ namespace Host {
                     break;
                 }
             }
+			response = new Response(connection);
 			try {
-				obj_request = Reqest.CreateNewReqest(data, index, connection);
-				obj_request.CheckTabelOfRedirect();
-				reads_bytes = new Reader(obj_request);
+				obj_request = Reqest.CreateNewReqest(data, index, connection);//создание экземпляра класса запроса
+				obj_request.CheckTabelOfRedirect();//проверка таблицы перенаправлений
+				try {//попытка найти данные к запросу
+					UserData = UserConnect.GetUserDataFromID(obj_request.cookies[Repository.Configurate["webserver"].Element("guid").Value.ToString()]);
+                }
+                catch(Exception err) {
+					//при неудачной попытки(осутствуют данные или нет информации в куках) создать данные и запись куков в ответ
+					UserData = new UserConnect();
+					response.SetCookie(Repository.Configurate["webserver"].Element("guid").Value.ToString(), UserData.ID);
+				}
+				//нахождение пользователя
+
+				reads_bytes = new Reader(obj_request);//нахождение и получение запрошенных данных
+				try {//попытка найти обработчик данных
+					DataHandle = Repository.DataHandlers[reads_bytes.file_extension];
+				}
+				catch (Exception err) {
+					//при неудачной попытки бросаем исключение
+					throw Repository.ExceptionFabrics["Internal Server Error"].Create(null);
+				}
+				DataHandle.Handle(ref response, ref obj_request, ref reads_bytes);//вызов обработчика данных
 			}
 			catch (ExceptionCode err) {
 				code = err;
 			}
-			catch (Exception err2) {
-				code = Repository.ExceptionFabrics["Internal Server Error"].Create(null);
-			}
-            response = new Response(code);
-            try {
-                byte[] send_data = response.GetData(obj_request, reads_bytes);
-                connection.GetStream().Write(send_data, 0, send_data.Length);
-            }
-            catch (Exception err) {}
-            finally {
-                connection.Close();
-				Repository.threads_count-=1;
-				Console.WriteLine("закрытие соединения web server {0}\r\nthreads count : {1}", Repository.Configurate["name"].Value, Repository.threads_count);
-            }
+
+			response.code = code;
+			response.SendData(obj_request);
+
+			Repository.threads_count-=1;
+			Console.WriteLine("закрытие соединения web server {0}\r\nthreads count : {1}", Repository.Configurate["name"].Value, Repository.threads_count);
         }
 
         public static bool ExistSeqeunce(byte[] sequence, IEnumerable<byte> array, out int index) {

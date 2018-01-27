@@ -49,7 +49,6 @@
     <Compile Include="Host\Response.cs" />
     <Compile Include="Host\WebSerwer.cs" />
     <Compile Include="Host\HttpHandler\IHttpHandler.cs" />
-    <Compile Include="Host\MIME\HttpMIME.cs" />
     <Compile Include="Host\MIME\IMIME.cs" />
     <Compile Include="Host\ServerExceptions\ExceptionCode.cs" />
     <Compile Include="Config\ErrorServerConfig.cs" />
@@ -58,8 +57,6 @@
     <Compile Include="Resouces\Directory.cs" />
     <Compile Include="Resouces\File.cs" />
     <Compile Include="Resouces\IItem.cs" />
-    <Compile Include="Host\DataHeadersInterfaces\IAddHeader.cs" />
-    <Compile Include="Host\DataHeadersInterfaces\IAddData.cs" />
     <Compile Include="Host\Session\UserConnect.cs" />
     <Compile Include="Host\Session\UserNotFound.cs" />
     <Compile Include="Host\DataInput\ABSReqestData.cs" />
@@ -75,6 +72,7 @@
     <Compile Include="Host\ServerExceptions\Exceptions\ExceptionCodeNotFoundFabric.cs" />
     <Compile Include="Host\ServerExceptions\Exceptions\ExceptionCodeInternalServerErrorFabric.cs" />
     <Compile Include="Host\ServerExceptions\Exceptions\ExceptionCodeMovedPermanentlyFabric.cs" />
+    <Compile Include="Host\ServerExceptions\Exceptions\ExceptionCodeUnauthorizedFabric.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -82,11 +80,11 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Folder Include="Host\DataHeadersInterfaces\" />
     <Folder Include="Host\Session\" />
     <Folder Include="Host\DataInput\" />
     <Folder Include="Host\HeaderData\" />
     <Folder Include="Host\ServerExceptions\Exceptions\" />
+    <Folder Include="Host\Users\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -6,11 +6,11 @@ namespace MIMEHandlers
 	public class CSSIMIME : IMIME
 	{
 		private string[] _file_extensions = { ".css" };
-		public string MIME_Type { get { return "text/css"; } }
 		public string[] file_extensions { get { return _file_extensions; } }
 
-		public byte[] Handle(ref Response response, ref Reqest reqest, ref Reader read) {
-			return read.data;
+		public void Handle(ref Response response, ref Reqest reqest, ref Reader read) {
+			response.AddToHeader("Content-Type", "text/css; charset=UTF-8");
+			response.AddToBody(read.data);
 		}
 	}
 }

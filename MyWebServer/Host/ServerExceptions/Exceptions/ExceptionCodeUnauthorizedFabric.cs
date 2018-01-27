@@ -25,9 +25,8 @@ namespace Host.ServerExceptions
             _IsFatal = true;
         }
 
-        public override void GetAddingToHeader(Action<string, string> add_to_header) {
-            add_to_header("WWW-Authenticate", "Basic realm=\"Access to staging site\"");
-            base.GetAddingToHeader(add_to_header);
-        }
+		public override void ExceptionHandle(ref Reqest request, ref Response response) {
+			response.AddToHeader("WWW-Authenticate", "Basic realm=\"Access to staging site\"");
+		}
     }
 }

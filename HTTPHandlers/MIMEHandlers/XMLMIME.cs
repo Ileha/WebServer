@@ -8,11 +8,11 @@ namespace MIMEHandlers
 	{
 		private string[] _file_extensions = { ".xml" };
 		public string[] file_extensions { get { return _file_extensions; } }
-		public string MIME_Type { get { return "text/xml"; } }
 
-		public byte[] Handle(ref Response response, ref Reqest reqest, ref Reader read)
+		public void Handle(ref Response response, ref Reqest reqest, ref Reader read)
 		{
-			return read.data;
+			response.AddToHeader("Content-Type", "text/xml");
+			response.AddToBody(read.data);
 		}
 	}
 }

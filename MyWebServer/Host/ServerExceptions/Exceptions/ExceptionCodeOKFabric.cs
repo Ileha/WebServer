@@ -18,6 +18,8 @@ namespace Host.ServerExceptions
 		public OK() {
 			Code = "200 OK";
 			_IsFatal = false;
-		}	
+		}
+
+		public override void ExceptionHandle(ref Reqest request, ref Response response) {}
 	}
 }

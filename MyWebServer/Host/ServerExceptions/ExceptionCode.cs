@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Text;
-using Host.DataHeaderInterfaces;
 
 namespace Host.ServerExceptions
 {
-	public abstract class ExceptionCode : Exception, IAddData, IAddHeader
+	public abstract class ExceptionCode : Exception
 	{
 		protected string Code;
 		protected bool _IsFatal;
@@ -12,14 +11,9 @@ namespace Host.ServerExceptions
 			get { return _IsFatal; }
 		}
 
-        public virtual void GetAddingToHeader(Action<string, string> add_to_header) {
-            add_to_header("Content-Type", "text/html; charset=UTF-8");
-        }
-        public byte[] GetByteData() {
-            return Encoding.UTF8.GetBytes(GetDataString());
-        }
-		public virtual string GetDataString() {
-			return "<html><body><h2>An error has occurred code of error " + Code + "</h2></body></html>";
+		public virtual void ExceptionHandle(ref Reqest request, ref Response response) {
+			response.AddToHeader("Content-Type", "text/html; charset=UTF-8");
+			response.AddToBody("<html><body><h2>An error has occurred code of error " + Code + "</h2></body></html>");
 		}
 
 		public string GetExeptionCode() {
