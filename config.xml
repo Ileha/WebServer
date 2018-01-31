@@ -46,7 +46,7 @@
 			<element path="/index" target="/index.html"></element> -->
 		</redirect_table>
 		<users>
-
+			<user name="test" groups="test,all" passwd="123"></user>
 		</users>
 	</server>
 </root>

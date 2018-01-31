@@ -17,41 +17,41 @@ namespace Resouces
             Parent = _parent;
         }
 
-        public string GetName()
+        public override string GetName()
         {
             return Resource.Name;
         }
 
-        public IItem GetParent()
+        public override IItem GetParent()
         {
             return Parent;
         }
 
-        public FileSystemInfo GetInfo()
+        public override FileSystemInfo GetInfo()
         {
             return Resource;
         }
 
-        public void AddItem(IItem adder_item)
+        public override void AddItem(IItem adder_item)
         {
             throw new NotImplementedException();
         }
 
-        public void Remove(IItem rem_item)
+        public override void Remove(IItem rem_item)
         {
             throw new NotImplementedException();
         }
 
-        public IItem GetResourceByString(string path)
+        public override IItem GetResourceByString(string path)
         {
             throw new NotImplementedException();
         }
 
-        public IItem Element(string name)
+        public override IItem Element(string name)
         {
             throw new NotImplementedException();
         }
-        public string GetPath()
+        public override string GetPath()
         {
             IItem i = this;
             string res = "";
@@ -62,13 +62,13 @@ namespace Resouces
             return res;
         }
 
-        public System.Collections.IEnumerator GetEnumerator()
+        public override System.Collections.IEnumerator GetEnumerator()
         {
             throw new NotImplementedException();
         }
 
 
-        public void SetInfo(FileSystemInfo target, IItem New_parent)
+        public override void SetInfo(FileSystemInfo target, IItem New_parent)
         {
             if (target is FileInfo)
             {

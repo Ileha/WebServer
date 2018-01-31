@@ -2,27 +2,28 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Config;
+using System.Text.RegularExpressions;
 
 namespace Host.Users
 {
 	public class UserBank : IConfigurate
 	{
 		public Dictionary<string, UserInfo> users;
-		public readonly UserInfo DefaultUser;
 
 		public UserBank() {
 			users = new Dictionary<string, UserInfo>();
-			DefaultUser = new UserInfo("Default", "");
 		}
 
 		public string ConfigName {
-			get {
-				return "users";
-			}
+			get { return "users"; }
 		}
 
 		public void Configurate(XElement data) {
-			
+			foreach (XElement el in data.Elements()) {
+				string name = el.Attribute("name").Value;
+				string[] groups = Regex.Split(el.Attribute("groups").Value, ",");
+				users.Add(name, new UserInfo(name, el.Attribute("passwd").Value, groups));
+			}
 		}
 	}
 }

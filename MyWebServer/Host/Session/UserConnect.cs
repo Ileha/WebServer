@@ -50,7 +50,20 @@ namespace Host.Session {
 			timeOfLife = new DateTime(DateTime.Now.Ticks);
 		}
 
+		public void Clear() {
+			Data.Clear();
+		}
+
+		public void RemoveData(string name) {
+			Data.Remove(name);
+		}
+
+		public void AddData(string name, object data) {
+			Data.Add(name, data);
+		}
+
 		public T GetData<T>(string name) where T : class {
+			SetDeletingTime();
 			try {
 				object data = Data[name];
 				if (data is T) {

@@ -93,32 +93,32 @@ namespace Resouces
             throw new FileNotFoundException(path);
         }
 
-        public void AddItem(IItem adder_item)
+        public override void AddItem(IItem adder_item)
         {
             contain.Add(adder_item.GetName(), adder_item);
         }
 
-        public string GetName()
+        public override string GetName()
         {
             return Resource.Name;
         }
 
-        public IItem GetParent()
+        public override IItem GetParent()
         {
             return Parent;
         }
 
-        public FileSystemInfo GetInfo()
+        public override FileSystemInfo GetInfo()
         {
             return Resource;
         }
 
-        public void Remove(IItem rem_item)
+        public override void Remove(IItem rem_item)
         {
             contain.Remove(rem_item.GetName());
         }
 
-        public IItem GetResourceByString(string path)
+        public override IItem GetResourceByString(string path)
         {
             string[] path_arr = path.Split('/');
             IItem result = this;
@@ -143,12 +143,12 @@ namespace Resouces
             return result;
         }
 
-        public IItem Element(string name)
+        public override IItem Element(string name)
         {
             return contain[name];
         }
 
-        public string GetPath()
+        public override string GetPath()
         {
             IItem i = this;
             string res = "";
@@ -162,13 +162,13 @@ namespace Resouces
         }
 
 
-        public System.Collections.IEnumerator GetEnumerator()
+        public override System.Collections.IEnumerator GetEnumerator()
         {
             return contain.Values.GetEnumerator();
         }
 
 
-        public void SetInfo(FileSystemInfo target, IItem New_parent)
+        public override void SetInfo(FileSystemInfo target, IItem New_parent)
         {
             if (target is DirectoryInfo) {
                 directoryInfo = target as DirectoryInfo;

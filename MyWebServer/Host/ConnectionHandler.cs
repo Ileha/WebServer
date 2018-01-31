@@ -9,6 +9,7 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
 using Host.Session;
+using Host.Users;
 
 namespace Host {
     public class ConnectionHandler {
@@ -21,6 +22,7 @@ namespace Host {
         public Response response;
 		public UserConnect UserData;
 		public IMIME DataHandle;
+		public UserInfo User;
 
         public ConnectionHandler(TcpClient Connection)
         {
@@ -31,6 +33,7 @@ namespace Host {
             reads_bytes = null;
 			UserData = null;
 			DataHandle = null;
+			User = null;
         }
 
         public void Execute() {
@@ -58,7 +61,16 @@ namespace Host {
 					UserData = new UserConnect();
 					response.SetCookie(Repository.Configurate["webserver"].Element("guid").Value.ToString(), UserData.ID);
 				}
-				//нахождение пользователя
+				//нахождение пользователяя
+				bool finduser = false;
+				try {
+					User = UserData.GetData<UserInfo>("user");
+					finduser = true;
+				}
+				catch (Exception err) {}
+				if (!finduser) {
+					
+				}
 
 				reads_bytes = new Reader(obj_request);//нахождение и получение запрошенных данных
 				try {//попытка найти обработчик данных

@@ -9,14 +9,20 @@ namespace Host.Users
 			get { return name; }
 		}
 
+		private string[] groups;
+		public string[] Groups {
+			get { return groups; }
+		}
+
 		private string pass;
 		public string Password {
 			get { return pass; }
 		}
 
-		public UserInfo(string name, string pass) {
+		public UserInfo(string name, string pass, params string[] groups) {
 			this.name = name;
 			this.pass = pass;
+			this.groups = groups;
 		}
 	}
 }

@@ -41,10 +41,6 @@ namespace Config
 		}
 
 		private void Configurate() {
-            LinkDirectory d = new LinkDirectory();
-			ResourceLinker = d;
-			d.Configurate(_body_conf.Element(d.ConfigName));
-
             RedirectConfigure = new RedirectConfig();
 			RedirectConfigure.Configurate(_body_conf.Element(RedirectConfigure.ConfigName));
 
@@ -60,6 +56,10 @@ namespace Config
 
 			Users = new UserBank();
 			Users.Configurate(_body_conf.Element(Users.ConfigName));
+
+			LinkDirectory d = new LinkDirectory();
+			ResourceLinker = d;
+			d.Configurate(_body_conf.Element(d.ConfigName));
 		}
 	}
 }

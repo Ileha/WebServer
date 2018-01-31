@@ -3,16 +3,17 @@ using System.Collections;
 
 namespace Resouces
 {
-    public interface IItem : IEnumerable
+    public abstract class IItem : IEnumerable
     {
-        void AddItem(IItem adder_item);
-        string GetName();
-        void Remove(IItem rem_item);
-        IItem GetParent();
-        FileSystemInfo GetInfo();
-        void SetInfo(FileSystemInfo target, IItem New_parent);
-        IItem GetResourceByString(string path);
-        IItem Element(string name);
-        string GetPath();
-    }
+        public abstract void AddItem(IItem adder_item);
+        public abstract string GetName();
+		public abstract void Remove(IItem rem_item);
+		public abstract IItem GetParent();
+		public abstract FileSystemInfo GetInfo();
+		public abstract void SetInfo(FileSystemInfo target, IItem New_parent);
+		public abstract IItem GetResourceByString(string path);
+		public abstract IItem Element(string name);
+		public abstract string GetPath();
+		public abstract IEnumerator GetEnumerator();
+	}
 }
