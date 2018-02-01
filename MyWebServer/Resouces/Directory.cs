@@ -20,10 +20,9 @@ namespace Resouces
 			}
 		}
 
-		public LinkDirectory() {}
+		public LinkDirectory() : base() {}
 
-		public LinkDirectory(DirectoryInfo inf, IItem parent)
-        {
+		public LinkDirectory(DirectoryInfo inf, IItem parent) : base() {
 			ConstructHelp(inf, parent);
         }
 

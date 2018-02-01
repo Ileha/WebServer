@@ -12,7 +12,8 @@ namespace Resouces
         private FileInfo Resource;
         public IItem Parent;
 
-        public LinkFile(FileInfo inf, IItem _parent) {
+
+		public LinkFile(FileInfo inf, IItem _parent) : base() {
             Resource = inf;
             Parent = _parent;
         }
@@ -80,5 +81,5 @@ namespace Resouces
                 throw new FormatException(target.FullName);
             }
         }
-    }
+	}
 }

@@ -1,10 +1,35 @@
 ﻿using System.IO;
 using System.Collections;
+using Host.Users;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Resouces
 {
     public abstract class IItem : IEnumerable
     {
+		protected List<string> Groups;
+
+		public IItem() {
+			Groups = new List<string>();
+			Groups.Add("all");
+		}
+
+		public bool IsUserEnter(UserInfo user) {
+			foreach (string first in Groups) {
+				foreach (string second in user.Groups) {
+					if (first == second) { return true; }
+				}
+			}
+			return false;
+		}
+		public void ClearAllGroupe() {
+			Groups.Clear();
+		}
+		public void AddGroupe(string groupe_name) {
+			Groups.Add(groupe_name);
+		}
+
         public abstract void AddItem(IItem adder_item);
         public abstract string GetName();
 		public abstract void Remove(IItem rem_item);
