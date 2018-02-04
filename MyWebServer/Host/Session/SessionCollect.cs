@@ -15,8 +15,10 @@ namespace Host.Session
 			
 		}
 
-		public string ConfigName {
-			get { return "session_collector"; }
+        private string[] names = new string[] { "session_collector" };
+
+		public string[] ConfigName {
+            get { return names; }
 		}
 
 		public void Configurate(XElement data) {

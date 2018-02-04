@@ -25,9 +25,10 @@ namespace Host {
         public event HostEvent onStartHost;
         public event HostEvent onStopHost;
 
-		public string ConfigName {
+        private string[] names = new string[] { "webserver" };
+		public string[] ConfigName {
 			get {
-				return "webserver";
+                return names;
 			}
 		}
 

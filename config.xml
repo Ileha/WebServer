@@ -20,7 +20,9 @@
 			<element path="/index" target="/index.html"></element>
 		</redirect_table>
 		<users>
-
+			<default_user groups="all"></default_user>
+			<users>
+			</users>
 		</users>
 	</server>
 

@@ -14,9 +14,10 @@ namespace Resouces
         private DirectoryInfo directoryInfo;
         private FileSystemWatcher watcher;
 
-		public string ConfigName {
+        private string[] names = new string[] { "linker" };
+		public string[] ConfigName {
 			get {
-				return "linker";
+				return names;
 			}
 		}
 

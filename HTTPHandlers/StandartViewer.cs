@@ -9,9 +9,11 @@ namespace DirViewer
 {
 	public class StandartViewer : IDirectoryReader, IHostEvents
 	{
-		public string ConfigName {
+        private string[] names = new string[] { "allow_browse_folders" };
+
+		public string[] ConfigName {
 			get {
-				return "allow_browse_folders";
+				return names;
 			}
 		}
 

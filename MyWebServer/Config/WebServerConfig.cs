@@ -21,7 +21,7 @@ namespace Config
 		public RedirectConfig RedirectConfigure;
         public IItem ResourceLinker;
 		public WebSerwer Host;
-		public IDirectoryReader DirReader;
+		public IDirectoryReader DirReader;//экземпляр класса преобразующий директорию в html страницу
 		public SessionCollect Collector;
 		public UserBank Users;
 
@@ -42,13 +42,18 @@ namespace Config
 		}
 
         private XElement GetElements(IConfigurate conf) {
-            XElement data = new XElement("data");
-            data.Add(
-                (from el in _body_conf.Elements()
-                where is_have_name(el.Name.ToString(), conf)
-                select el)
-            );
-            return data;
+            if (conf.ConfigName.Length < 1) {
+                XElement data = new XElement("data");
+                data.Add(
+                    (from el in _body_conf.Elements()
+                     where is_have_name(el.Name.ToString(), conf)
+                     select el)
+                );
+                return data;
+            }
+            else {
+                return _body_conf.Element(conf.ConfigName[0]);
+            }
         }
 
         private bool is_have_name(string name, IConfigurate conf) {
@@ -59,11 +64,15 @@ namespace Config
         }
 
 		private void Configurate() {
+            Host = new WebSerwer();
+            Host.Configurate(GetElements(Host));
+
+            LinkDirectory d = new LinkDirectory();
+            ResourceLinker = d;
+            d.Configurate(GetElements(d));
+
             RedirectConfigure = new RedirectConfig();
 			RedirectConfigure.Configurate(GetElements(RedirectConfigure));
-
-			Host = new WebSerwer();
-			Host.Configurate(GetElements(Host));
 
 			Collector = new SessionCollect();
 			Collector.Configurate(GetElements(Collector));
@@ -74,10 +83,6 @@ namespace Config
 
 			Users = new UserBank();
 			Users.Configurate(GetElements(Users));
-
-			LinkDirectory d = new LinkDirectory();
-			ResourceLinker = d;
-			d.Configurate(GetElements(d));
 		}
 	}
 }

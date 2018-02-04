@@ -14,8 +14,10 @@ namespace Host.Users
 			users = new Dictionary<string, UserInfo>();
 		}
 
-		public string ConfigName {
-			get { return "users"; }
+
+        private string[] names = new string[] { "users" };
+		public string[] ConfigName {
+			get { return names; }
 		}
 
 		public void Configurate(XElement data) {

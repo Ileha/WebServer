@@ -52,12 +52,9 @@ namespace Config
 
         abstract public ReactionValue Adder(XElement item);
 
-		public void Configurate(XElement data)
-		{
-			foreach (XElement el in data.Elements())
-			{
-                try
-                {
+		public virtual void Configurate(XElement data) {
+			foreach (XElement el in data.Elements()) {
+                try {
                     _list_of_redirect.Add(Adder(el));
                 }
                 catch (FileNotFoundException err) { continue; }
