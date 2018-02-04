@@ -19,9 +19,10 @@ namespace Host.Users
 		}
 
 		public void Configurate(XElement data) {
-			UserInfo all_user = new UserInfo("all", "", "all");
+            string[] default_groups = Regex.Split(data.Element("default_user").Value, ",");
+			UserInfo all_user = new UserInfo("", "", default_groups);
 
-			foreach (XElement el in data.Elements()) {
+            foreach (XElement el in data.Element("users").Elements()) {
 				string name = el.Attribute("name").Value;
 				string[] groups = Regex.Split(el.Attribute("groups").Value, ",");
 				users.Add(name, new UserInfo(name, el.Attribute("passwd").Value, groups));

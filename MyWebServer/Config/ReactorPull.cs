@@ -24,14 +24,9 @@ namespace Config
     {
         protected List<ReactionValue> _list_of_redirect;
 
-		public virtual string ConfigName {
-			get {
-				throw new NotImplementedException();
-			}
-		}
+		public virtual string[] ConfigName { get { throw new NotImplementedException(); } }
 
-		public ReactorPull()
-		{
+		public ReactorPull() {
 			_list_of_redirect = new List<ReactionValue>();
 		}
 
@@ -68,5 +63,5 @@ namespace Config
                 catch (FileNotFoundException err) { continue; }
 			}
 		}
-	}
+    }
 }

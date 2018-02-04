@@ -5,10 +5,11 @@ namespace Config
 {
 	public class RedirectConfig : ReactorPull
 	{
+        private string[] names = new string[] { "redirect_table" };
 		public RedirectConfig() : base() { }
-		public override string ConfigName {
+		public override string[] ConfigName {
 			get {
-				return "redirect_table";
+				return names;
 			}
 		}
 		public override ReactionValue Adder(XElement item) {
