@@ -12,7 +12,6 @@ namespace Resouces
 
 		public IItem() {
 			Groups = new List<string>();
-			Groups.Add("all");
 		}
 
 		public bool IsUserEnter(UserInfo user) {
@@ -29,6 +28,12 @@ namespace Resouces
 		public void AddGroupe(string groupe_name) {
 			Groups.Add(groupe_name);
 		}
+        public void AddGroupe(string[] groupes_name)
+        {
+            for (int i = 0; i < groupes_name.Length; i++) {
+                Groups.Add(groupes_name[i]);
+            }
+        }
 
         public abstract void AddItem(IItem adder_item);
         public abstract string GetName();

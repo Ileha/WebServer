@@ -49,7 +49,7 @@ namespace Host {
                     break;
                 }
             }
-			response = new Response(connection);
+            response = new Response(connection); //создание экземпляра класса ответа
 			try {
 				obj_request = Reqest.CreateNewReqest(data, index, connection);//создание экземпляра класса запроса
 				obj_request.CheckTabelOfRedirect();//проверка таблицы перенаправлений
@@ -63,12 +63,12 @@ namespace Host {
 				}
 				//нахождение пользователяя
 				bool finduser = false;
-				try {
+				try {//попытка нахождения пользоавтеля в сессии
 					User = UserData.GetData<UserInfo>("user");
 					finduser = true;
 				}
 				catch (Exception err) {}
-				if (!finduser) {
+                if (!finduser) {//basic authentication
 					
 				}
 

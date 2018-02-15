@@ -12,10 +12,12 @@ namespace Resouces
         private FileInfo Resource;
         public IItem Parent;
 
-
-		public LinkFile(FileInfo inf, IItem _parent) : base() {
+		public LinkFile(FileInfo inf, IItem _parent, params string[] valid_groups) : base() {
             Resource = inf;
             Parent = _parent;
+            for (int i = 0; i < valid_groups.Length; i++) {
+                Groups.Add(valid_groups[i]);
+            }
         }
 
         public override string GetName()

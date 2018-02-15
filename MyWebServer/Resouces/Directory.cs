@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Config;
 using System.Xml.Linq;
+using System.Text.RegularExpressions;
 
 namespace Resouces
 {
@@ -14,7 +15,7 @@ namespace Resouces
         private DirectoryInfo directoryInfo;
         private FileSystemWatcher watcher;
 
-        private string[] names = new string[] { "linker" };
+        private string[] names = new string[] { "linker", "users" };
 		public string[] ConfigName {
 			get {
 				return names;
@@ -23,20 +24,23 @@ namespace Resouces
 
 		public LinkDirectory() : base() {}
 
-		public LinkDirectory(DirectoryInfo inf, IItem parent) : base() {
-			ConstructHelp(inf, parent);
+        public LinkDirectory(DirectoryInfo inf, IItem parent, params string[] valid_groups)
+            : base() {
+			ConstructHelp(inf, parent, valid_groups);
         }
 
-		private void ConstructHelp(DirectoryInfo inf, IItem parent) {
+        private void ConstructHelp(DirectoryInfo inf, IItem parent, params string[] valid_groups)
+        {
 			contain = new Dictionary<string, IItem>();
             Resource = inf;
             Parent = parent;
+            for (int i = 0; i < valid_groups.Length; i++) {
+                Groups.Add(valid_groups[i]);
+            }
             foreach (DirectoryInfo d in inf.GetDirectories()) {
-
 				AddItem(new LinkDirectory(d, this));
             }
             foreach (FileInfo f in inf.GetFiles()) {
-
 				AddItem(new LinkFile(f, this));
             }
             watcher = new FileSystemWatcher();
@@ -180,8 +184,9 @@ namespace Resouces
         }
 
 		public void Configurate(XElement data) {
-			DirectoryInfo inf = new DirectoryInfo(data.Element("root_dir").Value);
-            ConstructHelp(inf, null);
+            DirectoryInfo inf = new DirectoryInfo(data.Element("linker").Element("root_dir").Value);
+            string[] def_groupes = Regex.Split(data.Element("users").Element("default_user").Attribute("groups").Value, ",");
+            ConstructHelp(inf, null, def_groupes);
 			try {
 				XElement el = data.Element("additive_dirs");
 				foreach (XElement add_dir in el.Elements()) {
@@ -194,6 +199,12 @@ namespace Resouces
 				}
 			}
 			catch (Exception err) {}
+
+            foreach (XElement el in data.Element("linker").Element("resource_config").Elements()) {
+                IItem resource = GetResourceByString(el.Value);
+                string[] groups = Regex.Split(el.Attribute("groips").Value, ",");
+                resource.AddGroupe(groups);
+            }
 		}
 	}
 }
