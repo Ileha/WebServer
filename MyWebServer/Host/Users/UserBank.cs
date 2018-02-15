@@ -9,11 +9,12 @@ namespace Host.Users
 	public class UserBank : IConfigurate
 	{
 		public Dictionary<string, UserInfo> users;
+		public Dictionary<string, GroupInfo> groups;
 
 		public UserBank() {
 			users = new Dictionary<string, UserInfo>();
+			groups = new Dictionary<string, GroupInfo>();
 		}
-
 
         private string[] names = new string[] { "users" };
 		public string[] ConfigName {

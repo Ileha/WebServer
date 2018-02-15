@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
-using System.IO;
-using System.Text.RegularExpressions;
 using Config;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -40,8 +37,8 @@ namespace Host {
 
         public void ConfigureEvents() {
             Type target = typeof(IHostEvents);
-            if (Repository.Configurate.DirReader != null && Repository.Configurate.DirReader.GetType().GetInterfaces().Contains(target)) {
-                AddEvents(Repository.Configurate.DirReader as IHostEvents);
+            if (Repository.DirReader != null && Repository.DirReader.GetType().GetInterfaces().Contains(target)) {
+                AddEvents(Repository.DirReader as IHostEvents);
             }
             foreach (KeyValuePair<string, IHttpHandler> el in Repository.ReqestsHandlers) {
                 if (el.Value.GetType().GetInterfaces().Contains(target)) {
@@ -72,12 +69,12 @@ namespace Host {
             catch (Exception err) { Console.WriteLine(err.ToString()); }
             try {
                 sListener.Start();
-				Console.WriteLine("Запуск сервера {0}", Repository.Configurate.ConfigBody.Element("name").Value);
+				Console.WriteLine("Запуск сервера {0}", Repository.ConfigBody.Element("name").Value);
                 while (is_work) {
                     // Программа приостанавливается, ожидая входящее соединение
                     TcpClient handler = sListener.AcceptTcpClient();
 					#if DEBUG
-						Console.WriteLine("хост {1}, соединение через порт {0}", ipEndPoint, Repository.Configurate.ConfigBody.Element("name").Value);
+						Console.WriteLine("хост {1}, соединение через порт {0}", ipEndPoint, Repository.ConfigBody.Element("name").Value);
 					#endif
 					Repository.threads_count+=1;
                     ConnectionHandler executor = new ConnectionHandler(handler);

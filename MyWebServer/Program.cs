@@ -1,21 +1,8 @@
 ﻿using System;
-using System.Net;
-using System.Net.Sockets;
-using System.Collections.Generic;
-using Host.HttpHandler;
-using System.Linq;
 using System.Xml.Linq;
 using System.Reflection;
-using Host.MIME;
-using Config;
 using System.IO;
-using System.Text.RegularExpressions;
-using System.Runtime.Remoting;
 using System.Security.Policy;
-using Host;
-using System.Text.RegularExpressions;
-using Resouces;
-using System.Text;
 
 namespace MainProgramm {
 
@@ -42,7 +29,7 @@ namespace MainProgramm {
                             typeof(Resident).Assembly.FullName,
                             typeof(Resident).FullName);
                 resident.AddConfig(host_conf.ToString());
-                if (has_modules) resident.LoadPluginExternal();
+				if (has_modules) resident.LoadPluginExternal();
                 resident.LoadPluginInternal();
                 resident.FileBrowser();
                 resident.GetPluginInfo();

@@ -2,32 +2,6 @@
 <root>
 	<server>
 		<modules_dir>../../../HTTPHandlers/bin/Debug</modules_dir><!--Сборка(сборки) с модулями-->
-	  	<name>first host</name><!--имя хоста-->
-		<webserver>
-		  	<ip_adress>127.0.0.1</ip_adress><!--адрес хоста-->
-			<port>11000</port><!--порт хоста-->
-		</webserver>
-		<linker>
-			<root_dir>../../../Resourses/host_01</root_dir><!--корневой каталог хоста-->
-			<additive_dirs>
-				<element>../../../README.md</element>
-			</additive_dirs>
-		</linker>
-		<session_collector time_of_life="60000" time_of_collect="10000"></session_collector>
-		<redirect_table>
-			<element path="/" target="/index.html"></element>
-			<element path="/index.\w+" target="/index.html"></element>
-			<element path="/index" target="/index.html"></element>
-		</redirect_table>
-		<users>
-			<default_user groups="all"></default_user>
-			<users>
-			</users>
-		</users>
-	</server>
-
-	<server>
-		<modules_dir>../../../HTTPHandlers/bin/Debug</modules_dir><!--Сборка(сборки) с модулями-->
 		<name>second host</name><!--имя хоста-->
 		<webserver>
 			<ip_adress>127.0.0.1</ip_adress><!--адрес хоста-->
@@ -54,6 +28,32 @@
 			<default_user groups="all"></default_user>
 			<users>
 				<user name="test" groups="all,test" passwd="123"></user>
+			</users>
+		</users>
+	</server>
+
+	<server>
+		<modules_dir>../../../HTTPHandlers/bin/Debug</modules_dir><!--Сборка(сборки) с модулями-->
+	  	<name>first host</name><!--имя хоста-->
+		<webserver>
+		  	<ip_adress>127.0.0.1</ip_adress><!--адрес хоста-->
+			<port>11000</port><!--порт хоста-->
+		</webserver>
+		<linker>
+			<root_dir>../../../Resourses/host_01</root_dir><!--корневой каталог хоста-->
+			<additive_dirs>
+				<element>../../../README.md</element>
+			</additive_dirs>
+		</linker>
+		<session_collector time_of_life="60000" time_of_collect="10000"></session_collector>
+		<redirect_table>
+			<element path="/" target="/index.html"></element>
+			<element path="/index.\w+" target="/index.html"></element>
+			<element path="/index" target="/index.html"></element>
+		</redirect_table>
+		<users>
+			<default_user groups="all"></default_user>
+			<users>
 			</users>
 		</users>
 	</server>

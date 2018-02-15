@@ -4,7 +4,7 @@ using Config;
 
 namespace Host.DirReader
 {
-    public interface IDirectoryReader : IConfigurate
+    public interface IDirectoryReader
     {
         string ItemPars(IItem file);
     }

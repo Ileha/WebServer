@@ -3,26 +3,16 @@ using System.IO;
 using Host.DirReader;
 using Host;
 using Resouces;
-using System.Xml.Linq;
 
 namespace DirViewer
 {
 	public class StandartViewer : IDirectoryReader, IHostEvents
 	{
-        private string[] names = new string[] { "allow_browse_folders" };
-
-		public string[] ConfigName {
-			get {
-				return names;
-			}
-		}
-
-		public StandartViewer() {
-			
-		}
+		public StandartViewer() {}
 
 		public void OnStart() {
 			Console.WriteLine("Test event start");
+			Repository.Configurate.ResourceLinker.AddItem(new LinkDirectory(new DirectoryInfo(Repository.ConfigBody.Element("allow_browse_folders").Attribute("reourse_path").Value), Repository.Configurate.ResourceLinker));
 		}
         public void OnStop() {}
         public string ItemPars(IItem file)
@@ -36,10 +26,5 @@ namespace DirViewer
             }
             else { throw new InvalidDataException(); }
         }
-
-		public void Configurate(XElement data)
-		{
-			Repository.Configurate.ResourceLinker.AddItem(new LinkDirectory(new DirectoryInfo(data.Attribute("reourse_path").Value), Repository.Configurate.ResourceLinker));
-		}
 	}
 }

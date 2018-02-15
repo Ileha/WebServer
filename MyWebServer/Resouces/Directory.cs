@@ -188,7 +188,7 @@ namespace Resouces
             string[] def_groupes = Regex.Split(data.Element("users").Element("default_user").Attribute("groups").Value, ",");
             ConstructHelp(inf, null, def_groupes);
 			try {
-				XElement el = data.Element("additive_dirs");
+				XElement el = data.Element("linker").Element("additive_dirs");
 				foreach (XElement add_dir in el.Elements()) {
 					if (Directory.Exists(add_dir.Value)) {
 						AddItem(new LinkDirectory(new DirectoryInfo(add_dir.Value), this));
@@ -200,11 +200,11 @@ namespace Resouces
 			}
 			catch (Exception err) {}
 
-            foreach (XElement el in data.Element("linker").Element("resource_config").Elements()) {
-                IItem resource = GetResourceByString(el.Value);
-                string[] groups = Regex.Split(el.Attribute("groips").Value, ",");
-                resource.AddGroupe(groups);
-            }
+            //foreach (XElement el in data.Element("linker").Element("resource_config").Elements()) {
+            //    IItem resource = GetResourceByString(el.Value);
+            //    string[] groups = Regex.Split(el.Attribute("groips").Value, ",");
+            //    resource.AddGroupe(groups);
+            //}
 		}
 	}
 }

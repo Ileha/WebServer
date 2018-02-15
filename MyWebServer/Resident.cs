@@ -1,5 +1,4 @@
-﻿using Config;
-using Host;
+﻿using Host;
 using Host.HttpHandler;
 using Host.MIME;
 using System;
@@ -10,38 +9,26 @@ using System.Xml.Linq;
 using System.Reflection;
 using Host.DirReader;
 using Host.ServerExceptions;
-using System.Text.RegularExpressions;
 
 namespace MainProgramm
 {
-	public delegate void OnResidentLoadEvent();
-	public delegate void ForAddEvent(OnResidentLoadEvent new_event);
-
     public class Resident : MarshalByRefObject
     {
-		private event OnResidentLoadEvent OnEndLoad;
-
         public void AddConfig(string data) {
 			XElement doc = XElement.Parse(data);
-			Repository.RepositoryConstruct();
-            Repository.Configurate = new WebServerConfig(doc, AddToLoad);
+			Repository.RepositoryConstruct(doc);
 		}
 
-		private void AddToLoad(OnResidentLoadEvent new_event) {
-			OnEndLoad += new_event;
-		}
         public void StartHost() {
-			if (OnEndLoad != null) {
-				OnEndLoad();
-			}
+			Repository.LoadWebServer();
 			Repository.Configurate.Host.Start();
         }
 
 		public void FileBrowser() {
 			string name;
 			try {
-				if (Repository.Configurate["allow_browse_folders"].Attribute("is_work").Value != "true") { return; }
-				name = Repository.Configurate["allow_browse_folders"].Attribute("browser").Value;
+				if (Repository.ConfigBody.Element("allow_browse_folders").Attribute("is_work").Value != "true") { return; }
+				name = Repository.ConfigBody.Element("allow_browse_folders").Attribute("browser").Value;
 			}
 			catch (Exception err) {
 				return;
@@ -55,7 +42,7 @@ namespace MainProgramm
 				IEnumerable<Type> list = assem.GetTypes().Where((arg) => arg.GetInterfaces().Contains(ourtype) && arg.IsClass);
 				foreach (Type t in list) {
 					if (name == t.Name) {
-						Repository.Configurate.DirReader = (IDirectoryReader)Activator.CreateInstance(t);
+						Repository.DirReader = (IDirectoryReader)Activator.CreateInstance(t);
 						break;
 					}
 				}
@@ -160,7 +147,7 @@ namespace MainProgramm
             {
                 Console.WriteLine("Exception: {0}", handler.Key);
             }
-			Console.WriteLine("Browser module: {0}", Repository.Configurate.DirReader == null ? "" : Repository.Configurate.DirReader.GetType().ToString());
+			Console.WriteLine("Browser module: {0}", Repository.DirReader == null ? "" : Repository.DirReader.GetType().ToString());
         }
         public void Info()
         {

@@ -75,6 +75,7 @@
     <Compile Include="Host\ServerExceptions\Exceptions\ExceptionCodeUnauthorizedFabric.cs" />
     <Compile Include="Host\Users\UserBank.cs" />
     <Compile Include="Host\Users\UserInfo.cs" />
+    <Compile Include="Host\Users\GroupInfo.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

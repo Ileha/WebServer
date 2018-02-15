@@ -54,12 +54,12 @@ namespace Host {
 				obj_request = Reqest.CreateNewReqest(data, index, connection);//создание экземпляра класса запроса
 				obj_request.CheckTabelOfRedirect();//проверка таблицы перенаправлений
 				try {//попытка найти данные к запросу
-					UserData = UserConnect.GetUserDataFromID(obj_request.cookies[Repository.Configurate["webserver"].Element("guid").Value.ToString()]);
+					UserData = UserConnect.GetUserDataFromID(obj_request.cookies[Repository.ConfigBody.Element("webserver").Element("guid").Value.ToString()]);
                 }
                 catch(Exception err) {
 					//при неудачной попытки(осутствуют данные или нет информации в куках) создать данные и запись куков в ответ
 					UserData = new UserConnect();
-					response.SetCookie(Repository.Configurate["webserver"].Element("guid").Value.ToString(), UserData.ID);
+					response.SetCookie(Repository.ConfigBody.Element("webserver").Element("guid").Value.ToString(), UserData.ID);
 				}
 				//нахождение пользователяя
 				bool finduser = false;
@@ -90,7 +90,7 @@ namespace Host {
 			response.SendData(obj_request);
 
 			Repository.threads_count-=1;
-			Console.WriteLine("закрытие соединения web server {0}\r\nthreads count : {1}", Repository.Configurate["name"].Value, Repository.threads_count);
+			Console.WriteLine("закрытие соединения web server {0}\r\nthreads count : {1}", Repository.ConfigBody.Element("name").Value, Repository.threads_count);
         }
 
         public static bool ExistSeqeunce(byte[] sequence, IEnumerable<byte> array, out int index) {

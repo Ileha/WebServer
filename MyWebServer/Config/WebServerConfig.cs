@@ -2,8 +2,6 @@
 using System.Xml.Linq;
 using Resouces;
 using Host;
-using Host.DirReader;
-using MainProgramm;
 using Host.Session;
 using Host.Users;
 using System.Linq;
@@ -11,48 +9,30 @@ using System.Linq;
 namespace Config
 {
 	public class WebServerConfig {
-        private XElement _body_conf;
-		public XElement ConfigBody {
-			get {
-				return _body_conf;	
-			} 
-		}
+
 
 		public RedirectConfig RedirectConfigure;
         public IItem ResourceLinker;
 		public WebSerwer Host;
-		public IDirectoryReader DirReader;//экземпляр класса преобразующий директорию в html страницу
 		public SessionCollect Collector;
 		public UserBank Users;
 
-        public WebServerConfig(XElement data, ForAddEvent start) {
-			_body_conf = data;
-			start(Configurate);
-		}
-
-		public XElement this[string index] {
-			get {
-				try {
-					return _body_conf.Element(index);
-				}
-				catch (Exception err) {
-					throw new ErrorServerConfig(index);
-				}
-			}
+        public WebServerConfig() {
+			Configurate();
 		}
 
         private XElement GetElements(IConfigurate conf) {
-            if (conf.ConfigName.Length < 1) {
+            if (conf.ConfigName.Length > 1) {
                 XElement data = new XElement("data");
                 data.Add(
-                    (from el in _body_conf.Elements()
+                    (from el in Repository.ConfigBody.Elements()
                      where is_have_name(el.Name.ToString(), conf)
                      select el)
                 );
                 return data;
             }
             else {
-                return _body_conf.Element(conf.ConfigName[0]);
+                return Repository.ConfigBody.Element(conf.ConfigName[0]);
             }
         }
 
@@ -64,9 +44,6 @@ namespace Config
         }
 
 		private void Configurate() {
-            Host = new WebSerwer();
-            Host.Configurate(GetElements(Host));
-
             LinkDirectory d = new LinkDirectory();
             ResourceLinker = d;
             d.Configurate(GetElements(d));
@@ -77,12 +54,11 @@ namespace Config
 			Collector = new SessionCollect();
 			Collector.Configurate(GetElements(Collector));
 
-			if (DirReader != null) {
-				DirReader.Configurate(GetElements(DirReader));
-			}
-
 			Users = new UserBank();
 			Users.Configurate(GetElements(Users));
+
+			Host = new WebSerwer();
+			Host.Configurate(GetElements(Host));
 		}
 	}
 }

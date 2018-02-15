@@ -30,10 +30,10 @@ namespace Host
                         throw Repository.ExceptionFabrics["Internal Server Error"].Create(null);
                     }
                 }
-                else if (Repository.Configurate.DirReader != null && res.GetType() == typeof(LinkDirectory)) {
+                else if (Repository.DirReader != null && res.GetType() == typeof(LinkDirectory)) {
                     string str = "";
                     foreach (IItem ite in res) {
-                        str += Repository.Configurate.DirReader.ItemPars(ite);
+                        str += Repository.DirReader.ItemPars(ite);
                     }
                     data = Encoding.UTF8.GetBytes(str);
                     file_extension = ".html";
