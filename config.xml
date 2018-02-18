@@ -9,12 +9,12 @@
 		</webserver>
 		<linker>
 			<root_dir>../../../Resourses/host_02</root_dir><!--корневой каталог хоста-->
-			<additive_dirs>
+			<additive_dirs><!--добавляемые ресурсы в корень-->
 				<element>../../../Resourses/host_01/banana.gif</element>
 				<element>../../../README.md</element>
 			</additive_dirs>
-			<resource_config>
-				<element groips="test">banana.gif</element>
+			<resource_config><!--назначение пользователей ресурсу-->
+				<element groups="test">banana.gif</element>
 			</resource_config>
 		</linker>
 		<allow_browse_folders is_work="true" browser="StandartViewer" reourse_path="../../../Resourses/WebServerResourses"></allow_browse_folders>
@@ -41,9 +41,11 @@
 		</webserver>
 		<linker>
 			<root_dir>../../../Resourses/host_01</root_dir><!--корневой каталог хоста-->
-			<additive_dirs>
+			<additive_dirs><!--добавляемые ресурсы в корень-->
 				<element>../../../README.md</element>
 			</additive_dirs>
+			<resource_config><!--назначение пользователей ресурсу-->
+			</resource_config>
 		</linker>
 		<session_collector time_of_life="60000" time_of_collect="10000"></session_collector>
 		<redirect_table>

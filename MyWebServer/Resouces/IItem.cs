@@ -8,27 +8,27 @@ namespace Resouces
 {
     public abstract class IItem : IEnumerable
     {
-		protected List<string> Groups;
+		protected List<GroupInfo> Groups;
 
 		public IItem() {
-			Groups = new List<string>();
+			Groups = new List<GroupInfo>();
 		}
 
 		public bool IsUserEnter(UserInfo user) {
-			foreach (string first in Groups) {
-				foreach (string second in user.Groups) {
-					if (first == second) { return true; }
-				}
+			foreach (GroupInfo first in Groups) {
+                if (first.isConsistUser(user)) {
+                    return true;
+                }
 			}
 			return false;
 		}
 		public void ClearAllGroupe() {
 			Groups.Clear();
 		}
-		public void AddGroupe(string groupe_name) {
+		public void AddGroupe(GroupInfo groupe_name) {
 			Groups.Add(groupe_name);
 		}
-        public void AddGroupe(string[] groupes_name)
+        public void AddGroupe(GroupInfo[] groupes_name)
         {
             for (int i = 0; i < groupes_name.Length; i++) {
                 Groups.Add(groupes_name[i]);

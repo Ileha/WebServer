@@ -4,6 +4,8 @@ using System.IO;
 using Config;
 using System.Xml.Linq;
 using System.Text.RegularExpressions;
+using Host.Users;
+using Host;
 
 namespace Resouces
 {
@@ -16,53 +18,62 @@ namespace Resouces
         private FileSystemWatcher watcher;
 
         private string[] names = new string[] { "linker", "users" };
-		public string[] ConfigName {
-			get {
-				return names;
-			}
-		}
-
-		public LinkDirectory() : base() {}
-
-        public LinkDirectory(DirectoryInfo inf, IItem parent, params string[] valid_groups)
-            : base() {
-			ConstructHelp(inf, parent, valid_groups);
+        public string[] ConfigName
+        {
+            get
+            {
+                return names;
+            }
         }
 
-        private void ConstructHelp(DirectoryInfo inf, IItem parent, params string[] valid_groups)
+        public LinkDirectory() : base() { }
+
+        public LinkDirectory(DirectoryInfo inf, IItem parent, params GroupInfo[] valid_groups)
+            : base()
         {
-			contain = new Dictionary<string, IItem>();
+            ConstructHelp(inf, parent, valid_groups);
+        }
+
+        private void ConstructHelp(DirectoryInfo inf, IItem parent, params GroupInfo[] valid_groups)
+        {
+            contain = new Dictionary<string, IItem>();
             Resource = inf;
             Parent = parent;
-            for (int i = 0; i < valid_groups.Length; i++) {
+            for (int i = 0; i < valid_groups.Length; i++)
+            {
                 Groups.Add(valid_groups[i]);
             }
-            foreach (DirectoryInfo d in inf.GetDirectories()) {
-				AddItem(new LinkDirectory(d, this));
+            foreach (DirectoryInfo d in inf.GetDirectories())
+            {
+                AddItem(new LinkDirectory(d, this));
             }
-            foreach (FileInfo f in inf.GetFiles()) {
-				AddItem(new LinkFile(f, this));
+            foreach (FileInfo f in inf.GetFiles())
+            {
+                AddItem(new LinkFile(f, this));
             }
             watcher = new FileSystemWatcher();
-			watcher.Path = Resource.FullName;
+            watcher.Path = Resource.FullName;
             watcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName;
             watcher.Created += new FileSystemEventHandler(OnCreated);
-			watcher.Deleted += new FileSystemEventHandler(OnDeleted);
-			watcher.Renamed += new RenamedEventHandler(OnRenamed);
-			watcher.EnableRaisingEvents = true;
-		} 
+            watcher.Deleted += new FileSystemEventHandler(OnDeleted);
+            watcher.Renamed += new RenamedEventHandler(OnRenamed);
+            watcher.EnableRaisingEvents = true;
+        }
 
         private void OnCreated(object source, FileSystemEventArgs e)
         {
-            try {
-                if (IsFile(e.FullPath)) {
+            try
+            {
+                if (IsFile(e.FullPath))
+                {
                     AddItem(new LinkFile(new FileInfo(e.FullPath), this));
                 }
-                else {
+                else
+                {
                     AddItem(new LinkDirectory(new DirectoryInfo(e.FullPath), this));
                 }
             }
-            catch (Exception err) {return;}
+            catch (Exception err) { return; }
         }
         private void OnDeleted(object source, FileSystemEventArgs e)
         {
@@ -71,23 +82,28 @@ namespace Resouces
         private void OnRenamed(object source, RenamedEventArgs e)
         {
             FileSystemInfo f = null;
-            try {
-                if (IsFile(e.FullPath)) {
+            try
+            {
+                if (IsFile(e.FullPath))
+                {
                     f = new FileInfo(e.FullPath);
                 }
-                else {
+                else
+                {
                     f = new DirectoryInfo(e.FullPath);
                 }
             }
-            catch (Exception err) {return;}
+            catch (Exception err) { return; }
             IItem t = contain[e.OldName];
             t.SetInfo(f, this);
             contain.Remove(e.OldName);
             AddItem(t);
         }
 
-        private bool IsFile(string path) {
-            if (File.Exists(path)) {
+        private bool IsFile(string path)
+        {
+            if (File.Exists(path))
+            {
                 return true;
             }
             else if (System.IO.Directory.Exists(path))
@@ -126,7 +142,8 @@ namespace Resouces
         {
             string[] path_arr = path.Split('/');
             IItem result = this;
-            foreach (string bit in path_arr) {
+            foreach (string bit in path_arr)
+            {
                 try
                 {
                     if (bit == ".") { }
@@ -174,37 +191,56 @@ namespace Resouces
 
         public override void SetInfo(FileSystemInfo target, IItem New_parent)
         {
-            if (target is DirectoryInfo) {
+            if (target is DirectoryInfo)
+            {
                 directoryInfo = target as DirectoryInfo;
                 Parent = New_parent;
             }
-            else {
+            else
+            {
                 throw new FormatException(target.FullName);
             }
         }
 
-		public void Configurate(XElement data) {
+        public void Configurate(XElement data)
+        {
             DirectoryInfo inf = new DirectoryInfo(data.Element("linker").Element("root_dir").Value);
-            string[] def_groupes = Regex.Split(data.Element("users").Element("default_user").Attribute("groups").Value, ",");
-            ConstructHelp(inf, null, def_groupes);
-			try {
-				XElement el = data.Element("linker").Element("additive_dirs");
-				foreach (XElement add_dir in el.Elements()) {
-					if (Directory.Exists(add_dir.Value)) {
-						AddItem(new LinkDirectory(new DirectoryInfo(add_dir.Value), this));
-					}
-					else if (File.Exists(add_dir.Value)) {
-						AddItem(new LinkFile(new FileInfo(add_dir.Value), this));
-					}
-				}
-			}
-			catch (Exception err) {}
+            ConstructHelp(inf, null, Repository.Configurate.Users.DefaultGroup);
 
-            //foreach (XElement el in data.Element("linker").Element("resource_config").Elements()) {
-            //    IItem resource = GetResourceByString(el.Value);
-            //    string[] groups = Regex.Split(el.Attribute("groips").Value, ",");
-            //    resource.AddGroupe(groups);
-            //}
-		}
-	}
+            try
+            {
+                XElement el = data.Element("linker").Element("additive_dirs");
+                foreach (XElement add_dir in el.Elements())
+                {
+                    if (Directory.Exists(add_dir.Value))
+                    {
+                        AddItem(new LinkDirectory(new DirectoryInfo(add_dir.Value), this));
+                    }
+                    else if (File.Exists(add_dir.Value))
+                    {
+                        AddItem(new LinkFile(new FileInfo(add_dir.Value), this));
+                    }
+                }
+            }
+            catch (Exception err) { }
+
+            foreach (XElement el in data.Element("linker").Element("resource_config").Elements()) {
+                IItem resource;
+                try {
+                    resource = GetResourceByString(el.Value);
+                }
+                catch (FileNotFoundException err) { continue; }
+                string[] groups = Regex.Split(el.Attribute("groups").Value, ",");
+                resource.ClearAllGroupe();
+                for (int i = 0; i < groups.Length; i++) {
+                    GroupInfo gr;
+                    try {
+                        gr = Repository.Configurate.Users.groups[groups[i]];
+                    }
+                    catch (Exception err) { continue; }
+                    resource.AddGroupe(gr);
+                }
+            }
+        }
+    }
 }

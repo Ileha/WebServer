@@ -17,9 +17,7 @@ namespace Config
 		public SessionCollect Collector;
 		public UserBank Users;
 
-        public WebServerConfig() {
-			Configurate();
-		}
+        public WebServerConfig() {}
 
         private XElement GetElements(IConfigurate conf) {
             if (conf.ConfigName.Length > 1) {
@@ -43,7 +41,10 @@ namespace Config
             return false;
         }
 
-		private void Configurate() {
+		public void Configurate() {
+            Users = new UserBank();
+            Users.Configurate(GetElements(Users));
+
             LinkDirectory d = new LinkDirectory();
             ResourceLinker = d;
             d.Configurate(GetElements(d));
@@ -53,9 +54,6 @@ namespace Config
 
 			Collector = new SessionCollect();
 			Collector.Configurate(GetElements(Collector));
-
-			Users = new UserBank();
-			Users.Configurate(GetElements(Users));
 
 			Host = new WebSerwer();
 			Host.Configurate(GetElements(Host));

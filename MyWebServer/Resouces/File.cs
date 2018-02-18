@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Host.Users;
 
 namespace Resouces
 {
@@ -12,7 +13,7 @@ namespace Resouces
         private FileInfo Resource;
         public IItem Parent;
 
-		public LinkFile(FileInfo inf, IItem _parent, params string[] valid_groups) : base() {
+		public LinkFile(FileInfo inf, IItem _parent, params GroupInfo[] valid_groups) : base() {
             Resource = inf;
             Parent = _parent;
             for (int i = 0; i < valid_groups.Length; i++) {

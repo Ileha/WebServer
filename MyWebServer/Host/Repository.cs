@@ -36,6 +36,7 @@ namespace Host {
 
 		public static void LoadWebServer() {
 			Configurate = new WebServerConfig();
+            Configurate.Configurate();
 		}
 	}
 }

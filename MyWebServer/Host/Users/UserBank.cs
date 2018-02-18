@@ -6,30 +6,55 @@ using System.Text.RegularExpressions;
 
 namespace Host.Users
 {
-	public class UserBank : IConfigurate
-	{
-		public Dictionary<string, UserInfo> users;
-		public Dictionary<string, GroupInfo> groups;
+    public class UserBank : IConfigurate
+    {
+        private UserInfo _defaultUser;
+        public UserInfo DefaultUser {
+            get { return _defaultUser; }
+        }
 
-		public UserBank() {
-			users = new Dictionary<string, UserInfo>();
-			groups = new Dictionary<string, GroupInfo>();
-		}
+        private GroupInfo _defaultGroup;
+        public GroupInfo DefaultGroup
+        {
+            get { return _defaultGroup; }
+        }
+
+        public Dictionary<string, GroupInfo> groups;
+
+        public UserBank()
+        {
+            groups = new Dictionary<string, GroupInfo>();
+        }
 
         private string[] names = new string[] { "users" };
-		public string[] ConfigName {
-			get { return names; }
-		}
+        public string[] ConfigName
+        {
+            get { return names; }
+        }
 
-		public void Configurate(XElement data) {
-            string[] default_groups = Regex.Split(data.Element("default_user").Value, ",");
-			UserInfo all_user = new UserInfo("", "", default_groups);
+        public void Configurate(XElement data)
+        {
+            string default_group = data.Element("default_user").Attribute("groups").Value;
+            _defaultUser = new UserInfo("default", "");
+            _defaultGroup = new GroupInfo(default_group, _defaultUser);
+            groups.Add(_defaultGroup.Name, _defaultGroup);
 
             foreach (XElement el in data.Element("users").Elements()) {
-				string name = el.Attribute("name").Value;
-				string[] groups = Regex.Split(el.Attribute("groups").Value, ",");
-				users.Add(name, new UserInfo(name, el.Attribute("passwd").Value, groups));
-			}
-		}
-	}
+                string[] groups_title = Regex.Split(el.Attribute("groups").Value, ",");
+                UserInfo new_user = new UserInfo(el.Attribute("name").Value, el.Attribute("passwd").Value);
+                
+                for (int i = 0; i < groups_title.Length; i++) {
+                    GroupInfo curr_group = null;
+                    try {
+                        curr_group = groups[groups_title[i]];
+                    }
+                    catch (Exception err) {
+                        curr_group = new GroupInfo(groups_title[i]);
+                        groups.Add(curr_group.Name, curr_group);
+                    }
+                    curr_group.AddUser(new_user);
+                }
+            }
+        }
+    }
 }
