@@ -45,11 +45,11 @@ namespace Resouces
             }
             foreach (DirectoryInfo d in inf.GetDirectories())
             {
-                AddItem(new LinkDirectory(d, this));
+                AddItem(new LinkDirectory(d, this, valid_groups));
             }
             foreach (FileInfo f in inf.GetFiles())
             {
-                AddItem(new LinkFile(f, this));
+                AddItem(new LinkFile(f, this, valid_groups));
             }
             watcher = new FileSystemWatcher();
             watcher.Path = Resource.FullName;

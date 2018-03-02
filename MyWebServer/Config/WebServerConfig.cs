@@ -9,8 +9,6 @@ using System.Linq;
 namespace Config
 {
 	public class WebServerConfig {
-
-
 		public RedirectConfig RedirectConfigure;
         public IItem ResourceLinker;
 		public WebSerwer Host;

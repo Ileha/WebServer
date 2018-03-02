@@ -71,8 +71,12 @@ namespace Host {
                 if (!finduser) {//basic authentication
 					
 				}
+                if (!finduser) {
+                    User = Repository.Configurate.Users.DefaultUser;
+                    UserData.AddData("user", User);
+                }
 
-				reads_bytes = new Reader(obj_request);//нахождение и получение запрошенных данных
+				reads_bytes = new Reader(obj_request, User);//нахождение и получение запрошенных данных
 				try {//попытка найти обработчик данных
 					DataHandle = Repository.DataHandlers[reads_bytes.file_extension];
 				}

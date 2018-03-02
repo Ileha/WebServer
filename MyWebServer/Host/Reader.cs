@@ -4,6 +4,7 @@ using Host.ServerExceptions;
 using Config;
 using System.Text;
 using Resouces;
+using Host.Users;
 
 namespace Host
 {
@@ -12,7 +13,7 @@ namespace Host
         public readonly byte[] data;
         public readonly string file_extension;
 
-        public Reader(Reqest Reqest) {
+        public Reader(Reqest Reqest, UserInfo target_user) {
             try {
                 IItem res = null;
                 try {
@@ -20,6 +21,9 @@ namespace Host
                 }
                 catch (FileNotFoundException err) {
 					throw Repository.ExceptionFabrics["Not Found"].Create(null);
+                }
+                if (!res.IsUserEnter(target_user)) {
+                    throw Repository.ExceptionFabrics["Internal Server Error"].Create(null);//временно   
                 }
                 if (res.GetType() == typeof(LinkFile)) {
                     try {
@@ -33,6 +37,7 @@ namespace Host
                 else if (Repository.DirReader != null && res.GetType() == typeof(LinkDirectory)) {
                     string str = "";
                     foreach (IItem ite in res) {
+                        if (!ite.IsUserEnter(target_user)) { continue; }
                         str += Repository.DirReader.ItemPars(ite);
                     }
                     data = Encoding.UTF8.GetBytes(str);
