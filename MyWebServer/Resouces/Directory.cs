@@ -66,11 +66,11 @@ namespace Resouces
             {
                 if (IsFile(e.FullPath))
                 {
-                    AddItem(new LinkFile(new FileInfo(e.FullPath), this));
+                    AddItem(new LinkFile(new FileInfo(e.FullPath), this, Repository.Configurate.Users.DefaultGroup));
                 }
                 else
                 {
-                    AddItem(new LinkDirectory(new DirectoryInfo(e.FullPath), this));
+                    AddItem(new LinkDirectory(new DirectoryInfo(e.FullPath), this, Repository.Configurate.Users.DefaultGroup));
                 }
             }
             catch (Exception err) { return; }
@@ -214,11 +214,11 @@ namespace Resouces
                 {
                     if (Directory.Exists(add_dir.Value))
                     {
-                        AddItem(new LinkDirectory(new DirectoryInfo(add_dir.Value), this));
+                        AddItem(new LinkDirectory(new DirectoryInfo(add_dir.Value), this, Repository.Configurate.Users.DefaultGroup));
                     }
                     else if (File.Exists(add_dir.Value))
                     {
-                        AddItem(new LinkFile(new FileInfo(add_dir.Value), this));
+                        AddItem(new LinkFile(new FileInfo(add_dir.Value), this, Repository.Configurate.Users.DefaultGroup));
                     }
                 }
             }

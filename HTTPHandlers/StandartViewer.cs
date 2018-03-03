@@ -12,7 +12,7 @@ namespace DirViewer
 
 		public void OnStart() {
 			Console.WriteLine("Test event start");
-			Repository.Configurate.ResourceLinker.AddItem(new LinkDirectory(new DirectoryInfo(Repository.ConfigBody.Element("allow_browse_folders").Attribute("reourse_path").Value), Repository.Configurate.ResourceLinker));
+			Repository.Configurate.ResourceLinker.AddItem(new LinkDirectory(new DirectoryInfo(Repository.ConfigBody.Element("allow_browse_folders").Attribute("reourse_path").Value), Repository.Configurate.ResourceLinker, Repository.Configurate.Users.DefaultGroup));
 		}
         public void OnStop() {}
         public string ItemPars(IItem file)
