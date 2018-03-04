@@ -15,18 +15,21 @@ namespace Host.ServerExceptions
 
         public override ExceptionCode Create(object data)
         {
-            throw new NotImplementedException();
+			return new Unauthorized((string)data);
         }
     }
     public class Unauthorized : ExceptionCode
     {
-        public Unauthorized() {
+		private string message;
+
+        public Unauthorized(string message) {
             Code = "401 Unauthorized";
             _IsFatal = true;
+			this.message = message;
         }
 
 		public override void ExceptionHandle(ref Reqest request, ref Response response) {
-			response.AddToHeader("WWW-Authenticate", "Basic realm=\"Access to staging site\"");
+			response.AddToHeader("WWW-Authenticate", "Basic realm=\""+message+"\"");
 		}
     }
 }
