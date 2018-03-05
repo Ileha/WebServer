@@ -105,7 +105,13 @@ namespace Host {
         }
 
 		public void Configurate(XElement data) {
-			IPAddress adres = IPAddress.Parse(data.Element("ip_adress").Value);
+			IPAddress adres = null;
+			if (data.Element("ip_adress").Value != "+") {
+				adres = IPAddress.Parse(data.Element("ip_adress").Value);
+			}
+			else {
+				adres = IPAddress.Any;
+			}
 			ipEndPoint = new IPEndPoint(adres, Convert.ToInt32(data.Element("port").Value));
 			data.Add(new XElement("guid", Guid.NewGuid().ToString("N")));
             sListener = new TcpListener(ipEndPoint);
