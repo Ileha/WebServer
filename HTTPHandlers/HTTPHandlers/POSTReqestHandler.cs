@@ -24,7 +24,7 @@ namespace HttpHandlers
 
 		public override void ParseData(ref Reqest output, string data_sourse)
 		{
-			string data_type = output.preferens["Content-Type"].Value["0"];
+			string data_type = output.preferens["Content-Type"].Value[0].Value["0"];
 			if (data_type == "application/x-www-form-urlencoded") {
 				MatchCollection collect = data_type01.Matches(data_sourse);
 				foreach (Match m in collect) {
@@ -33,7 +33,7 @@ namespace HttpHandlers
 				}
 			}
 			else if (data_type == "multipart/form-data") {
-				string for_split = "--" + output.preferens["Content-Type"].Value["boundary"];
+				string for_split = "--" + output.preferens["Content-Type"].Value[0].Value["boundary"];
 				string[] data_parts = Regex.Split(data_sourse, for_split);
 				foreach (string s in data_parts) {
 					if (s == "" || s == "--\r\n") { continue; }
@@ -48,10 +48,10 @@ namespace HttpHandlers
 						}
 					}
 					if (val.ContainsKey("Content-Type")) {
-						data_to_return = new FileData(val["Content-Disposition"].Value["name"], Encoding.UTF8.GetBytes(vals[1]), val);
+						data_to_return = new FileData(val["Content-Disposition"].Value[0].Value["name"], Encoding.UTF8.GetBytes(vals[1]), val);
 					}
 					else {
-						data_to_return = new StringData(val["Content-Disposition"].Value["name"], vals[1], val);
+						data_to_return = new StringData(val["Content-Disposition"].Value[0].Value["name"], vals[1], val);
 					}
 					output.varibles.Add(data_to_return.Name, data_to_return);
 				}
@@ -85,7 +85,7 @@ namespace HttpHandlers
 
 		public override bool CanHasData(Reqest output) {
 			try {
-				if (Convert.ToInt32(output.preferens["Content-Length"].Value["0"]) != 0) {
+				if (Convert.ToInt32(output.preferens["Content-Length"].Value[0].Value["0"]) != 0) {
 					return true;
 				}
 				else {
@@ -98,7 +98,7 @@ namespace HttpHandlers
 		}
 
 		public override long GetDataLenght(Reqest output) {
-			return Convert.ToInt64(output.preferens["Content-Length"].Value["0"]);
+			return Convert.ToInt64(output.preferens["Content-Length"].Value[0].Value["0"]);
 		}
 	}
 }

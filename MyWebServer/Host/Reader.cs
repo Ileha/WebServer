@@ -23,7 +23,7 @@ namespace Host
 					throw Repository.ExceptionFabrics["Not Found"].Create(null);
                 }
                 if (!res.IsUserEnter(target_user)) {
-                    throw Repository.ExceptionFabrics["Internal Server Error"].Create(null);//временно   
+                    throw Repository.ExceptionFabrics["Unauthorized"].Create("Access to staging site");
                 }
                 if (res.GetType() == typeof(LinkFile)) {
                     try {

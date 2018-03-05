@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net.Sockets;
-using System.Text;
 using Host.ServerExceptions;
 using Config;
 using Host.HttpHandler;
@@ -10,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Host.Session;
 using Host.Users;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Host {
     public class ConnectionHandler {
@@ -61,16 +62,27 @@ namespace Host {
 					UserData = new UserConnect();
 					response.SetCookie(Repository.ConfigBody.Element("webserver").Element("guid").Value.ToString(), UserData.ID);
 				}
-				//нахождение пользователяя
+
+				//нахождение пользователя
 				bool finduser = false;
-				try {//попытка нахождения пользоавтеля в сессии
+				if (!finduser) {//basic authentication
+					try {
+						byte[] data_authentication = Convert.FromBase64String(obj_request.preferens["Authorization"].Value[0].Value["1"]);
+						string[] decodedString = Regex.Split(Encoding.UTF8.GetString(data_authentication), ":");
+						UserInfo find = Repository.Configurate.Users.GetUserByName(decodedString[0]);
+						if (find.Password == decodedString[1]) {
+							finduser = true;
+							User = find;
+							UserData.AddData("user", User);
+						}
+					}
+					catch (Exception err) {}
+				}
+				try {//попытка нахождения пользователя в сессии
 					User = UserData.GetData<UserInfo>("user");
 					finduser = true;
 				}
 				catch (Exception err) {}
-                if (!finduser) {//basic authentication
-					
-				}
                 if (!finduser) {
                     User = Repository.Configurate.Users.DefaultUser;
                     UserData.AddData("user", User);

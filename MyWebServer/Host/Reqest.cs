@@ -5,8 +5,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Host.HttpHandler;
 using Host.ServerExceptions;
-using Config;
-using System.Reflection;
 using System.Net.Sockets;
 using Host.DataInput;
 using Host.HeaderData;
@@ -14,8 +12,8 @@ using Host.HeaderData;
 namespace Host {
     public class Reqest {
         public string URL;
-        public Dictionary<string, ABSReqestData> varibles;
-        public Dictionary<string, HeaderValueMain> preferens;
+        public Dictionary<string, ABSReqestData> varibles;//данные после заголовков
+        public Dictionary<string, HeaderValueMain> preferens;//заголовки
 		public Dictionary<string, string> cookies;
 
         public Reqest() {

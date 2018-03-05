@@ -14,26 +14,34 @@ namespace Host.Users
         }
 
         private GroupInfo _defaultGroup;
-        public GroupInfo DefaultGroup
-        {
+        public GroupInfo DefaultGroup {
             get { return _defaultGroup; }
         }
-
         public Dictionary<string, GroupInfo> groups;
 
-        public UserBank()
-        {
-            groups = new Dictionary<string, GroupInfo>();
-        }
+		private string[] names = new string[] { "users" };
+		public string[] ConfigName {
+			get { return names; }
+		}
 
-        private string[] names = new string[] { "users" };
-        public string[] ConfigName
-        {
-            get { return names; }
-        }
+		public UserBank() {
+			groups = new Dictionary<string, GroupInfo>();
+		}
 
-        public void Configurate(XElement data)
-        {
+		public UserInfo GetUserByName(string name) {
+			Exception th = null;
+			foreach (GroupInfo gr in groups.Values) {
+				try {
+					return gr.GetUser(name);
+				}
+				catch (Exception err) {
+					th = err;
+				}
+			}
+			throw th;
+		}
+
+        public void Configurate(XElement data) {
             string default_group = data.Element("default_user").Attribute("groups").Value;
             _defaultUser = new UserInfo("default", "");
             _defaultGroup = new GroupInfo(default_group, _defaultUser);
@@ -43,6 +51,7 @@ namespace Host.Users
                 string[] groups_title = Regex.Split(el.Attribute("groups").Value, ",");
                 UserInfo new_user = new UserInfo(el.Attribute("name").Value, el.Attribute("passwd").Value);
                 
+
                 for (int i = 0; i < groups_title.Length; i++) {
                     GroupInfo curr_group = null;
                     try {

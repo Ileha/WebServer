@@ -59,7 +59,12 @@ namespace Host.Session {
 		}
 
 		public void AddData(string name, object data) {
-			Data.Add(name, data);
+			try {
+				Data.Add(name, data);
+			}
+			catch (Exception err) {
+				Data[name] = data;
+			}
 		}
 
 		public T GetData<T>(string name) where T : class {

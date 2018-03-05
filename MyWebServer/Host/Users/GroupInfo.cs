@@ -18,6 +18,9 @@ namespace Host.Users
                 AddUser(groups[i]);
             }
 		}
+		public UserInfo GetUser(string name) {
+			return Contain[name];
+		}
 
         public void AddUser(UserInfo user) {
             Contain.Add(user.Name, user);
