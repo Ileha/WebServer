@@ -39,7 +39,7 @@ namespace MainProgramm
 			Type ourtype = typeof(IDirectoryReader);
 			foreach (Assembly assem in assems) {
 				//Console.WriteLine("find assembly: {0}", assem.ToString());
-				IEnumerable<Type> list = assem.GetTypes().Where((arg) => arg.GetInterfaces().Contains(ourtype) && arg.IsClass);
+				IEnumerable<Type> list = assem.GetTypes().Where((arg) => arg.IsSubclassOf(ourtype) && arg.IsClass);
 				foreach (Type t in list) {
 					if (name == t.Name) {
 						Repository.DirReader = (IDirectoryReader)Activator.CreateInstance(t);

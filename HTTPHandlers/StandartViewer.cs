@@ -15,7 +15,7 @@ namespace DirViewer
 			Repository.Configurate.ResourceLinker.AddItem(new LinkDirectory(new DirectoryInfo(Repository.ConfigBody.Element("allow_browse_folders").Attribute("reourse_path").Value), Repository.Configurate.ResourceLinker, Repository.Configurate.Users.DefaultGroup));
 		}
         public void OnStop() {}
-        public string ItemPars(IItem file)
+        public override string ItemPars(IItem file)
         {
             if (file.GetType() == typeof(LinkDirectory))
             {
@@ -26,5 +26,9 @@ namespace DirViewer
             }
             else { throw new InvalidDataException(); }
         }
+
+		public override string UpFolder(IItem file) {
+			return "<p><a href=\"" + file.GetPath() + "\"><img src=\"WebServerResourses/folder.png\" height=\"20\"></img>..</a>";
+		}
 	}
 }

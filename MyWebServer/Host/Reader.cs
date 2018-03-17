@@ -35,11 +35,12 @@ namespace Host
                     }
                 }
                 else if (Repository.DirReader != null && res.GetType() == typeof(LinkDirectory)) {
-                    string str = "";
+					string str = Repository.DirReader.ParsDirectoryHeader(res);
                     foreach (IItem ite in res) {
                         if (!ite.IsUserEnter(target_user)) { continue; }
                         str += Repository.DirReader.ItemPars(ite);
                     }
+					str += Repository.DirReader.ParsDirectoryDown(res);
                     data = Encoding.UTF8.GetBytes(str);
                     file_extension = ".html";
                 }
