@@ -172,6 +172,10 @@ namespace Resouces
         public override string GetPath()
         {
             IItem i = this;
+            if (i.GetParent() == null) {
+                return "/";
+            }
+
             string res = "";
 
             while (i.GetParent() != null)
