@@ -89,8 +89,8 @@ namespace Host
             }
 
             string httpbody = "";
-            foreach (KeyValuePair<string, string> vord in http_headers) {
-                httpbody += "\r\n" + vord.Key + ": " + vord.Value;
+            foreach (KeyValuePair<string, string> word in http_headers) {
+                httpbody += "\r\n" + word.Key + ": " + word.Value;
             }
 			foreach (KeyValuePair<string, string> vord in http_cookie) {
                 httpbody += "\r\nSet-Cookie: " + vord.Key + vord.Value;

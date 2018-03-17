@@ -35,9 +35,6 @@ namespace MainProgramm {
                 resident.GetPluginInfo();
                 resident.StartHost();
             }
-            //string rn = "\r\n\r\n";
-            //byte[] b = Encoding.UTF8.GetBytes(rn);
-            //[13, 10, 13, 10]
             Console.ReadLine();
         }
     }

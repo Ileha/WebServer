@@ -45,9 +45,9 @@ namespace HttpHandlers
 				}
 			}
 		}
-		public override void ParseData(ref Reqest output, string data_sourse) {
-			throw new NotImplementedException();
-		}
+		//public override void ParseData(ref Reqest output, string data_sourse) {
+		//	throw new NotImplementedException();
+		//}
 
 		public override bool CanHasData(Reqest output) {
 			return false;

@@ -22,44 +22,44 @@ namespace HttpHandlers
 
 		public override string HandlerVersion { get { return "HTTP/1.1"; } }
 
-		public override void ParseData(ref Reqest output, string data_sourse)
-		{
-			string data_type = output.preferens["Content-Type"].Value[0].Value["0"];
-			if (data_type == "application/x-www-form-urlencoded") {
-				MatchCollection collect = data_type01.Matches(data_sourse);
-				foreach (Match m in collect) {
-					StringData dat = new StringData(m.Groups["name"].Value, m.Groups["val"].Value);
-					output.varibles.Add(dat.Name, dat);
-				}
-			}
-			else if (data_type == "multipart/form-data") {
-				string for_split = "--" + output.preferens["Content-Type"].Value[0].Value["boundary"];
-				string[] data_parts = Regex.Split(data_sourse, for_split);
-				foreach (string s in data_parts) {
-					if (s == "" || s == "--\r\n") { continue; }
-					string[] vals = Regex.Split(s, "\r\n\r\n");//первая заголовки; вторая данные
-					string[] headers = Regex.Split(vals[0], "\r\n");//заголвки
-					ABSReqestData data_to_return;
-					Dictionary<string, HeaderValueMain> val = new Dictionary<string, HeaderValueMain>();
-					for (int i = 0; i < headers.Length; i++) {
-						if (headers[i] != "") {
-							HeaderValueMain val_to_add = new HeaderValueMain(headers[i]);
-							val.Add(val_to_add.Name, val_to_add);
-						}
-					}
-					if (val.ContainsKey("Content-Type")) {
-						data_to_return = new FileData(val["Content-Disposition"].Value[0].Value["name"], Encoding.UTF8.GetBytes(vals[1]), val);
-					}
-					else {
-						data_to_return = new StringData(val["Content-Disposition"].Value[0].Value["name"], vals[1], val);
-					}
-					output.varibles.Add(data_to_return.Name, data_to_return);
-				}
-			}
-			else {
-				throw new BadRequest();
-			}
-		}
+		//public override void ParseData(ref Reqest output, string data_sourse)
+		//{
+		//	string data_type = output.preferens["Content-Type"].Value[0].Value["0"];
+		//	if (data_type == "application/x-www-form-urlencoded") {
+		//		MatchCollection collect = data_type01.Matches(data_sourse);
+		//		foreach (Match m in collect) {
+		//			StringData dat = new StringData(m.Groups["name"].Value, m.Groups["val"].Value);
+		//			output.varibles.Add(dat.Name, dat);
+		//		}
+		//	}
+		//	else if (data_type == "multipart/form-data") {
+		//		string for_split = "--" + output.preferens["Content-Type"].Value[0].Value["boundary"];
+		//		string[] data_parts = Regex.Split(data_sourse, for_split);
+		//		foreach (string s in data_parts) {
+		//			if (s == "" || s == "--\r\n") { continue; }
+		//			string[] vals = Regex.Split(s, "\r\n\r\n");//первая заголовки; вторая данные
+		//			string[] headers = Regex.Split(vals[0], "\r\n");//заголвки
+		//			ABSReqestData data_to_return;
+		//			Dictionary<string, HeaderValueMain> val = new Dictionary<string, HeaderValueMain>();
+		//			for (int i = 0; i < headers.Length; i++) {
+		//				if (headers[i] != "") {
+		//					HeaderValueMain val_to_add = new HeaderValueMain(headers[i]);
+		//					val.Add(val_to_add.Name, val_to_add);
+		//				}
+		//			}
+		//			if (val.ContainsKey("Content-Type")) {
+		//				data_to_return = new FileData(val["Content-Disposition"].Value[0].Value["name"], Encoding.UTF8.GetBytes(vals[1]), val);
+		//			}
+		//			else {
+		//				data_to_return = new StringData(val["Content-Disposition"].Value[0].Value["name"], vals[1], val);
+		//			}
+		//			output.varibles.Add(data_to_return.Name, data_to_return);
+		//		}
+		//	}
+		//	else {
+		//		throw new BadRequest();
+		//	}
+		//}
 
 		public override void ParseHeaders(ref Reqest output, string[] reqest, string URI)
 		{
