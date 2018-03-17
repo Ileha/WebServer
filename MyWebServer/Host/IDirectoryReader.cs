@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Resouces;
+﻿using Resouces;
 using Config;
 using System.Text;
 

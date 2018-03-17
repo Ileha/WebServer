@@ -42,7 +42,6 @@
     <Compile Include="MIMEHandlers\GIFMIME.cs" />
     <Compile Include="MIMEHandlers\JPGMIME.cs" />
     <Compile Include="MIMEHandlers\JSIMIME.cs" />
-    <Compile Include="MIMEHandlers\PHPIMIME.cs" />
     <Compile Include="MIMEHandlers\PNGIMIME.cs" />
     <Compile Include="MIMEHandlers\XMLMIME.cs" />
     <Compile Include="MIMEHandlers\MDIMIME.cs" />
