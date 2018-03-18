@@ -11,8 +11,6 @@ using System.Xml.Linq;
 using Host.ServerExceptions;
 
 namespace Host {
-    public delegate void HandlerExecutor();
-
     public class WebSerwer : IConfigurate {
         private TcpListener sListener;
         private IPEndPoint ipEndPoint;
@@ -71,13 +69,12 @@ namespace Host {
                 sListener.Start();
 				Console.WriteLine("Запуск сервера {0}", Repository.ConfigBody.Element("name").Value);
                 while (is_work) {
-                    // Программа приостанавливается, ожидая входящее соединение
+                    //Программа приостанавливается, ожидая входящее соединение
                     TcpClient handler = sListener.AcceptTcpClient();
-					#if DEBUG
-						Console.WriteLine("хост {1}, соединение через порт {0}", ipEndPoint, Repository.ConfigBody.Element("name").Value);
-					#endif
-					Repository.threads_count+=1;
-                    ConnectionHandler executor = new ConnectionHandler(handler);
+					ConnectionHandler executor = new ConnectionHandler(handler);
+					Console.WriteLine("хост {1}, новое соединение через порт {0}", ipEndPoint, Repository.ConfigBody.Element("name").Value);
+
+					//Repository.threads_count+=1;
                     Task handle = new Task(executor.Execute);
                     handle.Start();
                 }

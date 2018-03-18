@@ -11,7 +11,7 @@ namespace HTTPHandlers
 
 		public void Handle(ref Response response, ref Reqest reqest, ref Reader read)
 		{
-			response.AddToHeader("Content-Type", "text/plain; charset=UTF-8");
+			response.AddToHeader("Content-Type", "text/plain; charset=UTF-8", AddMode.rewrite);
 			response.AddToBody(read.data);
 		}
 	}

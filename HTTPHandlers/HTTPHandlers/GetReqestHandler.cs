@@ -19,8 +19,7 @@ namespace HttpHandlers
 		public override string HandlerType { get { return "GET"; } }
 		public override string HandlerVersion { get { return "HTTP/1.1"; } }
 
-		public override void ParseHeaders(ref Reqest output, string[] reqest, string URI)
-		{
+		public override void ParseHeaders(ref Reqest output, string[] reqest, string URI) {
 			Match m = url_var.Match(URI);
 			output.URL = m.Groups["url"].Value;
 			if (TwoPoints.IsMatch(output.URL)) {//проверить на наличие двух точек подряд

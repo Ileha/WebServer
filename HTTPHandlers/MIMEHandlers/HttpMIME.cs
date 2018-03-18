@@ -8,7 +8,7 @@ namespace Host.MIME
         public string[] file_extensions { get { return _file_extensions; } }
 
 		public void Handle(ref Response response, ref Reqest reqest, ref Reader read) {
-			response.AddToHeader("Content-Type", "text/html; charset=UTF-8");
+			response.AddToHeader("Content-Type", "text/html; charset=UTF-8", AddMode.rewrite);
 			response.AddToBody(read.data);
 		}
 	}

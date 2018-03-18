@@ -31,7 +31,7 @@
 					prot += protocols[i] + ", ";
 				}
 			}
-			response.AddToHeader("Upgrade", prot);
+			response.AddToHeader("Upgrade", prot, AddMode.rewrite);
 		}
 	}
 }

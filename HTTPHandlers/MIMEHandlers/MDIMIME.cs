@@ -11,7 +11,7 @@ namespace MIMEHandlers
 
 		public void Handle(ref Response response, ref Reqest reqest, ref Reader read)
 		{
-			response.AddToHeader("Content-Type", "text/markdown");
+			response.AddToHeader("Content-Type", "text/markdown", AddMode.rewrite);
 			response.AddToBody(read.data);
 		}
 	}

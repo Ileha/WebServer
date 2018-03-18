@@ -81,14 +81,16 @@ namespace Host {
 
         public string URL;
         public ReqestDataStream Data;
-        public Dictionary<string, ABSReqestData> varibles;//данные после заголовков
+        public Dictionary<string, ABSReqestData> varibles;//данные
         public Dictionary<string, HeaderValueMain> preferens;//заголовки
 		public Dictionary<string, string> cookies;
+		public TcpClient client;
 
-        public Reqest() {
+        public Reqest(TcpClient client) {
             varibles = new Dictionary<string, ABSReqestData>();
             preferens = new Dictionary<string, HeaderValueMain>();
 			cookies = new Dictionary<string, string>();
+			this.client = client;
         }
 
         public void CheckTabelOfRedirect() {
@@ -102,8 +104,15 @@ namespace Host {
 			throw Repository.ExceptionFabrics["Moved Permanently"].Create(new_url);
         }
 
-        public static Reqest CreateNewReqest(TcpClient client) {
-            
+		public void Clear() {
+			varibles.Clear();
+			preferens.Clear();
+			cookies.Clear();
+			URL = "";
+			Data = null;
+		}
+
+		public void Create() {
             List<byte> input_data = new List<byte>();
             byte[] buffer = new byte[1024];
 			int count = 0;
@@ -116,20 +125,19 @@ namespace Host {
                 }
             }
 
-
             string headers_data = Encoding.UTF8.GetString(input_data.GetRange(0, index).ToArray());
             byte[] data = null;
 			if (index + 4 < input_data.Count) {
 				data = input_data.GetRange(index + 4, input_data.Count - (index + 4)).ToArray();
 			}
-			Reqest result = new Reqest();
+			Reqest result = this;
             string[] elements = Regex.Split(headers_data, "\r\n");
             try {
                 string[] header = elements[0].Split(' ');
                 IHttpHandler _handler = Repository.ReqestsHandlers[header[0]+header[2]];
                 _handler.ParseHeaders(ref result, elements.ToList().GetRange(1, elements.Length - 1).ToArray(), header[1]);
-				if (_handler.CanHasData(result)) {
-					result.Data = new ReqestDataStream(data, _handler.GetDataLenght(result), client.GetStream());
+				if (_handler.CanHasData(this)) {
+					Data = new ReqestDataStream(data, _handler.GetDataLenght(this), client.GetStream());
 				}
             }
             catch (Exception err) {
@@ -139,8 +147,7 @@ namespace Host {
                 else {
 					throw Repository.ExceptionFabrics["Bad Request"].Create(null);
                 }
-            } 
-            return result;
+            }
         }
 
         public static bool ExistSeqeunce(byte[] sequence, IEnumerable<byte> array, out int index) {

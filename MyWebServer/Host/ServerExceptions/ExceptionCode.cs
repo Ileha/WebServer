@@ -12,7 +12,7 @@ namespace Host.ServerExceptions
 		}
 
 		public virtual void ExceptionHandle(ref Reqest request, ref Response response) {
-			response.AddToHeader("Content-Type", "text/html; charset=UTF-8");
+			response.AddToHeader("Content-Type", "text/html; charset=UTF-8", AddMode.rewrite);
 			response.AddToBody("<html><body><h2>An error has occurred code of error " + Code + "</h2></body></html>");
 		}
 

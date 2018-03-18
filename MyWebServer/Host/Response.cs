@@ -10,6 +10,11 @@ using System.Net.Sockets;
 
 namespace Host
 {
+	public enum AddMode {
+		adding,
+		rewrite
+	}
+
     public class Response
     {
 //HTTP/1.1 200 OK\r\n
@@ -28,7 +33,7 @@ namespace Host
 //";
 		public UserConnect UserData;
 
-        private string bolvanka = "HTTP/1.1 {0}\r\nServer: MyWebServer(0.0.0.1) (Unix) (Red-Hat/Linux)\r\nConnection: close{1}\r\n\r\n";
+        private string bolvanka = "HTTP/1.1 {0}\r\nServer: MyWebServer(0.0.0.1) (Unix) (Red-Hat/Linux){1}\r\n\r\n";
         public ExceptionCode code;
 		private Dictionary<string, string> http_headers;
 		private Dictionary<string, string> http_cookie;
@@ -45,9 +50,25 @@ namespace Host
 			http_body = new List<byte[]>();
 			Connection = connection;
         }
+		public void Clear() {
+			http_headers.Clear();
+			http_cookie.Clear();
+			http_body.Clear();
+			code = null;
+		}
 
-		public void AddToHeader(string _key, string _value) {
-			http_headers.Add(_key, _value);
+		public void AddToHeader(string _key, string _value, AddMode mode) {
+			try {
+                http_headers.Add(_key, _value);
+            }
+            catch (Exception is_has) {
+				if (mode == AddMode.rewrite) {
+					http_headers[_key] = _value;
+				}
+				else {
+					throw is_has;
+				}
+            }
 		}
 
 		public void AddToBody(string data) {
@@ -64,10 +85,9 @@ namespace Host
 				adding_cookie += "; "+settings[i];
 			}
 			http_cookie.Add(name, adding_cookie);
-			//AddToHeader("Set-Cookie", adding_cookie);
 		}
 
-		public void SendData(Reqest request) {
+		public bool SendData(Reqest request) { //false on connection close
 			if (code.IsFatal) {
 				http_body.Clear();
 				http_headers.Clear();
@@ -81,12 +101,27 @@ namespace Host
 				data_length += arr.Length;
 			}
 
-            try {
-				AddToHeader("Content-Length", data_length.ToString());
-            }
-            catch (ArgumentException is_has) {
-				http_headers["Content-Length"] = data_length.ToString();
-            }
+			AddToHeader("Content-Length", data_length.ToString(), AddMode.rewrite);
+			//Connection: keep-alive
+			bool keep_alive = true;
+			try {
+				//Console.WriteLine(request.preferens["Connection"].Value[0].Value["0"]);
+				if (request.preferens["Connection"].Value[0].Value["0"] == "close") {
+					keep_alive = false;
+				}
+			}
+			catch (Exception err) {
+				//Console.WriteLine("close");
+				keep_alive = false;
+			}
+			if (keep_alive) {
+				try {
+					AddToHeader("Connection", "keep-alive", AddMode.adding);
+				}
+				catch (Exception err) {
+					keep_alive = false;
+				}
+			}
 
             string httpbody = "";
             foreach (KeyValuePair<string, string> word in http_headers) {
@@ -101,7 +136,12 @@ namespace Host
 			foreach (byte[] arr in http_body) {
 				Connection.GetStream().Write(arr, 0, arr.Length);
 			}
-			Connection.Close();
+
+			if (!keep_alive) {
+				Connection.Close();
+			}
+			return keep_alive;
+
         }
     }
 }

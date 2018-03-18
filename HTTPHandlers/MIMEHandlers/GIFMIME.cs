@@ -15,7 +15,7 @@ namespace HTTPHandlers
 
         public void Handle(ref Response response, ref Reqest reqest, ref Reader read)
         {
-			response.AddToHeader("Content-Type", "image/gif");
+			response.AddToHeader("Content-Type", "image/gif", AddMode.rewrite);
 			response.AddToBody(read.data);
         }
     }

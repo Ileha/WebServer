@@ -24,42 +24,51 @@ namespace Host {
 		public UserConnect UserData;
 		public IMIME DataHandle;
 		public UserInfo User;
+		private string connect;
 
         public ConnectionHandler(TcpClient Connection)
         {
             connection = Connection;
 			code = new OK();
             handler = null;
-            obj_request = null;
+            obj_request = new Reqest(connection);//создание экземпляра класса запроса;
             reads_bytes = null;
 			UserData = null;
 			DataHandle = null;
+			response = new Response(connection); //создание экземпляра класса ответа
 			User = null;
         }
 
-        public void Execute()
-        {
+		public void Clear() {
+			obj_request.Clear();
+			response.Clear();
+		}
 
-            response = new Response(connection); //создание экземпляра класса ответа
-            try
-            {
-                obj_request = Reqest.CreateNewReqest(connection);//создание экземпляра класса запроса
+		public void Execute() {
+			connect = Guid.NewGuid().ToString();
+			while (ExecuteHandler()) {
+				Clear();
+			}
+			Console.WriteLine("end connection {0}", connect);
+		}
+
+        private bool ExecuteHandler() //false on connection close
+        {   
+			Console.WriteLine("continue connection {0}", connect);
+            try {
+				obj_request.Create();
                 obj_request.CheckTabelOfRedirect();//проверка таблицы перенаправлений
-                try
-                {//попытка найти данные к запросу
+                try {//попытка найти данные к запросу
                     UserData = UserConnect.GetUserDataFromID(obj_request.cookies[Repository.ConfigBody.Element("webserver").Element("guid").Value.ToString()]);
                 }
-                catch (Exception err)
-                {
-                    //при неудачной попытки(осутствуют данные или нет информации в куках) создать данные и запись куков в ответ
+                catch (Exception err) {//при неудачной попытки(осутствуют данные или нет информации в куках) создать данные и запись куков в ответ
                     UserData = new UserConnect();
                     response.SetCookie(Repository.ConfigBody.Element("webserver").Element("guid").Value.ToString(), UserData.ID);
                 }
 
                 //нахождение пользователя
                 bool finduser = false;
-                if (!finduser)
-                {//basic authentication
+                if (!finduser) {//basic authentication
                     try
                     {
                         byte[] data_authentication = Convert.FromBase64String(obj_request.preferens["Authorization"].Value[0].Value["1"]);
@@ -74,40 +83,37 @@ namespace Host {
                     }
                     catch (Exception err) { }
                 }
-                try
-                {//попытка нахождения пользователя в сессии
+                try {//попытка нахождения пользователя в сессии
                     User = UserData.GetData<UserInfo>("user");
                     finduser = true;
                 }
                 catch (Exception err) { }
-                if (!finduser)
-                {
+                if (!finduser) {
                     User = Repository.Configurate.Users.DefaultUser;
                     UserData.AddData("user", User);
                 }
 
                 reads_bytes = new Reader(obj_request, User);//нахождение и получение запрошенных данных
-                try
-                {//попытка найти обработчик данных
+                try {//попытка найти обработчик данных
                     DataHandle = Repository.DataHandlers[reads_bytes.file_extension];
                 }
-                catch (Exception err)
-                {
-                    //при неудачной попытки бросаем исключение
+                catch (Exception err) {//при неудачной попытки бросаем исключение
                     throw Repository.ExceptionFabrics["Internal Server Error"].Create(null);
                 }
+				//websocket
+
                 DataHandle.Handle(ref response, ref obj_request, ref reads_bytes);//вызов обработчика данных
             }
-            catch (ExceptionCode err)
-            {
+            catch (ExceptionCode err) {
                 code = err;
             }
 
             response.code = code;
-            response.SendData(obj_request);
+			return response.SendData(obj_request);
+            
 
-            Repository.threads_count -= 1;
-            Console.WriteLine("закрытие соединения web server {0}\r\nthreads count : {1}", Repository.ConfigBody.Element("name").Value, Repository.threads_count);
+            //Repository.threads_count -= 1;
+            //Console.WriteLine("закрытие соединения web server {0}\r\nthreads count : {1}", Repository.ConfigBody.Element("name").Value, Repository.threads_count);
         }
     }
 }

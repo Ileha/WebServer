@@ -23,7 +23,7 @@ namespace Host.ServerExceptions
 			this.targeURL = targeURL;
 		}
 		public override void ExceptionHandle(ref Reqest request, ref Response response) {
-			response.AddToHeader("Location", targeURL);
+			response.AddToHeader("Location", targeURL, AddMode.rewrite);
 		}
 	}
 }
