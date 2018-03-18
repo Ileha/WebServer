@@ -14,7 +14,7 @@ namespace Host.ConnectionHandlers
 		}
 
 		public void Execute() {
-			while (Handler != null) {
+			while (true) {
 				if (is_start) {
 					Console.WriteLine("start connection id: {0}", ID.ToString());
 					is_start = false;
@@ -23,6 +23,7 @@ namespace Host.ConnectionHandlers
 					Console.WriteLine("continue connection id: {0}", ID.ToString());
 				}
 				Handler = Handler.ExecuteHandler();
+				if (Handler == null) { break; }
 				Handler.Clear();
 			}
 			Console.WriteLine("end connection id: {0}", ID.ToString());
