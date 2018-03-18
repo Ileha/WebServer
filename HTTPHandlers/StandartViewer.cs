@@ -28,7 +28,7 @@ namespace DirViewer
         }
 
 		public override string UpFolder(IItem file) {
-			return "<p><a href=\"" + file.GetPath() + "\"><img src=\"WebServerResourses/folder.png\" height=\"20\"></img>..</a>";
+			return "<p><a href=\"" + file.GetPath() + "\"><img src=\"WebServerResourses/up.png\" height=\"20\"></img>..</a>";
 		}
 
         public override string ThisFolder(IItem file) {

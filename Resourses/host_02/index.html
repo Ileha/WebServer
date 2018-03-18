@@ -1,8 +1,20 @@
+<!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8">
+    <title>Test page for second host of web-server</title>
+  </head>
   <body>
+    <script type="text/javascript" src="WebSockets.js"></script>
+    <script type="text/javascript">
+      function send(data) {
+        socket.send(data);
+      }
+    </script>
     <h1>It works!</h1>
   	from second host
     <br/>
+    <button onclick="send(document.getElementById('message').value)">send to WebSocket</button><input id="message" type="text"></input><br/>
     <p><a href="avatar.jpg">Открыть файл в браузере</a>
     <p><a href="avatar.jpg" download>Скачать файл</a>
     <br/>
