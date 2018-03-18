@@ -10,7 +10,7 @@ using Host.DataInput;
 using Host.HeaderData;
 using System.IO;
 
-namespace Host {
+namespace Host.ConnectionHandlers {
     public class ReqestDataStream : Stream
     {
         private byte[] _data;

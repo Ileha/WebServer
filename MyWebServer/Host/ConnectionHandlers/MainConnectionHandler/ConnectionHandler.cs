@@ -12,8 +12,8 @@ using Host.Users;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Host {
-    public class ConnectionHandler {
+namespace Host.ConnectionHandlers {
+    public class ConnectionHandler : IConnectionHandler {
         public readonly TcpClient connection;
 
         public ExceptionCode code;
@@ -24,9 +24,9 @@ namespace Host {
 		public UserConnect UserData;
 		public IMIME DataHandle;
 		public UserInfo User;
-		private string connect;
+		public TcpClient Client { get { return connection; } }
 
-        public ConnectionHandler(TcpClient Connection)
+		public ConnectionHandler(TcpClient Connection)
         {
             connection = Connection;
 			code = new OK();
@@ -42,19 +42,15 @@ namespace Host {
 		public void Clear() {
 			obj_request.Clear();
 			response.Clear();
+			handler = null;
+			code = new OK();
+			reads_bytes = null;
+			DataHandle = null;
 		}
 
-		public void Execute() {
-			connect = Guid.NewGuid().ToString();
-			while (ExecuteHandler()) {
-				Clear();
-			}
-			Console.WriteLine("end connection {0}", connect);
-		}
-
-        private bool ExecuteHandler() //false on connection close
+		public IConnectionHandler ExecuteHandler() //null on connection close
         {   
-			Console.WriteLine("continue connection {0}", connect);
+			IConnectionHandler res = this;
             try {
 				obj_request.Create();
                 obj_request.CheckTabelOfRedirect();//проверка таблицы перенаправлений
@@ -66,32 +62,30 @@ namespace Host {
                     response.SetCookie(Repository.ConfigBody.Element("webserver").Element("guid").Value.ToString(), UserData.ID);
                 }
 
-                //нахождение пользователя
-                bool finduser = false;
-                if (!finduser) {//basic authentication
-                    try
-                    {
-                        byte[] data_authentication = Convert.FromBase64String(obj_request.preferens["Authorization"].Value[0].Value["1"]);
-                        string[] decodedString = Regex.Split(Encoding.UTF8.GetString(data_authentication), ":");
-                        UserInfo find = Repository.Configurate.Users.GetUserByName(decodedString[0]);
-                        if (find.Password == decodedString[1])
-                        {
-                            finduser = true;
-                            User = find;
-                            UserData.AddData("user", User);
-                        }
-                    }
-                    catch (Exception err) { }
-                }
-                try {//попытка нахождения пользователя в сессии
-                    User = UserData.GetData<UserInfo>("user");
-                    finduser = true;
-                }
-                catch (Exception err) { }
-                if (!finduser) {
-                    User = Repository.Configurate.Users.DefaultUser;
-                    UserData.AddData("user", User);
-                }
+				//нахождение пользователя
+				do {
+					try {
+						byte[] data_authentication = Convert.FromBase64String(obj_request.preferens["Authorization"].Value[0].Value["1"]);
+						string[] decodedString = Regex.Split(Encoding.UTF8.GetString(data_authentication), ":");
+						UserInfo find = Repository.Configurate.Users.GetUserByName(decodedString[0]);
+						if (find.Password == decodedString[1])
+						{
+							User = find;
+							UserData.AddData("user", User);
+							break;
+						}
+					}
+					catch (Exception err) { }
+
+					try {
+						User = UserData.GetData<UserInfo>("user");
+						break;
+					}
+					catch (Exception err) { }
+
+					User = Repository.Configurate.Users.DefaultUser;
+					UserData.AddData("user", User);
+				} while (false);
 
                 reads_bytes = new Reader(obj_request, User);//нахождение и получение запрошенных данных
                 try {//попытка найти обработчик данных
@@ -101,6 +95,18 @@ namespace Host {
                     throw Repository.ExceptionFabrics["Internal Server Error"].Create(null);
                 }
 				//websocket
+				//GET /chat HTTP/1.1
+				//Host: server.example.com
+				//Upgrade: websocket
+				//Connection: Upgrade
+				//try {
+				//	if (obj_request.preferens["Upgrade"].Value[0].Value["0"] == "websocket") {
+						
+				//	}
+				//}
+				//catch (Exception err) {
+					
+				//}
 
                 DataHandle.Handle(ref response, ref obj_request, ref reads_bytes);//вызов обработчика данных
             }
@@ -109,11 +115,15 @@ namespace Host {
             }
 
             response.code = code;
-			return response.SendData(obj_request);
-            
+			if (response.SendData(obj_request)) {
+				return res;
+			}
+			else {
+				return null;
+			}
 
             //Repository.threads_count -= 1;
             //Console.WriteLine("закрытие соединения web server {0}\r\nthreads count : {1}", Repository.ConfigBody.Element("name").Value, Repository.threads_count);
         }
-    }
+	}
 }

@@ -1,4 +1,6 @@
-﻿namespace Host.ServerExceptions {
+﻿using Host.ConnectionHandlers;
+
+namespace Host.ServerExceptions {
 	public class SwitchingProtocolsFabric : ExceptionFabric {
 		public SwitchingProtocolsFabric() {}
 

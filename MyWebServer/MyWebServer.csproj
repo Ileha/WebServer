@@ -42,11 +42,8 @@
     <Compile Include="Host\IHostEvents.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Host\ConnectionHandler.cs" />
     <Compile Include="Host\Reader.cs" />
     <Compile Include="Host\Repository.cs" />
-    <Compile Include="Host\Reqest.cs" />
-    <Compile Include="Host\Response.cs" />
     <Compile Include="Host\WebSerwer.cs" />
     <Compile Include="Host\HttpHandler\IHttpHandler.cs" />
     <Compile Include="Host\MIME\IMIME.cs" />
@@ -77,6 +74,11 @@
     <Compile Include="Host\Users\UserInfo.cs" />
     <Compile Include="Host\Users\GroupInfo.cs" />
     <Compile Include="Host\ServerExceptions\Exceptions\SwitchingProtocolsFabric.cs" />
+    <Compile Include="Host\ConnectionHandlers\IConnectionHandler.cs" />
+    <Compile Include="Host\ConnectionHandlers\ConnectionExecutor.cs" />
+    <Compile Include="Host\ConnectionHandlers\MainConnectionHandler\ConnectionHandler.cs" />
+    <Compile Include="Host\ConnectionHandlers\MainConnectionHandler\Reqest.cs" />
+    <Compile Include="Host\ConnectionHandlers\MainConnectionHandler\Response.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -89,6 +91,7 @@
     <Folder Include="Host\HeaderData\" />
     <Folder Include="Host\ServerExceptions\Exceptions\" />
     <Folder Include="Host\Users\" />
+    <Folder Include="Host\ConnectionHandlers\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

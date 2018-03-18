@@ -1,6 +1,7 @@
 ﻿using System;
 using Host;
 using Host.MIME;
+using Host.ConnectionHandlers;
 
 namespace MIMEHandlers
 {

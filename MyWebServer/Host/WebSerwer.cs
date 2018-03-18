@@ -9,6 +9,7 @@ using Host.MIME;
 using System.Linq;
 using System.Xml.Linq;
 using Host.ServerExceptions;
+using Host.ConnectionHandlers;
 
 namespace Host {
     public class WebSerwer : IConfigurate {
@@ -71,7 +72,7 @@ namespace Host {
                 while (is_work) {
                     //Программа приостанавливается, ожидая входящее соединение
                     TcpClient handler = sListener.AcceptTcpClient();
-					ConnectionHandler executor = new ConnectionHandler(handler);
+					ConnectionExecutor executor = new ConnectionExecutor(new ConnectionHandler(handler));
 					Console.WriteLine("хост {1}, новое соединение через порт {0}", ipEndPoint, Repository.ConfigBody.Element("name").Value);
 
 					//Repository.threads_count+=1;

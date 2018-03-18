@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Host.MIME;
 using Host;
+using Host.ConnectionHandlers;
 
 namespace HTTPHandlers
 {

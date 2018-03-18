@@ -8,7 +8,7 @@ using Config;
 using Host.Session;
 using System.Net.Sockets;
 
-namespace Host
+namespace Host.ConnectionHandlers
 {
 	public enum AddMode {
 		adding,

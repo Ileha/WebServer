@@ -5,6 +5,7 @@ using Host.HttpHandler;
 using System;
 using Host.DataInput;
 using Host.HeaderData;
+using Host.ConnectionHandlers;
 
 namespace HttpHandlers
 {

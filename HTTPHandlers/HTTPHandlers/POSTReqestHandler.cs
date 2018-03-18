@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using Host.HeaderData;
 using Host.DataInput;
+using Host.ConnectionHandlers;
 
 namespace HttpHandlers
 {
