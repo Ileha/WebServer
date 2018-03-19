@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config\ReactorPull.cs" />
+    <Compile Include="Host\ConnectionHandlers\websocket\WebSocketHandler.cs" />
     <Compile Include="Host\IDirectoryReader.cs" />
     <Compile Include="Host\IHostEvents.cs" />
     <Compile Include="Program.cs" />
@@ -85,13 +86,6 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <Folder Include="Host\Session\" />
-    <Folder Include="Host\DataInput\" />
-    <Folder Include="Host\HeaderData\" />
-    <Folder Include="Host\ServerExceptions\Exceptions\" />
-    <Folder Include="Host\Users\" />
-    <Folder Include="Host\ConnectionHandlers\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

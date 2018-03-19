@@ -99,14 +99,14 @@ namespace Host.ConnectionHandlers {
 				//Host: server.example.com
 				//Upgrade: websocket
 				//Connection: Upgrade
-				//try {
-				//	if (obj_request.preferens["Upgrade"].Value[0].Value["0"] == "websocket") {
-						
-				//	}
-				//}
-				//catch (Exception err) {
-					
-				//}
+                try {
+                    if (obj_request.preferens["Upgrade"].Value[0].Value["0"] == "websocket") {
+                        res = new WebSocketHandler(Client);
+                        string[] data = new string[] { "websocket" };
+                        throw Repository.ExceptionFabrics["Switching Protocols"].Create(data);
+                    }
+                }
+                catch (Exception err) {}
 
                 DataHandle.Handle(ref response, ref obj_request, ref reads_bytes);//вызов обработчика данных
             }
