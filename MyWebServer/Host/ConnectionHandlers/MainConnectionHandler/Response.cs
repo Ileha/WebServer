@@ -102,16 +102,13 @@ namespace Host.ConnectionHandlers
 			}
 
 			AddToHeader("Content-Length", data_length.ToString(), AddMode.rewrite);
-			//Connection: keep-alive
 			bool keep_alive = true;
 			try {
-				//Console.WriteLine(request.preferens["Connection"].Value[0].Value["0"]);
 				if (request.preferens["Connection"] == "close") {
 					keep_alive = false;
 				}
 			}
 			catch (Exception err) {
-				//Console.WriteLine("close");
 				keep_alive = false;
 			}
 			if (keep_alive) {

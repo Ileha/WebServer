@@ -96,18 +96,13 @@ namespace Host.ConnectionHandlers {
                     throw Repository.ExceptionFabrics["Internal Server Error"].Create(null, null);
                 }
 				//websocket
-				//GET /chat HTTP/1.1
-				//Host: server.example.com
-				//Upgrade: websocket
-				//Connection: Upgrade
                 try {
                     if (obj_request.preferens["Upgrade"] == "websocket") {
                         res = new WebSocketHandler(Client, reads_bytes);
                         string[] data = new string[] { "websocket" };
                         throw Repository.ExceptionFabrics["Switching Protocols"].Create(
                             (ref Reqest _request, ref Response _response) => {
-                                string str = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
-                                str = _request.preferens["Sec-WebSocket-Key"] + str;
+                                string str = _request.preferens["Sec-WebSocket-Key"] + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
                                 byte[] bytes = Encoding.UTF8.GetBytes(str);
                                 var sha1 = SHA1.Create();
                                 byte[] hashBytes = sha1.ComputeHash(bytes);
