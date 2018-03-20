@@ -106,7 +106,7 @@ namespace Host.ConnectionHandlers
 			bool keep_alive = true;
 			try {
 				//Console.WriteLine(request.preferens["Connection"].Value[0].Value["0"]);
-				if (request.preferens["Connection"].Value[0].Value["0"] == "close") {
+				if (request.preferens["Connection"] == "close") {
 					keep_alive = false;
 				}
 			}

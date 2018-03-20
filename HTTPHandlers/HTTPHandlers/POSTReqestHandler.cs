@@ -6,8 +6,6 @@ using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Text;
-using Host.HeaderData;
-using Host.DataInput;
 using Host.ConnectionHandlers;
 
 namespace HttpHandlers
@@ -78,15 +76,14 @@ namespace HttpHandlers
 					}
 				}
 				else if (head != "") {
-					HeaderValueMain new_header = new HeaderValueMain(s);
-					output.preferens.Add(new_header.Name, new_header);
+					output.preferens.Add(head, m_pref.Groups["val"].Value);
                 }
             }
 		}
 
 		public override bool CanHasData(Reqest output) {
 			try {
-				if (Convert.ToInt32(output.preferens["Content-Length"].Value[0].Value["0"]) != 0) {
+				if (Convert.ToInt32(output.preferens["Content-Length"]) != 0) {
 					return true;
 				}
 				else {
@@ -99,7 +96,7 @@ namespace HttpHandlers
 		}
 
 		public override long GetDataLenght(Reqest output) {
-			return Convert.ToInt64(output.preferens["Content-Length"].Value[0].Value["0"]);
+			return Convert.ToInt64(output.preferens["Content-Length"]);
 		}
 	}
 }

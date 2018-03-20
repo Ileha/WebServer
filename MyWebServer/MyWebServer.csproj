@@ -57,10 +57,6 @@
     <Compile Include="Resouces\IItem.cs" />
     <Compile Include="Host\Session\UserConnect.cs" />
     <Compile Include="Host\Session\UserNotFound.cs" />
-    <Compile Include="Host\DataInput\ABSReqestData.cs" />
-    <Compile Include="Host\DataInput\StringData.cs" />
-    <Compile Include="Host\DataInput\FileData.cs" />
-    <Compile Include="Host\HeaderData\HeaderValueMain.cs" />
     <Compile Include="Config\RedirectConfig.cs" />
     <Compile Include="Config\IConfigurate.cs" />
     <Compile Include="Host\Session\SessionCollect.cs" />

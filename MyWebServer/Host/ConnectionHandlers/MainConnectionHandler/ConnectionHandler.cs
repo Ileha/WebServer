@@ -66,7 +66,7 @@ namespace Host.ConnectionHandlers {
 				//нахождение пользователя
 				do {
 					try {
-						byte[] data_authentication = Convert.FromBase64String(obj_request.preferens["Authorization"].Value[0].Value["1"]);
+						byte[] data_authentication = Convert.FromBase64String(Regex.Split(obj_request.preferens["Authorization"], " ")[1]);
 						string[] decodedString = Regex.Split(Encoding.UTF8.GetString(data_authentication), ":");
 						UserInfo find = Repository.Configurate.Users.GetUserByName(decodedString[0]);
 						if (find.Password == decodedString[1])
@@ -101,13 +101,13 @@ namespace Host.ConnectionHandlers {
 				//Upgrade: websocket
 				//Connection: Upgrade
                 try {
-                    if (obj_request.preferens["Upgrade"].Value[0].Value["0"] == "websocket") {
+                    if (obj_request.preferens["Upgrade"] == "websocket") {
                         res = new WebSocketHandler(Client, reads_bytes);
                         string[] data = new string[] { "websocket" };
                         throw Repository.ExceptionFabrics["Switching Protocols"].Create(
                             (ref Reqest _request, ref Response _response) => {
                                 string str = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
-                                str = _request.preferens["Sec-WebSocket-Key"].Value[0].Value["0"] + str;
+                                str = _request.preferens["Sec-WebSocket-Key"] + str;
                                 byte[] bytes = Encoding.UTF8.GetBytes(str);
                                 var sha1 = SHA1.Create();
                                 byte[] hashBytes = sha1.ComputeHash(bytes);

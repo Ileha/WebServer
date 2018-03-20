@@ -3,8 +3,6 @@ using Host.ServerExceptions;
 using Host;
 using Host.HttpHandler;
 using System;
-using Host.DataInput;
-using Host.HeaderData;
 using Host.ConnectionHandlers;
 
 namespace HttpHandlers
@@ -27,8 +25,7 @@ namespace HttpHandlers
                 throw Repository.ExceptionFabrics["Bad Request"].Create(null, null);
 			}
 			foreach (Match s in name_val.Matches(m.Groups["var"].Value)) {//парсинг данных
-				StringData dat = new StringData(s.Groups["name"].Value, s.Groups["val"].Value);
-				output.varibles.Add(dat.Name, dat);
+				output.varibles.Add(s.Groups["name"].Value, s.Groups["val"].Value);
 			}
 			foreach (string s in reqest) {//парсинг заголовков
 				Match m_pref = pref_val.Match(s);
@@ -40,8 +37,7 @@ namespace HttpHandlers
 					}
 				}
 				else if (head != "") {
-					HeaderValueMain new_header = new HeaderValueMain(s);
-					output.preferens.Add(new_header.Name, new_header);
+					output.preferens.Add(head, m_pref.Groups["val"].Value);
 				}
 			}
 		}

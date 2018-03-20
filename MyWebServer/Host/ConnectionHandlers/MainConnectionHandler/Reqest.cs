@@ -6,8 +6,6 @@ using System.Text.RegularExpressions;
 using Host.HttpHandler;
 using Host.ServerExceptions;
 using System.Net.Sockets;
-using Host.DataInput;
-using Host.HeaderData;
 using System.IO;
 
 namespace Host.ConnectionHandlers {
@@ -81,14 +79,14 @@ namespace Host.ConnectionHandlers {
 
         public string URL;
         public ReqestDataStream Data;
-        public Dictionary<string, ABSReqestData> varibles;//данные
-        public Dictionary<string, HeaderValueMain> preferens;//заголовки
+        public Dictionary<string, string> varibles;//данные
+        public Dictionary<string, string> preferens;//заголовки
 		public Dictionary<string, string> cookies;
 		public TcpClient client;
 
         public Reqest(TcpClient client) {
-            varibles = new Dictionary<string, ABSReqestData>();
-            preferens = new Dictionary<string, HeaderValueMain>();
+            varibles = new Dictionary<string, string>();
+            preferens = new Dictionary<string, string>();
 			cookies = new Dictionary<string, string>();
 			this.client = client;
         }
