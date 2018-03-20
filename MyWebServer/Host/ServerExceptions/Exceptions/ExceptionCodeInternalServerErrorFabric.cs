@@ -6,14 +6,16 @@ namespace Host.ServerExceptions
 
 		public override string name { get { return "Internal Server Error"; } }
 
-		public override ExceptionCode Create(object data)
+        public override ExceptionCode Create(ExceptionUserCode userCode, object data)
 		{
-			return new InternalServerError();
+			return new InternalServerError(userCode);
 		}
 	}
 
 	public class InternalServerError : ExceptionCode {
-		public InternalServerError() {
+        public InternalServerError(ExceptionUserCode userCode)
+            : base(userCode)
+        {
 			Code = "500 Internal Server Error";
 			_IsFatal = true;
 		}	

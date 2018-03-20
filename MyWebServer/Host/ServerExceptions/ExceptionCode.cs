@@ -4,6 +4,8 @@ using Host.ConnectionHandlers;
 
 namespace Host.ServerExceptions
 {
+    public delegate void ExceptionUserCode(ref Reqest request, ref Response response);
+
 	public abstract class ExceptionCode : Exception
 	{
 		protected string Code;
@@ -11,11 +13,23 @@ namespace Host.ServerExceptions
 		public bool IsFatal {
 			get { return _IsFatal; }
 		}
+        protected ExceptionUserCode userCode;
 
-		public virtual void ExceptionHandle(ref Reqest request, ref Response response) {
-			response.AddToHeader("Content-Type", "text/html; charset=UTF-8", AddMode.rewrite);
-			response.AddToBody("<html><body><h2>An error has occurred code of error " + Code + "</h2></body></html>");
+        public ExceptionCode(ExceptionUserCode userCode) {
+            this.userCode = userCode;
+        }
+
+		public void ExceptionHandle(ref Reqest request, ref Response response) {
+            ExceptionHandleCode(ref request, ref response);
+            if (userCode != null) {
+                userCode.Invoke(ref request, ref response);
+            }
 		}
+
+        public virtual void ExceptionHandleCode(ref Reqest request, ref Response response) {
+            response.AddToHeader("Content-Type", "text/html; charset=UTF-8", AddMode.rewrite);
+            response.AddToBody("<html><body><h2>An error has occurred code of error " + Code + "</h2></body></html>");
+        }
 
 		public string GetExeptionCode() {
 			return Code;

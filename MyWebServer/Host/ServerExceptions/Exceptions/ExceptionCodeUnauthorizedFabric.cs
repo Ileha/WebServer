@@ -14,22 +14,24 @@ namespace Host.ServerExceptions
             get { return "Unauthorized"; }
         }
 
-        public override ExceptionCode Create(object data)
+        public override ExceptionCode Create(ExceptionUserCode userCode, object data)
         {
-			return new Unauthorized((string)data);
+			return new Unauthorized((string)data, userCode);
         }
     }
     public class Unauthorized : ExceptionCode
     {
 		private string message;
 
-        public Unauthorized(string message) {
+        public Unauthorized(string message, ExceptionUserCode userCode)
+            : base(userCode)
+        {
             Code = "401 Unauthorized";
             _IsFatal = true;
 			this.message = message;
         }
 
-		public override void ExceptionHandle(ref Reqest request, ref Response response) {
+		public override void ExceptionHandleCode(ref Reqest request, ref Response response) {
 			response.AddToHeader("WWW-Authenticate", "Basic realm=\""+message+"\"", AddMode.rewrite);
 		}
     }

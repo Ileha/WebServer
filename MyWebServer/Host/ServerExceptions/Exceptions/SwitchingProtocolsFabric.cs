@@ -10,20 +10,22 @@ namespace Host.ServerExceptions {
 			}
 		}
 
-		public override ExceptionCode Create(object data) {
-			return new SwitchingProtocols(data as string[]);
+        public override ExceptionCode Create(ExceptionUserCode userCode, object data)
+        {
+			return new SwitchingProtocols(userCode, data as string[]);
 		}
 	}
 	public class SwitchingProtocols : ExceptionCode {
 		private string[] protocols;
 
-		public SwitchingProtocols(params string[] protocols) {
+        public SwitchingProtocols(ExceptionUserCode userCode, params string[] protocols) : base(userCode)
+        {
 			this.protocols = protocols;
 			Code = "101 Switching Protocols";
 			_IsFatal = true;
 		}
 
-		public override void ExceptionHandle(ref Reqest request, ref Response response) {
+		public override void ExceptionHandleCode(ref Reqest request, ref Response response) {
 			string prot = "";
 			for (int i = 0; i < protocols.Length; i++) {
 				if (i == protocols.Length - 1) {

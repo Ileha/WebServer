@@ -7,6 +7,6 @@ namespace Host.ServerExceptions
 
 		public ExceptionFabric() {}
 
-		public abstract ExceptionCode Create(object data);
+		public abstract ExceptionCode Create(ExceptionUserCode userCode, object data);
 	}
 }

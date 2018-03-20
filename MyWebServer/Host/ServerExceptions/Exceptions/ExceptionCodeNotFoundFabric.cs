@@ -7,14 +7,16 @@ namespace Host.ServerExceptions
 
 		public override string name { get { return "Not Found"; } }
 
-		public override ExceptionCode Create(object data)
+        public override ExceptionCode Create(ExceptionUserCode userCode, object data)
 		{
-			return new NotFound();
+			return new NotFound(userCode);
 		}
 	}
 
 	public class NotFound : ExceptionCode {
-		public NotFound() {
+        public NotFound(ExceptionUserCode userCode)
+            : base(userCode)
+        {
 			Code = "404 Not Found";
 			_IsFatal = true;
 		}	

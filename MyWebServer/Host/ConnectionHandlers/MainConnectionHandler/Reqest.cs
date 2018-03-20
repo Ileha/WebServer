@@ -101,7 +101,7 @@ namespace Host.ConnectionHandlers {
             catch (Exception err) { 
                 return;
             }
-			throw Repository.ExceptionFabrics["Moved Permanently"].Create(new_url);
+			throw Repository.ExceptionFabrics["Moved Permanently"].Create(null, new_url);
         }
 
 		public void Clear() {
@@ -145,7 +145,7 @@ namespace Host.ConnectionHandlers {
                     throw err;
                 }
                 else {
-					throw Repository.ExceptionFabrics["Bad Request"].Create(null);
+					throw Repository.ExceptionFabrics["Bad Request"].Create(null, null);
                 }
             }
         }

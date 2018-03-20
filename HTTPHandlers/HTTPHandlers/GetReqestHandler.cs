@@ -24,7 +24,7 @@ namespace HttpHandlers
 			Match m = url_var.Match(URI);
 			output.URL = m.Groups["url"].Value;
 			if (TwoPoints.IsMatch(output.URL)) {//проверить на наличие двух точек подряд
-				throw new BadRequest();
+                throw Repository.ExceptionFabrics["Bad Request"].Create(null, null);
 			}
 			foreach (Match s in name_val.Matches(m.Groups["var"].Value)) {//парсинг данных
 				StringData dat = new StringData(s.Groups["name"].Value, s.Groups["val"].Value);

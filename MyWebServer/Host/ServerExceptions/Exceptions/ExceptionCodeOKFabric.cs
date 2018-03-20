@@ -9,18 +9,21 @@ namespace Host.ServerExceptions
 
 		public override string name { get { return "OK"; } }
 
-		public override ExceptionCode Create(object data) {
-			return new OK();
+        public override ExceptionCode Create(ExceptionUserCode userCode, object data)
+        {
+			return new OK(userCode);
 		}
 	}
 
 	public class OK : ExceptionCode {
 
-		public OK() {
+        public OK(ExceptionUserCode userCode)
+            : base(userCode)
+        {
 			Code = "200 OK";
 			_IsFatal = false;
 		}
 
-		public override void ExceptionHandle(ref Reqest request, ref Response response) {}
+		public override void ExceptionHandleCode(ref Reqest request, ref Response response) {}
 	}
 }

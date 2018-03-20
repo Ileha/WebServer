@@ -66,7 +66,7 @@ namespace HttpHandlers
 		{
 			output.URL = URI;
             if (TwoPoints.IsMatch(output.URL)) {//проверить на наличие двух точек подряд
-                throw new BadRequest();
+                throw Repository.ExceptionFabrics["Bad Request"].Create(null, null);
             }
             foreach (string s in reqest) {
                 Match m_pref = pref_val.Match(s);

@@ -11,6 +11,7 @@ using Host.Session;
 using Host.Users;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Security.Cryptography;
 
 namespace Host.ConnectionHandlers {
     public class ConnectionHandler : IConnectionHandler {
@@ -29,7 +30,7 @@ namespace Host.ConnectionHandlers {
 		public ConnectionHandler(TcpClient Connection)
         {
             connection = Connection;
-			code = new OK();
+            code = Repository.ExceptionFabrics["OK"].Create(null, null);
             handler = null;
             obj_request = new Reqest(connection);//создание экземпляра класса запроса;
             reads_bytes = null;
@@ -43,7 +44,7 @@ namespace Host.ConnectionHandlers {
 			obj_request.Clear();
 			response.Clear();
 			handler = null;
-			code = new OK();
+            code = Repository.ExceptionFabrics["OK"].Create(null, null);
 			reads_bytes = null;
 			DataHandle = null;
 		}
@@ -92,7 +93,7 @@ namespace Host.ConnectionHandlers {
                     DataHandle = Repository.DataHandlers[reads_bytes.file_extension];
                 }
                 catch (Exception err) {//при неудачной попытки бросаем исключение
-                    throw Repository.ExceptionFabrics["Internal Server Error"].Create(null);
+                    throw Repository.ExceptionFabrics["Internal Server Error"].Create(null, null);
                 }
 				//websocket
 				//GET /chat HTTP/1.1
@@ -101,12 +102,21 @@ namespace Host.ConnectionHandlers {
 				//Connection: Upgrade
                 try {
                     if (obj_request.preferens["Upgrade"].Value[0].Value["0"] == "websocket") {
-                        res = new WebSocketHandler(Client);
+                        res = new WebSocketHandler(Client, reads_bytes);
                         string[] data = new string[] { "websocket" };
-                        throw Repository.ExceptionFabrics["Switching Protocols"].Create(data);
+                        throw Repository.ExceptionFabrics["Switching Protocols"].Create(
+                            (ref Reqest _request, ref Response _response) => {
+                                string str = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+                                str = _request.preferens["Sec-WebSocket-Key"].Value[0].Value["0"] + str;
+                                byte[] bytes = Encoding.UTF8.GetBytes(str);
+                                var sha1 = SHA1.Create();
+                                byte[] hashBytes = sha1.ComputeHash(bytes);
+                                _response.AddToHeader("Sec-WebSocket-Accept", Convert.ToBase64String(hashBytes), AddMode.rewrite);
+                            },
+                        data);
                     }
                 }
-                catch (Exception err) {}
+                catch (KeyNotFoundException err) {}
 
                 DataHandle.Handle(ref response, ref obj_request, ref reads_bytes);//вызов обработчика данных
             }
