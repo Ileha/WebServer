@@ -12,9 +12,10 @@ using Host.Users;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Security.Cryptography;
+using System.IO;
 
 namespace Host.ConnectionHandlers {
-    public class ConnectionHandler : IConnectionHandler {
+    public class ConnectionHandler : IConnectionHandler, IConnetion {
         public readonly TcpClient connection;
 
         public ExceptionCode code;
@@ -98,7 +99,7 @@ namespace Host.ConnectionHandlers {
 				//websocket
                 try {
                     if (obj_request.preferens["Upgrade"] == "websocket") {
-                        res = new WebSocketHandler(Client, reads_bytes);
+                        res = new WebSocketHandler(Client, reads_bytes, UserData);
                         string[] data = new string[] { "websocket" };
                         throw Repository.ExceptionFabrics["Switching Protocols"].Create(
                             (ref Reqest _request, ref Response _response) => {
@@ -113,7 +114,9 @@ namespace Host.ConnectionHandlers {
                 }
                 catch (KeyNotFoundException err) {}
 
-                DataHandle.Handle(ref response, ref obj_request, ref reads_bytes);//вызов обработчика данных
+                DataHandle.Headers(ref response, ref obj_request, ref reads_bytes);//вызов обработчика данных для заголовков
+                IConnetion this_connection = this;
+                DataHandle.Handle(ref this_connection);
             }
             catch (ExceptionCode err) {
                 code = err;
@@ -130,5 +133,21 @@ namespace Host.ConnectionHandlers {
             //Repository.threads_count -= 1;
             //Console.WriteLine("закрытие соединения web server {0}\r\nthreads count : {1}", Repository.ConfigBody.Element("name").Value, Repository.threads_count);
         }
-	}
+
+        public Stream InputData {
+            get { return obj_request.Data; }
+        }
+
+        public Stream OutputData {
+            get { throw new NotImplementedException(); }
+        }
+
+        public UserConnect UserConnectData {
+            get { return UserData; }
+        }
+
+        public Reader ReadData {
+            get { return reads_bytes; }
+        }
+    }
 }

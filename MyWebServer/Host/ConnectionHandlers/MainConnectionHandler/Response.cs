@@ -1,5 +1,4 @@
 ﻿using System;
-using Host.HttpHandler;
 using Host.ServerExceptions;
 using Host.MIME;
 using System.Collections.Generic;
