@@ -4,8 +4,10 @@ using Host.MIME;
 using System.Collections.Generic;
 using System.Text;
 using Config;
+using System.Linq;
 using Host.Session;
 using System.Net.Sockets;
+using System.IO;
 
 namespace Host.ConnectionHandlers
 {
@@ -14,7 +16,40 @@ namespace Host.ConnectionHandlers
 		rewrite
 	}
 
-    public class Response
+	public class ResponseDataStream : Stream {
+		private Action<byte[]> AddingData;
+
+		public ResponseDataStream(Action<byte[]> AddingData) {
+			this.AddingData = AddingData;
+		}
+
+		public override bool CanRead { get { return false; } }
+
+		public override bool CanSeek { get { return false; } }
+
+		public override bool CanWrite { get { return true; } }
+
+		public override long Length { get { throw new NotImplementedException(); } }
+
+		public override long Position {
+			get { throw new NotImplementedException(); }
+			set { throw new NotImplementedException(); }
+		}
+
+		public override void Flush() { throw new NotImplementedException(); }
+
+		public override int Read(byte[] buffer, int offset, int count) { throw new NotImplementedException(); }
+
+		public override long Seek(long offset, SeekOrigin origin) { throw new NotImplementedException(); }
+
+		public override void SetLength(long value) { throw new NotImplementedException(); }
+
+		public override void Write(byte[] buffer, int offset, int count) {
+			AddingData(buffer.Skip(offset).ToArray());
+		}
+	}
+
+	public class Response
     {
 //HTTP/1.1 200 OK\r\n
 //Server: MyWebServer(0.0.0.1) (Unix) (Red-Hat/Linux)\r\n
@@ -31,7 +66,7 @@ namespace Host.ConnectionHandlers
 //
 //";
 		public UserConnect UserData;
-
+		public ResponseDataStream DataWriter;
         private string bolvanka = "HTTP/1.1 {0}\r\nServer: MyWebServer(0.0.0.1) (Unix) (Red-Hat/Linux){1}\r\n\r\n";
         public ExceptionCode code;
 		private Dictionary<string, string> http_headers;
@@ -48,6 +83,7 @@ namespace Host.ConnectionHandlers
 			http_cookie = new Dictionary<string, string>();
 			http_body = new List<byte[]>();
 			Connection = connection;
+			DataWriter = new ResponseDataStream((obj) => http_body.Add(obj));
         }
 		public void Clear() {
 			http_headers.Clear();

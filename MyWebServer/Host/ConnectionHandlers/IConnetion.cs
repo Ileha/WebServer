@@ -8,7 +8,7 @@ using Host.Session;
 
 namespace Host.ConnectionHandlers
 {
-    interface IConnetion {
+    public interface IConnetion {
         Stream InputData { get; }
         Stream OutputData { get; }
         UserConnect UserConnectData { get; }

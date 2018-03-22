@@ -139,7 +139,7 @@ namespace Host.ConnectionHandlers {
         }
 
         public Stream OutputData {
-            get { throw new NotImplementedException(); }
+			get { return response.DataWriter; }
         }
 
         public UserConnect UserConnectData {

@@ -14,10 +14,12 @@ namespace MIMEHandlers
 		private string[] _file_extensions = { ".png", ".PNG" };
         public string[] file_extensions { get { return _file_extensions; } }
 
-        public void Handle(ref Response response, ref Reqest reqest, ref Reader read)
-        {
+		public void Handle(ref IConnetion connection) {
+			connection.OutputData.Write(connection.ReadData.data, 0, connection.ReadData.data.Length);
+		}
+
+		public void Headers(ref Response response, ref Reqest reqest, ref Reader read) {
 			response.AddToHeader("Content-Type", "image/png", AddMode.rewrite);
-			response.AddToBody(read.data);
-        }
-    }
+		}
+	}
 }

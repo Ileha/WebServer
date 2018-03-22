@@ -16,10 +16,15 @@ namespace Host.ConnectionHandlers {
         private long _index;
         private NetworkStream _client;
 
-        public ReqestDataStream(byte[] data, long lenght, NetworkStream client) {
+        public ReqestDataStream(byte[] data, long lenght_client, NetworkStream client) {
             _index = 0;
             _data = data;
-            _lenght = lenght;
+			if (data != null) {
+				_lenght = lenght_client+data.Length;
+			}
+			else {
+				_lenght = lenght_client;
+			}
             _client = client;
         }
 
@@ -30,43 +35,31 @@ namespace Host.ConnectionHandlers {
         public override long Position { get { return _index; } set { throw new NotImplementedException(); } }
         public override void Flush() { throw new NotImplementedException(); }
 
-        public override int Read(byte[] buffer, int offset, int count)
-        {
-            _index += offset;
-            int new_count = count;
-            if (_index + count > Length) {
-                new_count = (int)(Length - _index);
+		public override int Read(byte[] buffer, int offset, int count) {
+			int res = 0;
+            if (_data != null && _index < _data.Length && _index + count <= _data.Length) {
+                res = WriteFromData(buffer, offset, _index, count);
             }
-
-            if (_data != null && _index < _data.Length && _index + new_count <= _data.Length) {
-                WriteFromData(buffer, 0, _index, new_count);
-            }
-            else if (_data != null && _index < _data.Length && _index + new_count > _data.Length) {
-                WriteFromData(buffer, 0, _index, _data.Length - _index);
-				WriteFromClient(buffer, _data.Length - _index, new_count - (_data.Length - _index));
+            else if (_data != null && _index < _data.Length && _index + count > _data.Length) {
+                res = WriteFromData(buffer, offset, _index, _data.Length - _index);
+				res += _client.Read(buffer, (int)(_data.Length-_index), (int)(count-(_data.Length - _index)));
             }
             else if (_data == null || _index > _data.Length) {
-                WriteFromClient(buffer, 0, new_count);
+                res = _client.Read(buffer, offset, count);
             }
-			return new_count;
+			_index += res;
+			return res;
         }
 
-        private void WriteFromData(byte[] buffer, int start_buffer, long start, long count) {
+        private int WriteFromData(byte[] buffer, int start_buffer, long start, long count) {
+			int res = 0;
             for (long i = start; i < start + count; i++) {
                 buffer[start_buffer] = _data[i];
                 start_buffer++;
+				res++;
+				if (i == _data.Length - 1) { break; }
             }
-        }
-
-        private void WriteFromClient(byte[] buffer, long start_buffer, long count) {
-			if (start_buffer != 0) {
-				for (long i = start_buffer; i < start_buffer + count; i++) {
-					buffer[i] = (byte)_client.ReadByte();
-				}
-			}
-            else {
-                _client.Read(buffer, 0, (int)count);
-            }
+			return res;
         }
 
         public override long Seek(long offset, SeekOrigin origin) { throw new NotImplementedException(); }
