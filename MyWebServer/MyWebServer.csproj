@@ -77,6 +77,9 @@
     <Compile Include="Host\ConnectionHandlers\MainConnectionHandler\ConnectionHandler.cs" />
     <Compile Include="Host\ConnectionHandlers\MainConnectionHandler\Reqest.cs" />
     <Compile Include="Host\ConnectionHandlers\MainConnectionHandler\Response.cs" />
+    <Compile Include="Host\ConnectionHandlers\websocket\WebSocketStream.cs" />
+    <Compile Include="Host\ConnectionHandlers\websocket\WebSocketException.cs" />
+    <Compile Include="Assets\MyRandom.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -84,5 +87,8 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Assets\" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -37,6 +37,8 @@ namespace Host.ServerExceptions {
 			}
 			response.AddToHeader("Upgrade", prot, AddMode.rewrite);
             response.AddToHeader("Connection", "Upgrade", AddMode.rewrite);
+			response.AddForbiddenHeader("Content-Length");
+			response.AddForbiddenHeader("Server");
 		}
 	}
 }

@@ -67,12 +67,13 @@ namespace Host.ConnectionHandlers
 //";
 		public UserConnect UserData;
 		public ResponseDataStream DataWriter;
-        private string bolvanka = "HTTP/1.1 {0}\r\nServer: MyWebServer(0.0.0.1) (Unix) (Red-Hat/Linux){1}\r\n\r\n";
+        private string bolvanka = "HTTP/1.1 {0}{1}\r\n\r\n";
         public ExceptionCode code;
 		private Dictionary<string, string> http_headers;
 		private Dictionary<string, string> http_cookie;
 		private List<byte[]> http_body;
 		private TcpClient Connection;
+		private List<string> forbidden_http_headers;
 
         private bool IsFatal {
             get { return code.IsFatal; }
@@ -84,12 +85,17 @@ namespace Host.ConnectionHandlers
 			http_body = new List<byte[]>();
 			Connection = connection;
 			DataWriter = new ResponseDataStream((obj) => http_body.Add(obj));
+			forbidden_http_headers = new List<string>();
         }
 		public void Clear() {
 			http_headers.Clear();
 			http_cookie.Clear();
 			http_body.Clear();
 			code = null;
+		}
+
+		public void AddForbiddenHeader(string header_title) {
+			forbidden_http_headers.Add(header_title);
 		}
 
 		public void AddToHeader(string _key, string _value, AddMode mode) {
@@ -104,13 +110,6 @@ namespace Host.ConnectionHandlers
 					throw is_has;
 				}
             }
-		}
-
-		public void AddToBody(string data) {
-			http_body.Add(Encoding.UTF8.GetBytes(data));
-		}
-		public void AddToBody(byte[] data) {
-			http_body.Add(data);
 		}
 
 		public void SetCookie(string name, string value, params string[] settings) {
@@ -128,6 +127,7 @@ namespace Host.ConnectionHandlers
 				http_headers.Clear();
 				http_cookie.Clear();
 			}
+			AddToHeader("Server", "MyWebServer(0.0.0.1) (Unix) (Red-Hat/Linux)", AddMode.rewrite);
 			Response response = this;
 			code.ExceptionHandle(ref request, ref response);
 
@@ -151,13 +151,17 @@ namespace Host.ConnectionHandlers
 					AddToHeader("Connection", "keep-alive", AddMode.adding);
 				}
 				catch (Exception err) {
-					keep_alive = false;
+					if (http_headers["Connection"] == "close") {
+						keep_alive = false;
+					}
 				}
 			}
 
             string httpbody = "";
             foreach (KeyValuePair<string, string> word in http_headers) {
-                httpbody += "\r\n" + word.Key + ": " + word.Value;
+				if (!forbidden_http_headers.Contains(word.Key)) {
+					httpbody += "\r\n" + word.Key + ": " + word.Value;
+				}
             }
 			foreach (KeyValuePair<string, string> vord in http_cookie) {
                 httpbody += "\r\nSet-Cookie: " + vord.Key + vord.Value;
