@@ -89,7 +89,7 @@ namespace Host.ConnectionHandlers {
 					UserData.AddData("user", User);
 				} while (false);
 
-                reads_bytes = new Reader(obj_request, User);//нахождение и получение запрошенных данных
+                reads_bytes = new Reader(obj_request.URL, User);//нахождение и получение запрошенных данных
                 try {//попытка найти обработчик данных
                     DataHandle = Repository.DataHandlers[reads_bytes.file_extension];
                 }

@@ -14,11 +14,11 @@ namespace Host
         public readonly byte[] data;
         public readonly string file_extension;
 
-        public Reader(Reqest Reqest, UserInfo target_user) {
+        public Reader(string URL, UserInfo target_user) {
             try {
                 IItem res = null;
                 try {
-                    res = Repository.Configurate.ResourceLinker.GetResourceByString(Reqest.URL);
+                    res = Repository.Configurate.ResourceLinker.GetResourceByString(URL);
                 }
                 catch (FileNotFoundException err) {
 					throw Repository.ExceptionFabrics["Not Found"].Create(null, null);

@@ -3,6 +3,7 @@ using System.Collections;
 using Host.Users;
 using System.Linq;
 using System.Collections.Generic;
+using System;
 
 namespace Resouces
 {
@@ -35,15 +36,15 @@ namespace Resouces
             }
         }
 
-        public abstract void AddItem(IItem adder_item);
+        public virtual void AddItem(IItem adder_item) { throw new NotImplementedException(); }
         public abstract string GetName();
-		public abstract void Remove(IItem rem_item);
-		public abstract IItem GetParent();
+        public virtual void Remove(IItem rem_item) { throw new NotImplementedException(); }
+        public virtual IItem GetParent() { throw new NotImplementedException(); }
 		public abstract FileSystemInfo GetInfo();
 		public abstract void SetInfo(FileSystemInfo target, IItem New_parent);
-		public abstract IItem GetResourceByString(string path);
-		public abstract IItem Element(string name);
+        public virtual IItem GetResourceByString(string path) { throw new NotImplementedException(); }
+        public virtual IItem Element(string name) { throw new NotImplementedException(); }
 		public abstract string GetPath();
-		public abstract IEnumerator GetEnumerator();
+        public virtual IEnumerator GetEnumerator() { throw new NotImplementedException(); }
 	}
 }

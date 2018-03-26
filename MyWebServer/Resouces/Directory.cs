@@ -9,8 +9,7 @@ using Host;
 
 namespace Resouces
 {
-    public class LinkDirectory : IItem, IConfigurate
-    {
+    public class LinkDirectory : IItem, IConfigurate {
         public Dictionary<string, IItem> contain;
         public DirectoryInfo Resource;
         public IItem Parent;
@@ -18,10 +17,8 @@ namespace Resouces
         private FileSystemWatcher watcher;
 
         private string[] names = new string[] { "linker", "users" };
-        public string[] ConfigName
-        {
-            get
-            {
+        public string[] ConfigName {
+            get {
                 return names;
             }
         }
