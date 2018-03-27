@@ -114,7 +114,7 @@ namespace Host.ConnectionHandlers
 
 		public void SetCookie(string name, string value, params string[] settings) {
 			//Set-Cookie: name=value
-			string adding_cookie = string.Format("={0}", value);
+            string adding_cookie = value;
 			for (int i = 0; i < settings.Length; i++) {
 				adding_cookie += "; "+settings[i];
 			}
@@ -157,16 +157,19 @@ namespace Host.ConnectionHandlers
 				}
 			}
 
-            string httpbody = "";
+            //string httpbody = "";
+            StringBuilder httpbody = new StringBuilder();
             foreach (KeyValuePair<string, string> word in http_headers) {
 				if (!forbidden_http_headers.Contains(word.Key)) {
-					httpbody += "\r\n" + word.Key + ": " + word.Value;
+					//httpbody += "\r\n" + word.Key + ": " + word.Value;
+                    httpbody.AppendFormat("\r\n{0}: {1}", word.Key, word.Value);
 				}
             }
-			foreach (KeyValuePair<string, string> vord in http_cookie) {
-                httpbody += "\r\nSet-Cookie: " + vord.Key + vord.Value;
+			foreach (KeyValuePair<string, string> word in http_cookie) {
+                //httpbody += "\r\nSet-Cookie: " + vord.Key + vord.Value;
+                httpbody.AppendFormat("\r\nSet-Cookie: {0}={1}", word.Key, word.Value);
             }
-            string req_header_string = string.Format(bolvanka, code.GetExeptionCode(), httpbody);
+            string req_header_string = string.Format(bolvanka, code.GetExeptionCode(), httpbody.ToString());
 			byte[] header = Encoding.UTF8.GetBytes(req_header_string);
 			Connection.GetStream().Write(header, 0, header.Length);
 			foreach (byte[] arr in http_body) {
