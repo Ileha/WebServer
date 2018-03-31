@@ -9,6 +9,7 @@ using System.Xml.Linq;
 using System.Reflection;
 using Host.DirReader;
 using Host.ServerExceptions;
+using Host.Eventer;
 
 namespace MainProgramm
 {
@@ -86,6 +87,15 @@ namespace MainProgramm
                 }
                 catch (Exception err) {}
             }
+            ourtype = typeof(IGrub);
+            list = Assembly.GetAssembly(ourtype).GetTypes().Where(type => type.IsSubclassOf(ourtype) && type.IsClass);
+            foreach (Type t in list) {
+                IGrub h = (IGrub)Activator.CreateInstance(t);
+                try {
+                    Repository.Eventers.Add(h);
+                }
+                catch (Exception err) { }
+            }
         }
 
         public void LoadPluginExternal()
@@ -95,6 +105,7 @@ namespace MainProgramm
             Type http_handler = typeof(IHttpHandler);
             Type mime_handler = typeof(IMIME);
 			Type except_fabric = typeof(ExceptionFabric);
+            Type eventers = typeof(IGrub);
             foreach (FileInfo fi in files)
             {
                 Console.WriteLine("loading {0}...", fi.FullName);
@@ -126,6 +137,14 @@ namespace MainProgramm
 					}
 					catch (Exception err) { }
 	            }
+                list = load.GetTypes().Where(type => type.IsSubclassOf(eventers) && type.IsClass);
+                foreach (Type t in list) {
+                    IGrub h = (IGrub)Activator.CreateInstance(t);
+                    try {
+                        Repository.Eventers.Add(h);
+                    }
+                    catch (Exception err) { }
+                }
                 Console.WriteLine("load");
             }
         }

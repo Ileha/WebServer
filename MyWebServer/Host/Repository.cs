@@ -6,6 +6,7 @@ using Config;
 using Host.ServerExceptions;
 using System.Xml.Linq;
 using Host.DirReader;
+using Host.Eventer;
 
 namespace Host {
 	public static class Repository {
@@ -19,15 +20,13 @@ namespace Host {
 		public static Dictionary<string, ExceptionFabric> ExceptionFabrics;
 		public static IDirectoryReader DirReader;//экземпляр класса преобразующий директорию в html страницу
         public static WebServerConfig Configurate;
-
-		public static int threads_count;
+        public static List<IGrub> Eventers;
 
 		static Repository() {
 			ReqestsHandlers = new Dictionary<string, IHttpHandler>();
             DataHandlers = new Dictionary<string, IMIME>();
 			ExceptionFabrics = new Dictionary<string, ExceptionFabric>();
-
-			threads_count = 0;
+            Eventers = new List<IGrub>();
 		}
 
         public static void RepositoryConstruct(XElement doc) {

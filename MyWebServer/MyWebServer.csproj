@@ -40,6 +40,7 @@
     <Compile Include="Config\ReactorPull.cs" />
     <Compile Include="Host\ConnectionHandlers\IConnetion.cs" />
     <Compile Include="Host\ConnectionHandlers\websocket\WebSocketHandler.cs" />
+    <Compile Include="Host\Eventer\IGrub.cs" />
     <Compile Include="Host\IDirectoryReader.cs" />
     <Compile Include="Host\IHostEvents.cs" />
     <Compile Include="Program.cs" />
@@ -87,8 +88,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup />
-  <ItemGroup>
-    <Folder Include="Assets\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

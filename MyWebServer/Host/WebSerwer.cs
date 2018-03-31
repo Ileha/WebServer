@@ -10,6 +10,7 @@ using System.Linq;
 using System.Xml.Linq;
 using Host.ServerExceptions;
 using Host.ConnectionHandlers;
+using Host.Eventer;
 
 namespace Host {
     public class WebSerwer : IConfigurate {
@@ -53,6 +54,9 @@ namespace Host {
                 if (el.Value.GetType().GetInterfaces().Contains(target)) {
 					AddEvents(el.Value as IHostEvents);
                 }
+            }
+            foreach (IGrub eve in Repository.Eventers) {
+                AddEvents(eve);
             }
         }
 
