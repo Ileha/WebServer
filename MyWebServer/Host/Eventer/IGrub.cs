@@ -6,10 +6,5 @@ using System.Threading.Tasks;
 using Host;
 
 namespace Host.Eventer {
-    abstract class IGrub : IHostEvents {
-
-        public virtual void OnStart(WebSerwer host) {}
-
-        public virtual void OnStop() {}
-    }
+    abstract class IGrub : IHostEvents {}
 }

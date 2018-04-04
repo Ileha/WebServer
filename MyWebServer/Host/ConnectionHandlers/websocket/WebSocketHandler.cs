@@ -69,5 +69,11 @@ namespace Host.ConnectionHandlers
         public Reader ReadData {
             get { return reads_bytes; }
         }
+
+        public ConnectionType ConnectType {
+            get {
+                return ConnectionType.websocket;
+            }
+        }
     }
 }
