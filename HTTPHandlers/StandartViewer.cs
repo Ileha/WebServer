@@ -3,18 +3,13 @@ using System.IO;
 using Host.DirReader;
 using Host;
 using Resouces;
+using Host.Eventer;
 
 namespace DirViewer
 {
-	public class StandartViewer : IDirectoryReader, IHostEvents
+	public class StandartViewer : IDirectoryReader, OnWebServerStart
 	{
 		public StandartViewer() {}
-
-		public void OnStart() {
-			Console.WriteLine("Test event start");
-			Repository.Configurate.ResourceLinker.AddItem(new LinkDirectory(new DirectoryInfo(Repository.ConfigBody.Element("allow_browse_folders").Attribute("reourse_path").Value), Repository.Configurate.ResourceLinker, Repository.Configurate.Users.DefaultGroup));
-		}
-        public void OnStop() {}
         public override string ItemPars(IItem file)
         {
             if (file.GetType() == typeof(LinkDirectory))
@@ -34,5 +29,10 @@ namespace DirViewer
         public override string ThisFolder(IItem file) {
             return "<p><a href=\"" + file.GetPath() + "\"><img src=\"WebServerResourses/folder.png\" height=\"20\"></img>.</a>";
         }
+
+		public void OnStart(EventArgs data) {
+			Console.WriteLine("Test event start");
+			Repository.Configurate.ResourceLinker.AddItem(new LinkDirectory(new DirectoryInfo(Repository.ConfigBody.Element("allow_browse_folders").Attribute("reourse_path").Value), Repository.Configurate.ResourceLinker, Repository.Configurate.Users.DefaultGroup));
+		}
 	}
 }

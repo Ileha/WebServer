@@ -1,10 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Host;
+using Host.ConnectionHandlers;
 
 namespace Host.Eventer {
-    abstract class IGrub : IHostEvents {}
+	public abstract class IGrub : OnWebServerStart, OnWebServerStop, OnWebServerConntect, OnWebServerDisConntect {
+		public virtual void OnConntect(EventArgs data) {}
+
+		public virtual void OnDisConntect(EventArgs data) {}
+
+		public virtual void OnStart(EventArgs data) {}
+
+		public virtual void OnStop(EventArgs data) {}
+	}
 }

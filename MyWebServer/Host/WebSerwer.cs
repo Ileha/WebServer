@@ -36,38 +36,49 @@ namespace Host {
 		}
 
         public void ConfigureEvents() {
-            Type target = typeof(IHostEvents);
-            if (Repository.DirReader != null && Repository.DirReader.GetType().GetInterfaces().Contains(target)) {
-                AddEvents(Repository.DirReader as IHostEvents);
+            Type onStart = typeof(OnWebServerStart);
+			Type onStop = typeof(OnWebServerStop);
+            if (Repository.DirReader != null && Repository.DirReader.GetType().GetInterfaces().Contains(onStart)) {;
+				onStartHost += (Repository.DirReader as OnWebServerStart).OnStart;
             }
+			if (Repository.DirReader != null && Repository.DirReader.GetType().GetInterfaces().Contains(onStop)) {
+				onStartHost += (Repository.DirReader as OnWebServerStop).OnStop;
+            }
+
             foreach (KeyValuePair<string, IHttpHandler> el in Repository.ReqestsHandlers) {
-                if (el.Value.GetType().GetInterfaces().Contains(target)) {
-                    AddEvents(el.Value as IHostEvents);
+                if (el.Value.GetType().GetInterfaces().Contains(onStart)) {
+                    onStartHost += (el.Value as OnWebServerStart).OnStart;
+                }
+				if (el.Value.GetType().GetInterfaces().Contains(onStop)) {
+					onStartHost += (el.Value as OnWebServerStop).OnStop;
                 }
             }
             foreach (KeyValuePair<string, IMIME> el in Repository.DataHandlers) {
-                if (el.Value.GetType().GetInterfaces().Contains(target)) {
-                    AddEvents(el.Value as IHostEvents);
+                if (el.Value.GetType().GetInterfaces().Contains(onStart)) {
+                    onStartHost += (el.Value as OnWebServerStart).OnStart;
+                }
+				if (el.Value.GetType().GetInterfaces().Contains(onStop)) {
+					onStartHost += (el.Value as OnWebServerStop).OnStop;
                 }
             }
 			foreach (KeyValuePair<string, ExceptionFabric> el in Repository.ExceptionFabrics) {
-                if (el.Value.GetType().GetInterfaces().Contains(target)) {
-					AddEvents(el.Value as IHostEvents);
+                if (el.Value.GetType().GetInterfaces().Contains(onStart)) {
+                    onStartHost += (el.Value as OnWebServerStart).OnStart;
+                }
+				if (el.Value.GetType().GetInterfaces().Contains(onStop)) {
+					onStartHost += (el.Value as OnWebServerStop).OnStop;
                 }
             }
             foreach (IGrub eve in Repository.Eventers) {
-                AddEvents(eve);
+				onStartHost += eve.OnStart;
+				onStopHost += eve.OnStop;
             }
         }
 
-        private void AddEvents(IHostEvents listner) {
-            onStartHost += listner.OnStart;
-            onStopHost += listner.OnStop;
-        }
-
         private void ThreadFunc() {
+			HostEventData data = new HostEventData(this);
             try {
-                InvokeStart(this);
+                InvokeStart(data);
             }
             catch (Exception err) { Console.WriteLine(err.ToString()); }
             try {
@@ -87,18 +98,18 @@ namespace Host {
             }
             finally {
                 try {
-                    InvokeStop(this);
+                    InvokeStop(data);
                 }
                 catch (Exception err) { Console.WriteLine(err.ToString()); }
             }
         }
 
-        private void InvokeStart(WebSerwer host) {
+        private void InvokeStart(HostEventData host) {
             if (onStartHost != null) {
                 onStartHost(host);
             }
         }
-        private void InvokeStop(WebSerwer host) {
+        private void InvokeStop(HostEventData host) {
             if (onStopHost != null) {
                 onStopHost(host);
             }

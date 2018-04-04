@@ -14,7 +14,6 @@ namespace Host {
 		public static XElement ConfigBody {
 			get { return _body_conf; }
 		}
-
 		public static Dictionary<string, IHttpHandler> ReqestsHandlers;
 		public static Dictionary<string, IMIME> DataHandlers;
 		public static Dictionary<string, ExceptionFabric> ExceptionFabrics;

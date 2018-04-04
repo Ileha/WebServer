@@ -1,4 +1,4 @@
-﻿using Host;
+using Host;
 using Host.HttpHandler;
 using Host.MIME;
 using System;
