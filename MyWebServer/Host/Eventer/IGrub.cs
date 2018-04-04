@@ -8,7 +8,7 @@ using Host;
 namespace Host.Eventer {
     abstract class IGrub : IHostEvents {
 
-        public virtual void OnStart() {}
+        public virtual void OnStart(WebSerwer host) {}
 
         public virtual void OnStop() {}
     }

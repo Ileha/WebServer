@@ -67,7 +67,7 @@ namespace Host {
 
         private void ThreadFunc() {
             try {
-                InvokeStart();
+                InvokeStart(this);
             }
             catch (Exception err) { Console.WriteLine(err.ToString()); }
             try {
@@ -78,8 +78,6 @@ namespace Host {
                     TcpClient handler = sListener.AcceptTcpClient();
 					ConnectionExecutor executor = new ConnectionExecutor(new ConnectionHandler(handler));
 					Console.WriteLine("хост {1}, новое соединение через порт {0}", ipEndPoint, Repository.ConfigBody.Element("name").Value);
-
-					//Repository.threads_count+=1;
                     Task handle = new Task(executor.Execute);
                     handle.Start();
                 }
@@ -89,20 +87,20 @@ namespace Host {
             }
             finally {
                 try {
-                    InvokeStop();
+                    InvokeStop(this);
                 }
                 catch (Exception err) { Console.WriteLine(err.ToString()); }
             }
         }
 
-        private void InvokeStart() {
+        private void InvokeStart(WebSerwer host) {
             if (onStartHost != null) {
-                onStartHost();
+                onStartHost(host);
             }
         }
-        private void InvokeStop() {
+        private void InvokeStop(WebSerwer host) {
             if (onStopHost != null) {
-                onStopHost();
+                onStopHost(host);
             }
         }
 
