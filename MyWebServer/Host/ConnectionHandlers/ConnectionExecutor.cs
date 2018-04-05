@@ -24,6 +24,7 @@ namespace Host.ConnectionHandlers
 		}
 
 		public void Execute() {
+			onConnectEvent();
 			while (true) {
 				if (is_start) {
 					Console.WriteLine("start connection id: {0}", ID.ToString());
@@ -36,6 +37,7 @@ namespace Host.ConnectionHandlers
 				if (Handler == null) { break; }
 				Handler.Clear();
 			}
+			onDisConnectEvent();
 			Console.WriteLine("end connection id: {0}", ID.ToString());
 		}
 

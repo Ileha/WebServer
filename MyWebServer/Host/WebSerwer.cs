@@ -22,6 +22,9 @@ namespace Host {
         public event HostEvent onStartHost;
         public event HostEvent onStopHost;
 
+		private event HostEvent onConnect;
+		private event HostEvent onDisConnect;
+
         private string[] names = new string[] { "webserver" };
 		public string[] ConfigName {
 			get {
@@ -72,6 +75,8 @@ namespace Host {
             foreach (IGrub eve in Repository.Eventers) {
 				onStartHost += eve.OnStart;
 				onStopHost += eve.OnStop;
+				onConnect += eve.OnConntect;
+				onDisConnect += eve.OnDisConntect;
             }
         }
 
@@ -87,7 +92,7 @@ namespace Host {
                 while (is_work) {
                     //Программа приостанавливается, ожидая входящее соединение
                     TcpClient handler = sListener.AcceptTcpClient();
-					ConnectionExecutor executor = new ConnectionExecutor(new ConnectionHandler(handler));
+					ConnectionExecutor executor = new ConnectionExecutor(new ConnectionHandler(handler), onConnect, onDisConnect);
 					Console.WriteLine("хост {1}, новое соединение через порт {0}", ipEndPoint, Repository.ConfigBody.Element("name").Value);
                     Task handle = new Task(executor.Execute);
                     handle.Start();
