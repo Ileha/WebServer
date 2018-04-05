@@ -75,5 +75,8 @@ namespace Host.ConnectionHandlers
                 return ConnectionType.websocket;
             }
         }
+        public IConnetion GetConnetion {
+            get { return this; }
+        }
     }
 }

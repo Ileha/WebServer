@@ -155,5 +155,10 @@ namespace Host.ConnectionHandlers {
                 return ConnectionType.http;
             }
         }
+
+        public IConnetion GetConnetion
+        {
+            get { return this; }
+        }
     }
 }
