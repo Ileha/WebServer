@@ -12,7 +12,6 @@ namespace Resouces
     public class LinkDirectory : IItem, IConfigurate {
         public Dictionary<string, IItem> contain;
         public DirectoryInfo Resource;
-        public IItem Parent;
         private DirectoryInfo directoryInfo;
         private FileSystemWatcher watcher;
 
@@ -23,16 +22,17 @@ namespace Resouces
             }
         }
 
-        public LinkDirectory() : base() { }
+		public override string Extension {
+			get { return "dir"; }
+		}
 
-        public LinkDirectory(DirectoryInfo inf, IItem parent, params GroupInfo[] valid_groups)
-            : base()
-        {
+		public LinkDirectory() : base() { }
+
+        public LinkDirectory(DirectoryInfo inf, IItem parent, params GroupInfo[] valid_groups) : base() {
             ConstructHelp(inf, parent, valid_groups);
         }
 
-        private void ConstructHelp(DirectoryInfo inf, IItem parent, params GroupInfo[] valid_groups)
-        {
+        private void ConstructHelp(DirectoryInfo inf, IItem parent, params GroupInfo[] valid_groups) {
             contain = new Dictionary<string, IItem>();
             Resource = inf;
             Parent = parent;
@@ -57,36 +57,27 @@ namespace Resouces
             watcher.EnableRaisingEvents = true;
         }
 
-        private void OnCreated(object source, FileSystemEventArgs e)
-        {
-            try
-            {
-                if (IsFile(e.FullPath))
-                {
+        private void OnCreated(object source, FileSystemEventArgs e) {
+            try {
+                if (IsFile(e.FullPath)) {
                     AddItem(new LinkFile(new FileInfo(e.FullPath), this, Repository.Configurate.Users.DefaultGroup));
                 }
-                else
-                {
+                else {
                     AddItem(new LinkDirectory(new DirectoryInfo(e.FullPath), this, Repository.Configurate.Users.DefaultGroup));
                 }
             }
             catch (Exception err) { return; }
         }
-        private void OnDeleted(object source, FileSystemEventArgs e)
-        {
+        private void OnDeleted(object source, FileSystemEventArgs e) {
             contain.Remove(e.Name);
         }
-        private void OnRenamed(object source, RenamedEventArgs e)
-        {
+        private void OnRenamed(object source, RenamedEventArgs e) {
             FileSystemInfo f = null;
-            try
-            {
-                if (IsFile(e.FullPath))
-                {
+            try {
+                if (IsFile(e.FullPath)) {
                     f = new FileInfo(e.FullPath);
                 }
-                else
-                {
+                else {
                     f = new DirectoryInfo(e.FullPath);
                 }
             }
@@ -97,128 +88,79 @@ namespace Resouces
             AddItem(t);
         }
 
-        private bool IsFile(string path)
-        {
-            if (File.Exists(path))
-            {
+        private bool IsFile(string path) {
+            if (File.Exists(path)) {
                 return true;
             }
-            else if (System.IO.Directory.Exists(path))
-            {
+            else if (System.IO.Directory.Exists(path)) {
                 return false;
             }
             throw new FileNotFoundException(path);
         }
 
-        public override void AddItem(IItem adder_item)
-        {
+        public override void AddItem(IItem adder_item) {
             contain.Add(adder_item.GetName(), adder_item);
         }
 
-        public override string GetName()
-        {
+        public override string GetName() {
             return Resource.Name;
         }
 
-        public override IItem GetParent()
-        {
-            return Parent;
-        }
-
-        public override FileSystemInfo GetInfo()
-        {
-            return Resource;
-        }
-
-        public override void Remove(IItem rem_item)
-        {
+        public override void Remove(IItem rem_item) {
             contain.Remove(rem_item.GetName());
         }
 
-        public override IItem GetResourceByString(string path)
-        {
+        public override IItem GetResourceByString(string path) {
             string[] path_arr = path.Split('/');
             IItem result = this;
-            foreach (string bit in path_arr)
-            {
-                try
-                {
+            foreach (string bit in path_arr) {
+                try {
                     if (bit == ".") { }
-                    else if (bit == "..")
-                    {
+                    else if (bit == "..") {
                         result = Parent;
                     }
-                    else if (bit != "")
-                    {
+                    else if (bit != "") {
                         result = result.Element(bit);
                     }
                 }
-                catch (Exception err)
-                {
+                catch (Exception err) {
                     throw new FileNotFoundException(path_arr[path_arr.Length - 1]);
                 }
             }
             return result;
         }
 
-        public override IItem Element(string name)
-        {
+        public override IItem Element(string name) {
             return contain[name];
         }
 
-        public override string GetPath()
-        {
-            IItem i = this;
-            if (i.GetParent() == null) {
-                return "/";
-            }
 
-            string res = "";
-
-            while (i.GetParent() != null)
-            {
-                res = "/" + i.GetName() + res;
-                i = i.GetParent();
-            }
-            return res;
-        }
-
-
-        public override System.Collections.IEnumerator GetEnumerator()
-        {
+        public override System.Collections.IEnumerator GetEnumerator() {
             return contain.Values.GetEnumerator();
         }
 
 
-        public override void SetInfo(FileSystemInfo target, IItem New_parent)
-        {
-            if (target is DirectoryInfo)
-            {
+        public override void SetInfo(FileSystemInfo target, IItem New_parent) {
+            if (target is DirectoryInfo) {
                 directoryInfo = target as DirectoryInfo;
                 Parent = New_parent;
             }
-            else
-            {
+            else {
                 throw new FormatException(target.FullName);
             }
         }
 
-        public void Configurate(XElement data)
-        {
+        public void Configurate(XElement data) {
             DirectoryInfo inf = new DirectoryInfo(data.Element("linker").Element("root_dir").Value);
             ConstructHelp(inf, null, Repository.Configurate.Users.DefaultGroup);
 
-            try
-            {
+            try {
                 XElement el = data.Element("linker").Element("additive_dirs");
-                foreach (XElement add_dir in el.Elements())
-                {
-                    if (Directory.Exists(add_dir.Value))
-                    {
+                foreach (XElement add_dir in el.Elements()) {
+                    if (Directory.Exists(add_dir.Value)) {
                         AddItem(new LinkDirectory(new DirectoryInfo(add_dir.Value), this, Repository.Configurate.Users.DefaultGroup));
                     }
-                    else if (File.Exists(add_dir.Value))
-                    {
+                    else if (File.Exists(add_dir.Value)) {
                         AddItem(new LinkFile(new FileInfo(add_dir.Value), this, Repository.Configurate.Users.DefaultGroup));
                     }
                 }

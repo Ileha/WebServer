@@ -11,7 +11,11 @@ namespace Resouces
     public class LinkFile : IItem
     {
         private FileInfo Resource;
-        public IItem Parent;
+        private IItem _parent;
+
+		public override string Extension {
+			get { return Resource.Extension; }
+		}
 
 		public LinkFile(FileInfo inf, IItem _parent, params GroupInfo[] valid_groups) : base() {
             Resource = inf;
@@ -25,25 +29,6 @@ namespace Resouces
             return Resource.Name;
         }
 
-        public override IItem GetParent() {
-            return Parent;
-        }
-
-        public override FileSystemInfo GetInfo() {
-            return Resource;
-        }
-
-
-        public override string GetPath() {
-            IItem i = this;
-            string res = "";
-            while (i.GetParent() != null) {
-                res = "/" + i.GetName() + res;
-                i = i.GetParent();
-            }
-            return res;
-        }
-
         public override void SetInfo(FileSystemInfo target, IItem New_parent) {
             if (target is FileInfo) {
                 Resource = target as FileInfo;
@@ -53,5 +38,9 @@ namespace Resouces
                 throw new FormatException(target.FullName);
             }
         }
+
+		public override Stream GetData() {
+			return Resource.OpenRead();
+		}
 	}
 }
