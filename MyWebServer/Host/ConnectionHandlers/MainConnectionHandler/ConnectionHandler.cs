@@ -16,10 +16,9 @@ using System.IO;
 
 namespace Host.ConnectionHandlers {
     public class ConnectionHandler : IConnectionHandler, IConnetion {
-        public readonly TcpClient connection;
+        private TcpClient connection;
 
         public ExceptionCode code;
-        public IHttpHandler handler;
         public Reader reads_bytes;
         public Reqest obj_request;
         public Response response;
@@ -28,33 +27,33 @@ namespace Host.ConnectionHandlers {
 		public UserInfo User;
 		public TcpClient Client { get { return connection; } }
 
-		public ConnectionHandler(TcpClient Connection)
-        {
+		private Stream _outputData;
+
+		public ConnectionHandler(TcpClient Connection) {
             connection = Connection;
             code = Repository.ExceptionFabrics["OK"].Create(null, null);
-            handler = null;
-            obj_request = new Reqest(connection);//создание экземпляра класса запроса;
             reads_bytes = null;
 			UserData = null;
 			DataHandle = null;
-			response = new Response(connection); //создание экземпляра класса ответа
 			User = null;
+			_outputData = new MemoryStream();
         }
 
 		public void Clear() {
-			obj_request.Clear();
-			response.Clear();
-			handler = null;
             code = Repository.ExceptionFabrics["OK"].Create(null, null);
 			reads_bytes = null;
 			DataHandle = null;
+			_outputData.Dispose();
+			_outputData = new MemoryStream();
 		}
 
 		public IConnectionHandler ExecuteHandler() //null on connection close
         {   
 			IConnectionHandler res = this;
+			response = new Response(); //создание экземпляра класса ответа
+
             try {
-				obj_request.Create();
+				obj_request = new Reqest(connection.GetStream());//создание экземпляра класса запроса;
                 obj_request.CheckTabelOfRedirect();//проверка таблицы перенаправлений
                 try {//попытка найти данные к запросу
                     UserData = UserConnect.GetUserDataFromID(obj_request.cookies[Repository.ConfigBody.Element("webserver").Element("guid").Value.ToString()]);
@@ -102,7 +101,7 @@ namespace Host.ConnectionHandlers {
                         res = new WebSocketHandler(Client, reads_bytes, UserData);
                         string[] data = new string[] { "websocket" };
                         throw Repository.ExceptionFabrics["Switching Protocols"].Create(
-                            (ref Reqest _request, ref Response _response) => {
+                            (ref Reqest _request, ref Response _response, IConnetion dat) => {
                                 string str = _request.preferens["Sec-WebSocket-Key"] + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
                                 byte[] bytes = Encoding.UTF8.GetBytes(str);
                                 var sha1 = SHA1.Create();
@@ -113,25 +112,30 @@ namespace Host.ConnectionHandlers {
                     }
                 }
                 catch (KeyNotFoundException err) {}
-
                 DataHandle.Headers(ref response, ref obj_request, ref reads_bytes);//вызов обработчика данных для заголовков
-                IConnetion this_connection = this;
-                DataHandle.Handle(ref this_connection);
             }
             catch (ExceptionCode err) {
                 code = err;
             }
 
+			try {
+				IConnetion conn = this;
+				DataHandle.Handle(ref conn);
+			}
+			catch (Exception err) {
+				response.AddToHeader("Content-Type", "text/html; charset=UTF-8", AddMode.rewrite);
+				byte[] exce = Encoding.UTF8.GetBytes(err.ToString());
+				OutputData.Write(exce, 0, exce.Length);
+			}
+
             response.code = code;
-			if (response.SendData(obj_request)) {
+			response.SendData(obj_request, this, connection.GetStream());
+			if (response.GetHeader("Connection") != "close") {
 				return res;
 			}
 			else {
 				return null;
 			}
-
-            //Repository.threads_count -= 1;
-            //Console.WriteLine("закрытие соединения web server {0}\r\nthreads count : {1}", Repository.ConfigBody.Element("name").Value, Repository.threads_count);
         }
 
         public Stream InputData {
@@ -139,7 +143,8 @@ namespace Host.ConnectionHandlers {
         }
 
         public Stream OutputData {
-			get { return response.DataWriter; }
+			get { return _outputData; }
+			set { _outputData = value; }
         }
 
         public UserConnect UserConnectData {

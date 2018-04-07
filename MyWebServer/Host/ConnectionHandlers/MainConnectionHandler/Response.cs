@@ -16,39 +16,6 @@ namespace Host.ConnectionHandlers
 		rewrite
 	}
 
-	public class ResponseDataStream : Stream {
-		private Action<byte[]> AddingData;
-
-		public ResponseDataStream(Action<byte[]> AddingData) {
-			this.AddingData = AddingData;
-		}
-
-		public override bool CanRead { get { return false; } }
-
-		public override bool CanSeek { get { return false; } }
-
-		public override bool CanWrite { get { return true; } }
-
-		public override long Length { get { throw new NotImplementedException(); } }
-
-		public override long Position {
-			get { throw new NotImplementedException(); }
-			set { throw new NotImplementedException(); }
-		}
-
-		public override void Flush() { throw new NotImplementedException(); }
-
-		public override int Read(byte[] buffer, int offset, int count) { throw new NotImplementedException(); }
-
-		public override long Seek(long offset, SeekOrigin origin) { throw new NotImplementedException(); }
-
-		public override void SetLength(long value) { throw new NotImplementedException(); }
-
-		public override void Write(byte[] buffer, int offset, int count) {
-			AddingData(buffer.Skip(offset).ToArray());
-		}
-	}
-
 	public class Response
     {
 //HTTP/1.1 200 OK\r\n
@@ -65,39 +32,31 @@ namespace Host.ConnectionHandlers
 //Content-Type: {2}; charset=UTF-8
 //
 //";
-		public UserConnect UserData;
-		public ResponseDataStream DataWriter;
         private string bolvanka = "HTTP/1.1 {0}{1}\r\n\r\n";
         public ExceptionCode code;
 		private Dictionary<string, string> http_headers;
 		private Dictionary<string, string> http_cookie;
 		private List<byte[]> http_body;
-		private TcpClient Connection;
 		private List<string> forbidden_http_headers;
 
         private bool IsFatal {
             get { return code.IsFatal; }
         }
 
-        public Response(TcpClient connection) {
+        public Response() {
 			http_headers = new Dictionary<string, string>();
 			http_cookie = new Dictionary<string, string>();
 			http_body = new List<byte[]>();
-			Connection = connection;
-			DataWriter = new ResponseDataStream((obj) => http_body.Add(obj));
 			forbidden_http_headers = new List<string>();
         }
-		public void Clear() {
-			http_headers.Clear();
-			http_cookie.Clear();
-			http_body.Clear();
-			code = null;
-		}
 
 		public void AddForbiddenHeader(string header_title) {
 			forbidden_http_headers.Add(header_title);
 		}
 
+		public string GetHeader(string _key) {
+			return http_headers[_key];
+		}
 		public void AddToHeader(string _key, string _value, AddMode mode) {
 			try {
                 http_headers.Add(_key, _value);
@@ -121,7 +80,7 @@ namespace Host.ConnectionHandlers
 			http_cookie.Add(name, adding_cookie);
 		}
 
-		public bool SendData(Reqest request) { //false on connection close
+		public void SendData(Reqest request, IConnetion Data, Stream output) { //false on connection close
 			if (code.IsFatal) {
 				http_body.Clear();
 				http_headers.Clear();
@@ -129,12 +88,9 @@ namespace Host.ConnectionHandlers
 			}
 			AddToHeader("Server", "MyWebServer(0.0.0.1) (Unix) (Red-Hat/Linux)", AddMode.rewrite);
 			Response response = this;
-			code.ExceptionHandle(ref request, ref response);
+			code.ExceptionHandle(ref request, ref response, Data);
 
-			long data_length = 0;
-			foreach (byte[] arr in http_body) {
-				data_length += arr.Length;
-			}
+			long data_length = Data.OutputData.Length;
 
 			AddToHeader("Content-Length", data_length.ToString(), AddMode.rewrite);
 			bool keep_alive = true;
@@ -157,30 +113,20 @@ namespace Host.ConnectionHandlers
 				}
 			}
 
-            //string httpbody = "";
             StringBuilder httpbody = new StringBuilder();
             foreach (KeyValuePair<string, string> word in http_headers) {
 				if (!forbidden_http_headers.Contains(word.Key)) {
-					//httpbody += "\r\n" + word.Key + ": " + word.Value;
                     httpbody.AppendFormat("\r\n{0}: {1}", word.Key, word.Value);
 				}
             }
 			foreach (KeyValuePair<string, string> word in http_cookie) {
-                //httpbody += "\r\nSet-Cookie: " + vord.Key + vord.Value;
                 httpbody.AppendFormat("\r\nSet-Cookie: {0}={1}", word.Key, word.Value);
             }
             string req_header_string = string.Format(bolvanka, code.GetExeptionCode(), httpbody.ToString());
 			byte[] header = Encoding.UTF8.GetBytes(req_header_string);
-			Connection.GetStream().Write(header, 0, header.Length);
-			foreach (byte[] arr in http_body) {
-				Connection.GetStream().Write(arr, 0, arr.Length);
-			}
-
-			if (!keep_alive) {
-				Connection.Close();
-			}
-			return keep_alive;
-
+			output.Write(header, 0, header.Length);
+			Data.OutputData.Seek(0, SeekOrigin.Begin);
+			Data.OutputData.CopyTo(output);
         }
     }
 }

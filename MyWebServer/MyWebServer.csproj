@@ -81,6 +81,7 @@
     <Compile Include="Host\ConnectionHandlers\websocket\WebSocketException.cs" />
     <Compile Include="Assets\MyRandom.cs" />
     <Compile Include="Host\Eventer\IHostEvents.cs" />
+    <Compile Include="Host\ServerExceptions\Exceptions\NotImplementedFabric.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

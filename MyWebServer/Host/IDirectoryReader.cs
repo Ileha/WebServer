@@ -20,8 +20,8 @@ namespace Host.DirReader
 			string res = "";
 			res += BeforeData(dir);
 			res += ThisFolder(dir);
-			if (dir.GetParent() != null) {
-				res += UpFolder(dir.GetParent());
+			if (dir.Parent != null) {
+				res += UpFolder(dir.Parent);
 			}
 
 			return res;

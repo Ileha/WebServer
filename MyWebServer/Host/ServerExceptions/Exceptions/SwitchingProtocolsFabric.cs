@@ -25,7 +25,7 @@ namespace Host.ServerExceptions {
 			_IsFatal = true;
 		}
 
-		public override void ExceptionHandleCode(ref Reqest request, ref Response response) {
+		public override void ExceptionHandleCode(ref Reqest request, ref Response response, IConnetion handler) {
 			string prot = "";
 			for (int i = 0; i < protocols.Length; i++) {
 				if (i == protocols.Length - 1) {

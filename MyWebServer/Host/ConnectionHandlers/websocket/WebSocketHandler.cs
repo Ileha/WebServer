@@ -60,6 +60,7 @@ namespace Host.ConnectionHandlers
 
         public Stream OutputData {
             get { return SocketStream; }
+			set { throw new NotImplementedException(); }
         }
 
         public UserConnect UserConnectData {

@@ -25,7 +25,7 @@ namespace Host.ServerExceptions
 			_IsFatal = true;
 			this.targeURL = targeURL;
 		}
-        public override void ExceptionHandleCode(ref Reqest request, ref Response response) {
+        public override void ExceptionHandleCode(ref Reqest request, ref Response response, IConnetion handler) {
 			response.AddToHeader("Location", targeURL, AddMode.rewrite);
 		}
 	}

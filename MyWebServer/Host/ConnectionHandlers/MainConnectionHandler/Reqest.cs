@@ -14,9 +14,9 @@ namespace Host.ConnectionHandlers {
         private byte[] _data;
         private long _lenght;
         private long _index;
-        private NetworkStream _client;
+        private Stream _client;
 
-        public ReqestDataStream(byte[] data, long lenght_client, NetworkStream client) {
+        public ReqestDataStream(byte[] data, long lenght_client, Stream client) {
             _index = 0;
             _data = data;
 			if (data != null) {
@@ -75,13 +75,47 @@ namespace Host.ConnectionHandlers {
         public Dictionary<string, string> varibles;//данные
         public Dictionary<string, string> preferens;//заголовки
 		public Dictionary<string, string> cookies;
-		public TcpClient client;
 
-        public Reqest(TcpClient client) {
+        public Reqest(Stream client) {
             varibles = new Dictionary<string, string>();
             preferens = new Dictionary<string, string>();
 			cookies = new Dictionary<string, string>();
-			this.client = client;
+
+			List<byte> input_data = new List<byte>();
+			byte[] buffer = new byte[1024];
+			int count = 0;
+			int index = 0;
+			while ((count = client.Read(buffer, 0, buffer.Length)) > 0) {
+				input_data.AddRange(buffer.Take(count));
+				if (ExistSeqeunce(new_line, buffer, out index)) { //Запрос обрывается \r\n\r\n последовательностью
+					index += (input_data.Count - count);
+					break;
+				}
+			}
+
+			string headers_data = Encoding.UTF8.GetString(input_data.GetRange(0, index).ToArray());
+			byte[] data = null;
+			if (index + 4 < input_data.Count) {
+				data = input_data.GetRange(index + 4, input_data.Count - (index + 4)).ToArray();
+			}
+			Reqest result = this;
+			string[] elements = Regex.Split(headers_data, "\r\n");
+			try {
+				string[] header = elements[0].Split(' ');
+				IHttpHandler _handler = Repository.ReqestsHandlers[header[0] + header[2]];
+				_handler.ParseHeaders(ref result, elements.ToList().GetRange(1, elements.Length - 1).ToArray(), header[1]);
+				if (_handler.CanHasData(this)) {
+					Data = new ReqestDataStream(data, _handler.GetDataLenght(this), client);
+				}
+			}
+            catch (Exception err) {
+                if (err.GetType().IsSubclassOf(typeof(ExceptionCode))) {
+                    throw err;
+                }
+                else {
+					throw Repository.ExceptionFabrics["Bad Request"].Create(null, null);
+                }
+            }
         }
 
         public void CheckTabelOfRedirect() {
@@ -95,53 +129,7 @@ namespace Host.ConnectionHandlers {
 			throw Repository.ExceptionFabrics["Moved Permanently"].Create(null, new_url);
         }
 
-		public void Clear() {
-			varibles.Clear();
-			preferens.Clear();
-			cookies.Clear();
-			URL = "";
-			Data = null;
-		}
-
-		public void Create() {
-            List<byte> input_data = new List<byte>();
-            byte[] buffer = new byte[1024];
-			int count = 0;
-            int index = 0;
-            while ((count = client.GetStream().Read(buffer, 0, buffer.Length)) > 0) {
-                input_data.AddRange(buffer.Take(count));
-                if (ExistSeqeunce(new_line, buffer, out index)) { //Запрос обрывается \r\n\r\n последовательностью
-                    index += (input_data.Count - count);
-                    break;
-                }
-            }
-
-            string headers_data = Encoding.UTF8.GetString(input_data.GetRange(0, index).ToArray());
-            byte[] data = null;
-			if (index + 4 < input_data.Count) {
-				data = input_data.GetRange(index + 4, input_data.Count - (index + 4)).ToArray();
-			}
-			Reqest result = this;
-            string[] elements = Regex.Split(headers_data, "\r\n");
-            try {
-                string[] header = elements[0].Split(' ');
-                IHttpHandler _handler = Repository.ReqestsHandlers[header[0]+header[2]];
-                _handler.ParseHeaders(ref result, elements.ToList().GetRange(1, elements.Length - 1).ToArray(), header[1]);
-				if (_handler.CanHasData(this)) {
-					Data = new ReqestDataStream(data, _handler.GetDataLenght(this), client.GetStream());
-				}
-            }
-            catch (Exception err) {
-                if (err.GetType().IsSubclassOf(typeof(ExceptionCode))) {
-                    throw err;
-                }
-                else {
-					throw Repository.ExceptionFabrics["Bad Request"].Create(null, null);
-                }
-            }
-        }
-
-        public static bool ExistSeqeunce(byte[] sequence, IEnumerable<byte> array, out int index) {
+        private static bool ExistSeqeunce(byte[] sequence, IEnumerable<byte> array, out int index) {
             int seq_i = 0;
             for (int i = 0; i < array.Count(); i++)
             {

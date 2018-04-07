@@ -24,6 +24,6 @@ namespace Host.ServerExceptions
 			_IsFatal = false;
 		}
 
-		public override void ExceptionHandleCode(ref Reqest request, ref Response response) {}
+		public override void ExceptionHandleCode(ref Reqest request, ref Response response, IConnetion handler) {}
 	}
 }

@@ -31,7 +31,7 @@ namespace Host.ServerExceptions
 			this.message = message;
         }
 
-		public override void ExceptionHandleCode(ref Reqest request, ref Response response) {
+		public override void ExceptionHandleCode(ref Reqest request, ref Response response, IConnetion handler) {
 			response.AddToHeader("WWW-Authenticate", "Basic realm=\""+message+"\"", AddMode.rewrite);
 		}
     }
