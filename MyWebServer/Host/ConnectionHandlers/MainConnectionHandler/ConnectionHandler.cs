@@ -41,6 +41,7 @@ namespace Host.ConnectionHandlers {
 
 		public void Clear() {
             code = Repository.ExceptionFabrics["OK"].Create(null, null);
+			reads_bytes.Dispose();
 			reads_bytes = null;
 			DataHandle = null;
 			_outputData.Dispose();
@@ -130,6 +131,7 @@ namespace Host.ConnectionHandlers {
 
             response.code = code;
 			response.SendData(obj_request, this, connection.GetStream());
+			connection.GetStream().Flush();
 			if (response.GetHeader("Connection") != "close") {
 				return res;
 			}
