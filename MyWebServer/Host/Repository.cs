@@ -17,7 +17,6 @@ namespace Host {
 		public static Dictionary<string, IHttpHandler> ReqestsHandlers;
 		public static Dictionary<string, IMIME> DataHandlers;
 		public static Dictionary<string, ExceptionFabric> ExceptionFabrics;
-		public static IDirectoryReader DirReader;//экземпляр класса преобразующий директорию в html страницу
         public static WebServerConfig Configurate;
         public static List<IGrub> Eventers;
 

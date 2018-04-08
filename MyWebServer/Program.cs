@@ -31,7 +31,6 @@ namespace MainProgramm {
                 resident.AddConfig(host_conf.ToString());
 				if (has_modules) resident.LoadPluginExternal();
                 resident.LoadPluginInternal();
-                resident.FileBrowser();
                 resident.GetPluginInfo();
                 resident.StartHost();
             }

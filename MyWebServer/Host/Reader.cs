@@ -12,6 +12,7 @@ namespace Host
     {
         public readonly Stream data;
         public readonly string file_extension;
+		public readonly IItem Resourse;
 
         public Reader(string URL, UserInfo target_user) {
             try {
@@ -25,32 +26,19 @@ namespace Host
                 if (!res.IsUserEnter(target_user)) {
                     throw Repository.ExceptionFabrics["Unauthorized"].Create(null, "Access to staging site");
                 }
-                if (res.Extension == "dir") {
-					if (Repository.DirReader == null) {
-						throw Repository.ExceptionFabrics["Not Implemented"].Create(null, null);
-					}
-					StringBuilder str = new StringBuilder();
-					str.Append(Repository.DirReader.ParsDirectoryHeader(res));
-                    foreach (IItem ite in res) {
-                        if (!ite.IsUserEnter(target_user)) { continue; }
-						str.Append(Repository.DirReader.ItemPars(ite));
-                    }
-					str.Append(Repository.DirReader.ParsDirectoryDown(res));
-					data = new MemoryStream();
-					byte[] dt = Encoding.UTF8.GetBytes(str.ToString());
-					data.Write(dt, 0, dt.Length);
-					data.Seek(0, SeekOrigin.Begin);
-                    file_extension = ".html";
-                }
-                else {
+				try {
+					Resourse = res;
+					file_extension = res.Extension;
 					try {
-                        file_extension = res.Extension;
 						data = res.GetData();
-                    }
-                    catch (Exception err) {
-                        throw Repository.ExceptionFabrics["Internal Server Error"].Create(null, null);
-                    }
-                }
+					}
+					catch (NotImplementedException err) {
+						data = null;
+					}
+				}
+				catch (Exception err) {
+					throw Repository.ExceptionFabrics["Internal Server Error"].Create(null, null);
+				}
             }
             catch (Exception err) {
                 if (err.GetType().IsSubclassOf(typeof(ExceptionCode))) {

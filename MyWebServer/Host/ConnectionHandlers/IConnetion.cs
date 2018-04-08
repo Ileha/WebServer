@@ -10,7 +10,7 @@ namespace Host.ConnectionHandlers
 
     public interface IConnetion {
         Stream InputData { get; }
-        Stream OutputData { get; set; }
+        Stream OutputData { get; }
         UserConnect UserConnectData { get; }
         Reader ReadData { get; }
         ConnectionType ConnectType { get; }

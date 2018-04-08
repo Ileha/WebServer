@@ -42,7 +42,7 @@ namespace Host.ConnectionHandlers {
 				reads_bytes = null;
 			}
 			DataHandle = null;
-			if (reads_bytes != null) {
+			if (_outputData != null) {
 				_outputData.Dispose();
 			}
 			_outputData = new MemoryStream();
@@ -116,6 +116,7 @@ namespace Host.ConnectionHandlers {
                 DataHandle.Headers(ref response, ref obj_request, ref reads_bytes);//вызов обработчика данных для заголовков
 				try {
 					IConnetion conn = this;
+					conn.OutputData.Seek(0, SeekOrigin.Begin);
 					DataHandle.Handle(ref conn);
 				}
 				catch (Exception err) {
@@ -146,7 +147,6 @@ namespace Host.ConnectionHandlers {
 
         public Stream OutputData {
 			get { return _outputData; }
-			set { _outputData = value; }
         }
 
         public UserConnect UserConnectData {

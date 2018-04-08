@@ -23,7 +23,7 @@ namespace Resouces
         }
 
 		public override string Extension {
-			get { return "dir"; }
+			get { return ".dir"; }
 		}
 
 		public LinkDirectory() : base() { }

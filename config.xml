@@ -17,7 +17,7 @@
 				<element groups="test">banana.gif</element>
 			</resource_config>
 		</linker>
-		<allow_browse_folders is_work="true" browser="StandartViewer" reourse_path="../../../Resourses/WebServerResourses"></allow_browse_folders>
+		<!-- <allow_browse_folders is_work="true" browser="StandartViewer" reourse_path="../../../Resourses/WebServerResourses"></allow_browse_folders> -->
 		<session_collector time_of_life="60000" time_of_collect="10000"></session_collector>
 		<redirect_table>
 			<!-- <element path="/" target="/index.html"></element>

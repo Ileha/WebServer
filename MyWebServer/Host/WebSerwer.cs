@@ -41,12 +41,12 @@ namespace Host {
         public void ConfigureEvents() {
             Type onStart = typeof(OnWebServerStart);
 			Type onStop = typeof(OnWebServerStop);
-            if (Repository.DirReader != null && Repository.DirReader.GetType().GetInterfaces().Contains(onStart)) {;
-				onStartHost += (Repository.DirReader as OnWebServerStart).OnStart;
-            }
-			if (Repository.DirReader != null && Repository.DirReader.GetType().GetInterfaces().Contains(onStop)) {
-				onStartHost += (Repository.DirReader as OnWebServerStop).OnStop;
-            }
+   //         if (Repository.DirReader != null && Repository.DirReader.GetType().GetInterfaces().Contains(onStart)) {;
+			//	onStartHost += (Repository.DirReader as OnWebServerStart).OnStart;
+   //         }
+			//if (Repository.DirReader != null && Repository.DirReader.GetType().GetInterfaces().Contains(onStop)) {
+			//	onStartHost += (Repository.DirReader as OnWebServerStop).OnStop;
+   //         }
 
             foreach (KeyValuePair<string, IHttpHandler> el in Repository.ReqestsHandlers) {
                 if (el.Value.GetType().GetInterfaces().Contains(onStart)) {

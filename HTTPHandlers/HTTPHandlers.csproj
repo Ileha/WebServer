@@ -35,7 +35,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StandartViewer.cs" />
     <Compile Include="HTTPHandlers\GetReqestHandler.cs" />
     <Compile Include="HTTPHandlers\POSTReqestHandler.cs" />
     <Compile Include="MIMEHandlers\CSSIMIME.cs" />
@@ -48,6 +47,7 @@
     <Compile Include="MIMEHandlers\PlainTextMIME.cs" />
     <Compile Include="MIMEHandlers\CSVMIME.cs" />
     <Compile Include="MIMEHandlers\HtmlMIME.cs" />
+    <Compile Include="MIMEHandlers\DirMIME.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MyWebServer\MyWebServer.csproj">

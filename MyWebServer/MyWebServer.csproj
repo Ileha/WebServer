@@ -41,7 +41,6 @@
     <Compile Include="Host\ConnectionHandlers\IConnetion.cs" />
     <Compile Include="Host\ConnectionHandlers\websocket\WebSocketHandler.cs" />
     <Compile Include="Host\Eventer\IGrub.cs" />
-    <Compile Include="Host\IDirectoryReader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Host\Reader.cs" />
