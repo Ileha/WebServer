@@ -5,7 +5,6 @@ using Host.MIME;
 using Config;
 using Host.ServerExceptions;
 using System.Xml.Linq;
-using Host.DirReader;
 using Host.Eventer;
 
 namespace Host {

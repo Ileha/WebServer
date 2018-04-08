@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using System.Reflection;
-using Host.DirReader;
 using Host.ServerExceptions;
 using Host.Eventer;
 

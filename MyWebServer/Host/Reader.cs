@@ -51,7 +51,9 @@ namespace Host
         }
 
 		public void Dispose() {
-			data.Dispose();
+			if (data != null) {
+				data.Dispose();
+			}
 		}
 	}
 }

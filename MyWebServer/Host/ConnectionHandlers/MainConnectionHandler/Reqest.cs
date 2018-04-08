@@ -9,6 +9,73 @@ using System.Net.Sockets;
 using System.IO;
 
 namespace Host.ConnectionHandlers {
+
+	public class ReqestDataStream : Stream
+	{
+		private byte[] _data;
+		private long _lenght;
+		private long _index;
+		private NetworkStream _client;
+
+		public ReqestDataStream(byte[] data, long lenght_client, NetworkStream client)
+		{
+			_index = 0;
+			_data = data;
+			if (data != null)
+			{
+				_lenght = lenght_client + data.Length;
+			}
+			else
+			{
+				_lenght = lenght_client;
+			}
+			_client = client;
+		}
+
+		public override bool CanRead { get { return true; } }
+		public override bool CanSeek { get { return false; } }
+		public override bool CanWrite { get { return false; } }
+		public override long Length { get { return _lenght; } }
+		public override long Position { get { return _index; } set { throw new NotImplementedException(); } }
+		public override void Flush() { throw new NotImplementedException(); }
+
+		public override int Read(byte[] buffer, int offset, int count)
+		{
+			int res = 0;
+			if (_data != null && _index < _data.Length && _index + count <= _data.Length)
+			{
+				res = WriteFromData(buffer, offset, _index, count);
+			}
+			else if (_data != null && _index < _data.Length && _index + count > _data.Length)
+			{
+				res = WriteFromData(buffer, offset, _index, _data.Length - _index);
+				res += _client.Read(buffer, (int)(_data.Length - _index), (int)(count - (_data.Length - _index)));
+			}
+			else if (_data == null || _index > _data.Length)
+			{
+				res = _client.Read(buffer, offset, count);
+			}
+			_index += res;
+			return res;
+		}
+
+		private int WriteFromData(byte[] buffer, int start_buffer, long start, long count)
+		{
+			int res = 0;
+			for (long i = start; i < start + count; i++) {
+				buffer[start_buffer] = _data[i];
+				start_buffer++;
+				res++;
+				if (i == _data.Length - 1) { break; }
+			}
+			return res;
+		}
+
+		public override long Seek(long offset, SeekOrigin origin) { throw new NotImplementedException(); }
+		public override void SetLength(long value) { throw new NotImplementedException(); }
+		public override void Write(byte[] buffer, int offset, int count) { throw new NotImplementedException(); } 
+	}
+
     public class Reqest {
         private static byte[] new_line = new byte[] { 13, 10, 13, 10 };
 
@@ -18,7 +85,7 @@ namespace Host.ConnectionHandlers {
         public Dictionary<string, string> preferens;//заголовки
 		public Dictionary<string, string> cookies;
 
-        public Reqest(Stream client) {
+        public Reqest(TcpClient client) {
             varibles = new Dictionary<string, string>();
             preferens = new Dictionary<string, string>();
 			cookies = new Dictionary<string, string>();
@@ -28,7 +95,7 @@ namespace Host.ConnectionHandlers {
 			byte[] buffer = new byte[1024];
 			int count = 0;
 			int index = 0;
-			while ((count = client.Read(buffer, 0, buffer.Length)) > 0) {
+			while ((count = client.Client.Receive(buffer)) > 0) {
 				input_data.AddRange(buffer.Take(count));
 				if (ExistSeqeunce(new_line, buffer, out index)) { //Запрос обрывается \r\n\r\n последовательностью
 					index += (input_data.Count - count);
@@ -50,7 +117,7 @@ namespace Host.ConnectionHandlers {
 					int lenght_all = (int)_handler.GetDataLenght(this);
 					byte[] d = new byte[1024];
 					do {
-						int l = client.Read(d, 0, 1024);
+						int l = client.Client.Receive(d);
 						Data.Write(d, 0, l);
 					} while ((lenght_all - Data.Length) < 0);
 					Data.Seek(0, SeekOrigin.Begin);

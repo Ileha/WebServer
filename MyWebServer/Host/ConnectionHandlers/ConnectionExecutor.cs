@@ -38,6 +38,7 @@ namespace Host.ConnectionHandlers
 				Handler.Clear();
 			}
 			onDisConnectEvent();
+			Handler.Client.Close();
 			Console.WriteLine("end connection id: {0}", ID.ToString());
 		}
 

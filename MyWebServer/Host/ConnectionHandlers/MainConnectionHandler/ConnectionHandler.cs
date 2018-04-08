@@ -46,6 +46,10 @@ namespace Host.ConnectionHandlers {
 				_outputData.Dispose();
 			}
 			_outputData = new MemoryStream();
+			response = null;
+			obj_request = null;
+			UserData = null;
+			User = null;
 		}
 
 		public IConnectionHandler ExecuteHandler() //null on connection close
@@ -54,7 +58,7 @@ namespace Host.ConnectionHandlers {
 			response = new Response(); //создание экземпляра класса ответа
 
             try {
-				obj_request = new Reqest(connection.GetStream());//создание экземпляра класса запроса;
+				obj_request = new Reqest(Client);//создание экземпляра класса запроса;
                 obj_request.CheckTabelOfRedirect();//проверка таблицы перенаправлений
                 try {//попытка найти данные к запросу
                     UserData = UserConnect.GetUserDataFromID(obj_request.cookies[Repository.ConfigBody.Element("webserver").Element("guid").Value.ToString()]);
@@ -116,7 +120,7 @@ namespace Host.ConnectionHandlers {
                 DataHandle.Headers(ref response, ref obj_request, ref reads_bytes);//вызов обработчика данных для заголовков
 				try {
 					IConnetion conn = this;
-					conn.OutputData.Seek(0, SeekOrigin.Begin);
+					//conn.OutputData.Seek(0, SeekOrigin.Begin);
 					DataHandle.Handle(ref conn);
 				}
 				catch (Exception err) {
@@ -135,8 +139,6 @@ namespace Host.ConnectionHandlers {
 				return res;
 			}
 			else {
-				connection.GetStream().Close();
-				connection.GetStream().Dispose();
 				return null;
 			}
         }

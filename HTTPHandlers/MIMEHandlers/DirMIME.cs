@@ -14,22 +14,23 @@ namespace Host.MIME
 		public void Handle(ref IConnetion connection) {
 			StringBuilder sb = new StringBuilder();
 			sb.AppendFormat("<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"utf-8\">\n<title>{0}</title>\n</head>\n<body>\n", connection.ReadData.Resourse.GetName());
-			sb.AppendFormat("<p><a href=\"{0}\"><img src=\"WebServerResourses/folder.png\" height=\"20\"></img>.</a>\n", connection.ReadData.Resourse.GetPath());
+			sb.AppendFormat("<p><a href=\"{0}\"><img src=\"WebServerResourses/folder.png\" height=\"20\"></img>.</a></p>\n", connection.ReadData.Resourse.GetPath());
 			if (connection.ReadData.Resourse.Parent != null) {
-				sb.AppendFormat("<p><a href=\"{0}\"><img src=\"WebServerResourses/up.png\" height=\"20\"></img>..</a>\n", connection.ReadData.Resourse.Parent.GetPath());
+				sb.AppendFormat("<p><a href=\"{0}\"><img src=\"WebServerResourses/up.png\" height=\"20\"></img>..</a></p>\n", connection.ReadData.Resourse.Parent.GetPath());
 			}
 			foreach (IItem file in connection.ReadData.Resourse) {
 				if (file.Extension == ".dir") {
-					sb.AppendFormat("<p><a href=\"{0}\"><img src=\"WebServerResourses/folder.png\" height=\"20\"></img>{1}</a>\n", file.GetPath(), file.GetName());
+					sb.AppendFormat("<p><a href=\"{0}\"><img src=\"WebServerResourses/folder.png\" height=\"20\"></img>{1}</a></p>\n", file.GetPath(), file.GetName());
 				}
 				else {
-					sb.AppendFormat("<p><a href=\"{0}\"><img src=\"WebServerResourses/file.png\" height=\"20\"></img>{1}</a>\n", file.GetPath(), file.GetName());
+					sb.AppendFormat("<p><a href=\"{0}\"><img src=\"WebServerResourses/file.png\" height=\"20\"></img>{1}</a></p>\n", file.GetPath(), file.GetName());
 				}
 			}
 
 			sb.Append("\n</body>\n</html>");
 			byte[] buff = Encoding.UTF8.GetBytes(sb.ToString());
 			connection.OutputData.Write(buff, 0, buff.Length);
+			connection.OutputData.Seek(0, SeekOrigin.Begin);
 		}
 
 		public void Headers(ref Response response, ref Reqest reqest, ref Reader read) {
