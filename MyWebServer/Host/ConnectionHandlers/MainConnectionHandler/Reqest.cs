@@ -46,9 +46,14 @@ namespace Host.ConnectionHandlers {
 				string[] header = elements[0].Split(' ');
 				IHttpHandler _handler = Repository.ReqestsHandlers[header[0] + header[2]];
 				_handler.ParseHeaders(ref result, elements.ToList().GetRange(1, elements.Length - 1).ToArray(), header[1]);
-				if (_handler.CanHasData(this)) {
-					//Data = new ReqestDataStream(data, _handler.GetDataLenght(this), client);
-					client.CopyTo(Data);
+				if (_handler.CanHasData(this) && (int)_handler.GetDataLenght(this) - Data.Length > 0) {
+					int lenght_all = (int)_handler.GetDataLenght(this);
+					byte[] d = new byte[1024];
+					do {
+						int l = client.Read(d, 0, 1024);
+						Data.Write(d, 0, l);
+					} while ((lenght_all - Data.Length) < 0);
+					Data.Seek(0, SeekOrigin.Begin);
 				}
 			}
             catch (Exception err) {

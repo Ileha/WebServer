@@ -37,15 +37,19 @@ namespace Host.ConnectionHandlers {
 
 		public void Clear() {
             code = Repository.ExceptionFabrics["OK"].Create(null, null);
-			reads_bytes.Dispose();
-			reads_bytes = null;
+			if (reads_bytes != null) {
+				reads_bytes.Dispose();
+				reads_bytes = null;
+			}
 			DataHandle = null;
-			_outputData.Dispose();
+			if (reads_bytes != null) {
+				_outputData.Dispose();
+			}
 			_outputData = new MemoryStream();
 		}
 
 		public IConnectionHandler ExecuteHandler() //null on connection close
-        {   
+  		{
 			IConnectionHandler res = this;
 			response = new Response(); //создание экземпляра класса ответа
 
@@ -110,20 +114,19 @@ namespace Host.ConnectionHandlers {
                 }
                 catch (KeyNotFoundException err) {}
                 DataHandle.Headers(ref response, ref obj_request, ref reads_bytes);//вызов обработчика данных для заголовков
+				try {
+					IConnetion conn = this;
+					DataHandle.Handle(ref conn);
+				}
+				catch (Exception err) {
+					response.AddToHeader("Content-Type", "text/html; charset=UTF-8", AddMode.rewrite);
+					byte[] exce = Encoding.UTF8.GetBytes(err.ToString());
+					OutputData.Write(exce, 0, exce.Length);
+				}
             }
             catch (ExceptionCode err) {
                 code = err;
             }
-
-			try {
-				IConnetion conn = this;
-				DataHandle.Handle(ref conn);
-			}
-			catch (Exception err) {
-				response.AddToHeader("Content-Type", "text/html; charset=UTF-8", AddMode.rewrite);
-				byte[] exce = Encoding.UTF8.GetBytes(err.ToString());
-				OutputData.Write(exce, 0, exce.Length);
-			}
 
             response.code = code;
 			response.SendData(obj_request, this, connection.GetStream());

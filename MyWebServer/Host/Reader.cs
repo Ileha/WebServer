@@ -39,6 +39,7 @@ namespace Host
 					data = new MemoryStream();
 					byte[] dt = Encoding.UTF8.GetBytes(str.ToString());
 					data.Write(dt, 0, dt.Length);
+					data.Seek(0, SeekOrigin.Begin);
                     file_extension = ".html";
                 }
                 else {
