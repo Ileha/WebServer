@@ -95,12 +95,12 @@ namespace Host.ConnectionHandlers {
 			byte[] buffer = new byte[1024];
 			int count = 0;
 			int index = 0;
+			client.Client.Available
 			while ((count = client.Client.Receive(buffer)) > 0) {
 				input_data.AddRange(buffer.Take(count));
 				if (ExistSeqeunce(new_line, buffer, out index)) { //Запрос обрывается \r\n\r\n последовательностью
 					index += (input_data.Count - count);
-					break;
-				}
+					break;}
 			}
 
 			string headers_data = Encoding.UTF8.GetString(input_data.GetRange(0, index).ToArray());
