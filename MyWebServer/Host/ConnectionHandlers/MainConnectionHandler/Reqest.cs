@@ -9,7 +9,6 @@ using System.Net.Sockets;
 using System.IO;
 
 namespace Host.ConnectionHandlers {
-
 	public class ReqestDataStream : Stream
 	{
 		private byte[] _data;
@@ -21,14 +20,7 @@ namespace Host.ConnectionHandlers {
 		{
 			_index = 0;
 			_data = data;
-			if (data != null)
-			{
-				_lenght = lenght_client + data.Length;
-			}
-			else
-			{
-				_lenght = lenght_client;
-			}
+			_lenght = lenght_client;
 			_client = client;
 		}
 
@@ -95,13 +87,14 @@ namespace Host.ConnectionHandlers {
 			byte[] buffer = new byte[1024];
 			int count = 0;
 			int index = 0;
-			client.Client.Available
 			while ((count = client.Client.Receive(buffer)) > 0) {
 				input_data.AddRange(buffer.Take(count));
 				if (ExistSeqeunce(new_line, buffer, out index)) { //Запрос обрывается \r\n\r\n последовательностью
 					index += (input_data.Count - count);
-					break;}
+					break;
+				}
 			}
+			if (count == 0) { throw new ConnectionExecutorClose(); }
 
 			string headers_data = Encoding.UTF8.GetString(input_data.GetRange(0, index).ToArray());
 			if (index + 4 < input_data.Count) {

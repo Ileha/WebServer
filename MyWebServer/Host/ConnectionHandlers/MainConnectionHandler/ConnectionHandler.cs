@@ -120,7 +120,6 @@ namespace Host.ConnectionHandlers {
                 DataHandle.Headers(ref response, ref obj_request, ref reads_bytes);//вызов обработчика данных для заголовков
 				try {
 					IConnetion conn = this;
-					//conn.OutputData.Seek(0, SeekOrigin.Begin);
 					DataHandle.Handle(ref conn);
 				}
 				catch (Exception err) {

@@ -3,6 +3,12 @@ using Host.Eventer;
 
 namespace Host.ConnectionHandlers
 {
+	public class ConnectionExecutorException : Exception {}
+
+	public class ConnectionExecutorClose : ConnectionExecutorException {
+		
+	}
+
 	public class ConnectionExecutor
 	{
 		private IConnectionHandler Handler;
@@ -33,9 +39,19 @@ namespace Host.ConnectionHandlers
 				else {
 					Console.WriteLine("continue connection id: {0}", ID.ToString());
 				}
-				Handler = Handler.ExecuteHandler();
-				if (Handler == null) { break; }
-				Handler.Clear();
+				try
+				{
+					Handler = Handler.ExecuteHandler();
+					if (Handler == null) { break; }
+					Handler.Clear();
+				}
+				catch (ConnectionExecutorClose close) {
+					break;
+				}
+				catch (Exception err) {
+					Console.WriteLine("in connection {0} runtime exception {1}", ID, err);
+					break;
+				}
 			}
 			onDisConnectEvent();
 			Handler.Client.GetStream().Dispose();
