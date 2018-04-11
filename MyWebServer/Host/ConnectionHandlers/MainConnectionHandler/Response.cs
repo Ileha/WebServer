@@ -112,6 +112,9 @@ namespace Host.ConnectionHandlers
 					}
 				}
 			}
+            else {
+                AddToHeader("Connection", "close", AddMode.rewrite);
+            }
 
             StringBuilder httpbody = new StringBuilder();
             foreach (KeyValuePair<string, string> word in http_headers) {

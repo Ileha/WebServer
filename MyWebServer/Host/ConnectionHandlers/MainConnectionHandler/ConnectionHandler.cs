@@ -42,10 +42,11 @@ namespace Host.ConnectionHandlers {
 				reads_bytes = null;
 			}
 			DataHandle = null;
-			if (_outputData != null) {
-				_outputData.Dispose();
-			}
+            if (_outputData != null) {
+                _outputData.Dispose();
+            }
 			_outputData = new MemoryStream();
+            if (InputData != null) { InputData.Dispose(); }
 			response = null;
 			obj_request = null;
 			UserData = null;
