@@ -31,36 +31,20 @@ namespace Host.ConnectionHandlers {
 		public override long Position { get { return _index; } set { throw new NotImplementedException(); } }
 		public override void Flush() { throw new NotImplementedException(); }
 
-		public override int Read(byte[] buffer, int offset, int count)
-		{
+		public override int Read(byte[] buffer, int offset, int count) {
 			int res = 0;
-			if (_data != null && _index < _data.Length && _index + count <= _data.Length)
-			{
-				res = WriteFromData(buffer, offset, _index, count);
+			try {
+				_index += offset;
+				for (int i = 0; i < count; i++) {
+					_data[_index] = buffer[i];
+					_index++;
+					res++;
+				}
 			}
-			else if (_data != null && _index < _data.Length && _index + count > _data.Length)
-			{
-				res = WriteFromData(buffer, offset, _index, _data.Length - _index);
-				res += _client.Read(buffer, (int)(_data.Length - _index), (int)(count - (_data.Length - _index)));
+			catch (Exception err) {
+				//_client.Read(buffer, )
 			}
-			else if (_data == null || _index > _data.Length)
-			{
-				res = _client.Read(buffer, offset, count);
-			}
-			_index += res;
-			return res;
-		}
-
-		private int WriteFromData(byte[] buffer, int start_buffer, long start, long count)
-		{
-			int res = 0;
-			for (long i = start; i < start + count; i++) {
-				buffer[start_buffer] = _data[i];
-				start_buffer++;
-				res++;
-				if (i == _data.Length - 1) { break; }
-			}
-			return res;
+			
 		}
 
 		public override long Seek(long offset, SeekOrigin origin) { throw new NotImplementedException(); }
