@@ -38,7 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config\ReactorPull.cs" />
-    <Compile Include="Host\ConnectionHandlers\IConnetion.cs" />
+    <Compile Include="Host\ConnectionHandlers\Controll\IConnetion.cs" />
     <Compile Include="Host\ConnectionHandlers\websocket\WebSocketHandler.cs" />
     <Compile Include="Host\Eventer\IGrub.cs" />
     <Compile Include="Program.cs" />
@@ -71,8 +71,8 @@
     <Compile Include="Host\Users\UserInfo.cs" />
     <Compile Include="Host\Users\GroupInfo.cs" />
     <Compile Include="Host\ServerExceptions\Exceptions\SwitchingProtocolsFabric.cs" />
-    <Compile Include="Host\ConnectionHandlers\IConnectionHandler.cs" />
-    <Compile Include="Host\ConnectionHandlers\ConnectionExecutor.cs" />
+    <Compile Include="Host\ConnectionHandlers\Controll\IConnectionHandler.cs" />
+    <Compile Include="Host\ConnectionHandlers\Controll\ConnectionExecutor.cs" />
     <Compile Include="Host\ConnectionHandlers\MainConnectionHandler\ConnectionHandler.cs" />
     <Compile Include="Host\ConnectionHandlers\MainConnectionHandler\Reqest.cs" />
     <Compile Include="Host\ConnectionHandlers\MainConnectionHandler\Response.cs" />

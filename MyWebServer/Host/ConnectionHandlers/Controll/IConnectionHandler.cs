@@ -3,10 +3,9 @@ using System.Net.Sockets;
 
 namespace Host.ConnectionHandlers
 {
-	public interface IConnectionHandler {
+	public interface IConnectionHandler : IDisposable {
         IConnetion GetConnetion { get; }
-		IConnectionHandler ExecuteHandler();
-		TcpClient Client { get; }
-		void Clear();
+        IConnectionHandler ExecuteHandler { get; }
+		void Execute();
 	}
 }

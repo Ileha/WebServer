@@ -1,6 +1,7 @@
 ﻿using System;
 using Config;
 using Host.ConnectionHandlers;
+using System.IO;
 
 namespace Host.MIME
 {
@@ -10,6 +11,7 @@ namespace Host.MIME
 
 		public void Handle(ref IConnetion connection) {
 			connection.ReadData.data.CopyTo(connection.OutputData);
+            connection.OutputData.Seek(0, SeekOrigin.Begin);
 		}
 
 		public void Headers(ref Response response, ref Reqest reqest, ref Reader read) {

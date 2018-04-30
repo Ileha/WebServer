@@ -39,11 +39,9 @@ namespace Host.ConnectionHandlers
 				else {
 					Console.WriteLine("continue connection id: {0}", ID.ToString());
 				}
-				try
-				{
-					Handler = Handler.ExecuteHandler();
-					if (Handler == null) { break; }
-					Handler.Clear();
+				try {
+                    Handler.Execute();
+					Handler = Handler.ExecuteHandler;
 				}
 				catch (ConnectionExecutorClose close) {
 					break;
@@ -54,8 +52,7 @@ namespace Host.ConnectionHandlers
 				}
 			}
 			onDisConnectEvent();
-			Handler.Client.GetStream().Dispose();
-			Handler.Client.Close();
+            Handler.Dispose();
 			Console.WriteLine("end connection id: {0}", ID.ToString());
 		}
 

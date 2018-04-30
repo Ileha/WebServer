@@ -80,7 +80,7 @@ namespace Host.ConnectionHandlers
 			http_cookie.Add(name, adding_cookie);
 		}
 
-		public void SendData(Reqest request, IConnetion Data, Stream output) { //false on connection close
+		public void SendData(Reqest request, IConnetion Data, Stream output) {
 			if (code.IsFatal) {
 				http_body.Clear();
 				http_headers.Clear();
@@ -128,7 +128,6 @@ namespace Host.ConnectionHandlers
             string req_header_string = string.Format(bolvanka, code.GetExeptionCode(), httpbody.ToString());
 			byte[] header = Encoding.UTF8.GetBytes(req_header_string);
 			output.Write(header, 0, header.Length);
-			Data.OutputData.Seek(0, SeekOrigin.Begin);
 			Data.OutputData.CopyTo(output);
         }
     }

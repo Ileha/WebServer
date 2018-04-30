@@ -26,34 +26,6 @@ namespace Host.ConnectionHandlers
 			SocketStream = new WebSocketStream(client.GetStream());
         }
 
-        public IConnectionHandler ExecuteHandler() {
-            IConnectionHandler res = this;
-			byte[] data = new byte[1024];
-			string str = "";
-			try {
-				do {
-					int count = SocketStream.Read(data, 0, 1024);
-					str += Encoding.UTF8.GetString(data, 0, count);
-				} while (SocketStream.CanRead);
-				IConnetion this_connection = this;
-				//DataHandle.Handle(ref this_connection);
-				byte[] h = Encoding.UTF8.GetBytes(str);
-				OutputData.Write(h, 0, h.Length);
-			}
-			catch (BreakConnection err) {
-				res = null;
-			}
-
-
-            return res;
-        }
-
-        public TcpClient Client {
-            get { return client; }
-        }
-
-        public void Clear() {}
-
         public Stream InputData {
 			get { return SocketStream; }
         }
@@ -78,6 +50,33 @@ namespace Host.ConnectionHandlers
         }
         public IConnetion GetConnetion {
             get { return this; }
+        }
+
+        public IConnectionHandler ExecuteHandler {
+            get { return this; }
+        }
+
+        public void Execute() {
+            byte[] data = new byte[1024];
+            string str = "";
+            try {
+                do {
+                    int count = SocketStream.Read(data, 0, 1024);
+                    str += Encoding.UTF8.GetString(data, 0, count);
+                } while (SocketStream.CanRead);
+                IConnetion this_connection = this;
+                //DataHandle.Handle(ref this_connection);
+                byte[] h = Encoding.UTF8.GetBytes(str);
+                OutputData.Write(h, 0, h.Length);
+            }
+            catch (BreakConnection err) {
+                throw new ConnectionExecutorClose();
+            }
+        }
+
+        public void Dispose() {
+            client.GetStream().Dispose();
+            client.Close();
         }
     }
 }
