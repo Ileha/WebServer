@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config\ReactorPull.cs" />
+    <Compile Include="Host\ConnectionHandlers\Controll\ExecutorExceptions\ConnectionExecutorException.cs" />
     <Compile Include="Host\ConnectionHandlers\Controll\IConnetion.cs" />
     <Compile Include="Host\ConnectionHandlers\websocket\WebSocketHandler.cs" />
     <Compile Include="Host\Eventer\IGrub.cs" />
@@ -77,7 +78,6 @@
     <Compile Include="Host\ConnectionHandlers\MainConnectionHandler\Reqest.cs" />
     <Compile Include="Host\ConnectionHandlers\MainConnectionHandler\Response.cs" />
     <Compile Include="Host\ConnectionHandlers\websocket\WebSocketStream.cs" />
-    <Compile Include="Host\ConnectionHandlers\websocket\WebSocketException.cs" />
     <Compile Include="Assets\MyRandom.cs" />
     <Compile Include="Host\Eventer\IHostEvents.cs" />
     <Compile Include="Host\ServerExceptions\Exceptions\NotImplementedFabric.cs" />

@@ -12,7 +12,7 @@ using Host.Eventer;
 
 namespace MainProgramm
 {
-    public class Resident : MarshalByRefObject
+    public class Resident : MarshalByRefObject, IDisposable
     {
         public void AddConfig(string data) {
 			XElement doc = XElement.Parse(data);
@@ -144,6 +144,10 @@ namespace MainProgramm
         public void Info()
         {
             Console.WriteLine("execute in domain {0}", AppDomain.CurrentDomain.FriendlyName);
+        }
+
+        public void Dispose() {
+            Repository.Configurate.Dispose();
         }
     }
 }

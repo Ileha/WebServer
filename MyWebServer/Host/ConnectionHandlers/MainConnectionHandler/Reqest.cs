@@ -7,6 +7,7 @@ using Host.HttpHandler;
 using Host.ServerExceptions;
 using System.Net.Sockets;
 using System.IO;
+using Host.ConnectionHandlers.ExecutorExceptions;
 
 namespace Host.ConnectionHandlers
 {

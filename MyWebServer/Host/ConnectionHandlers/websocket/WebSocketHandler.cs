@@ -16,65 +16,72 @@ namespace Host.ConnectionHandlers
         private Reader reads_bytes;
         public IMIME DataHandle;
         public UserConnect UserData;
-		private WebSocketStream SocketStream;
+        private WebSocketStream SocketStream;
 
-        public WebSocketHandler(TcpClient client, Reader data, UserConnect user_data) {
+        public WebSocketHandler(TcpClient client, Reader data, UserConnect user_data)
+        {
             this.client = client;
             reads_bytes = data;
             DataHandle = Repository.DataHandlers[reads_bytes.file_extension];
             UserData = user_data;
-			SocketStream = new WebSocketStream(client.GetStream());
+            SocketStream = new WebSocketStream(client.GetStream());
         }
 
-        public Stream InputData {
-			get { return SocketStream; }
-        }
-
-        public Stream OutputData {
+        public Stream InputData
+        {
             get { return SocketStream; }
-			set { throw new NotImplementedException(); }
         }
 
-        public UserConnect UserConnectData {
+        public Stream OutputData
+        {
+            get { return SocketStream; }
+            set { throw new NotImplementedException(); }
+        }
+
+        public UserConnect UserConnectData
+        {
             get { return UserData; }
         }
 
-        public Reader ReadData {
+        public Reader ReadData
+        {
             get { return reads_bytes; }
         }
 
-        public ConnectionType ConnectType {
-            get {
+        public ConnectionType ConnectType
+        {
+            get
+            {
                 return ConnectionType.websocket;
             }
         }
-        public IConnetion GetConnetion {
+        public IConnetion GetConnetion
+        {
             get { return this; }
         }
 
-        public IConnectionHandler ExecuteHandler {
+        public IConnectionHandler ExecuteHandler
+        {
             get { return this; }
         }
 
-        public void Execute() {
+        public void Execute()
+        {
             byte[] data = new byte[1024];
             string str = "";
-            try {
-                do {
-                    int count = SocketStream.Read(data, 0, 1024);
-                    str += Encoding.UTF8.GetString(data, 0, count);
-                } while (SocketStream.CanRead);
-                IConnetion this_connection = this;
-                //DataHandle.Handle(ref this_connection);
-                byte[] h = Encoding.UTF8.GetBytes(str);
-                OutputData.Write(h, 0, h.Length);
-            }
-            catch (BreakConnection err) {
-                throw new ConnectionExecutorClose();
-            }
+            do
+            {
+                int count = SocketStream.Read(data, 0, 1024);
+                str += Encoding.UTF8.GetString(data, 0, count);
+            } while (SocketStream.CanRead);
+            IConnetion this_connection = this;
+            //DataHandle.Handle(ref this_connection);
+            byte[] h = Encoding.UTF8.GetBytes(str);
+            OutputData.Write(h, 0, h.Length);
         }
 
-        public void Dispose() {
+        public void Dispose()
+        {
             client.GetStream().Dispose();
             client.Close();
         }

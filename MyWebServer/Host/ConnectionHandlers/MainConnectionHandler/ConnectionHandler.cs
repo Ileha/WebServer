@@ -13,6 +13,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Security.Cryptography;
 using System.IO;
+using Host.ConnectionHandlers.ExecutorExceptions;
 
 namespace Host.ConnectionHandlers {
     public class ConnectionHandler : IConnectionHandler, IConnetion {

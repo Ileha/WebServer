@@ -1,14 +1,9 @@
 ﻿using System;
 using Host.Eventer;
+using Host.ConnectionHandlers.ExecutorExceptions;
 
 namespace Host.ConnectionHandlers
 {
-	public class ConnectionExecutorException : Exception {}
-
-	public class ConnectionExecutorClose : ConnectionExecutorException {
-		
-	}
-
 	public class ConnectionExecutor
 	{
 		private IConnectionHandler Handler;

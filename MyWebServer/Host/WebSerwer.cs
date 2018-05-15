@@ -11,13 +11,14 @@ using System.Xml.Linq;
 using Host.ServerExceptions;
 using Host.ConnectionHandlers;
 using Host.Eventer;
+using System.Threading;
 
 namespace Host {
-    public class WebSerwer : IConfigurate {
+    public class WebSerwer : IConfigurate, IDisposable {
         private TcpListener sListener;
         private IPEndPoint ipEndPoint;
         private bool is_work;
-		private Task thread;
+        private Thread thread;
 
         public event HostEvent onStartHost;
         public event HostEvent onStopHost;
@@ -98,6 +99,9 @@ namespace Host {
                     handle.Start();
                 }
             }
+            catch (ThreadAbortException Abort) {
+                Console.WriteLine("Остановка сервера {0}", Repository.ConfigBody.Element("name").Value);
+            }
             catch (Exception err) {
                 Console.WriteLine(err.ToString());
             }
@@ -133,7 +137,15 @@ namespace Host {
             sListener = new TcpListener(ipEndPoint);
 			is_work = true;
 			ConfigureEvents();
-			thread = new Task(ThreadFunc);
+            thread = new Thread(ThreadFunc) { IsBackground = true, Priority = ThreadPriority.Highest };
 		}
-	}
+
+        public void Dispose() {
+            if (!is_work) { return; }
+            is_work = false;
+            sListener.Stop();
+            thread.Abort();
+            thread.Join();
+        }
+    }
 }

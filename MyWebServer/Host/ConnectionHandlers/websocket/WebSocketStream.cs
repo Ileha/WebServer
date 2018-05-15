@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using Assets;
+using Host.ConnectionHandlers.ExecutorExceptions;
 
 namespace Host.ConnectionHandlers
 {
@@ -29,7 +30,7 @@ namespace Host.ConnectionHandlers
 			_stream.Read(fin_lenght, 0, 2);
 			fin = (byte)(fin_lenght[0] & fin_mask);
 			opcode = (byte)(fin_lenght[0] & opcode_mask);
-			if (opcode == 0x08 || opcode == 0x00) { throw new BreakConnection(); }
+            if (opcode == 0x08 || opcode == 0x00) { throw new ConnectionExecutorClose(); }
 			mask = (byte)(fin_lenght[1] & fin_mask);
 			byte lenght = (byte)(fin_lenght[1] & small_lenght);
 			if (lenght == 126) {

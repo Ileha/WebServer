@@ -6,7 +6,7 @@ using Config;
 
 namespace Host.Session
 {
-	public class SessionCollect : IConfigurate
+	public class SessionCollect : IConfigurate, IDisposable
 	{
 		private long time_of_live;
 		private Timer t;
@@ -38,5 +38,10 @@ namespace Host.Session
 			}
 			//Console.WriteLine(string.Format("{0} tick !!!\r\nCollect count {1}", Repository.Configurate["name"].Value, UserConnect.SessionInfo.Count));
 		}
-	}
+
+        public void Dispose() {
+            t.Change(Timeout.Infinite, Timeout.Infinite);
+            t.Dispose();
+        }
+    }
 }

@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Config
 {
-	public class WebServerConfig {
+	public class WebServerConfig : IDisposable {
 		public RedirectConfig RedirectConfigure;
         public IItem ResourceLinker;
 		public WebSerwer Host;
@@ -56,5 +56,11 @@ namespace Config
 			Host = new WebSerwer();
 			Host.Configurate(GetElements(Host));
 		}
-	}
+
+        public void Dispose()
+        {
+            Host.Dispose();
+            Collector.Dispose();
+        }
+    }
 }
