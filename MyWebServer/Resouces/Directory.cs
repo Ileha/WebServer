@@ -100,6 +100,7 @@ namespace Resouces
 
         public override void AddItem(IItem adder_item) {
             contain.Add(adder_item.GetName(), adder_item);
+            adder_item.Parent = this;
         }
 
         public override string GetName() {
@@ -108,6 +109,7 @@ namespace Resouces
 
         public override void Remove(IItem rem_item) {
             contain.Remove(rem_item.GetName());
+            rem_item.Parent = null;
         }
 
         public override IItem GetResourceByString(string path) {
@@ -155,8 +157,8 @@ namespace Resouces
             ConstructHelp(inf, null, Repository.Configurate.Users.DefaultGroup);
 
             try {
-                XElement element = data.Element("linker").Element("additive_dirs");
-                foreach (XElement add_dir in element.Elements()) {
+                XElement el = data.Element("linker").Element("additive_dirs");
+                foreach (XElement add_dir in el.Elements()) {
                     if (Directory.Exists(add_dir.Value)) {
                         AddItem(new LinkDirectory(new DirectoryInfo(add_dir.Value), this, Repository.Configurate.Users.DefaultGroup));
                     }
@@ -166,14 +168,16 @@ namespace Resouces
                 }
             }
             catch (Exception err) { }
-			XElement ele = data.Element("linker").Element("remove_dirs");
-            foreach (XElement rm_dir in ele.Elements()) {
-				try {
-					GetResourceByString(rm_dir.Value).RemoveThis();
-				}
-				catch (Exception err) {}
+            try { 
+			    XElement el = data.Element("linker").Element("remove_dirs");
+                foreach (XElement rm_dir in el.Elements()) {
+				    try {
+					    GetResourceByString(rm_dir.Value).RemoveThis();
+				    }
+				    catch (Exception err) {}
+                }
             }
-
+            catch (Exception err) {}
 
             foreach (XElement el in data.Element("linker").Element("resource_config").Elements()) {
                 IItem resource;

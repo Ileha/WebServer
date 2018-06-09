@@ -111,6 +111,7 @@ namespace Host {
 					Console.WriteLine("хост {2}, новое соединение через {0}:{1}", ipEndPoint.Address, ipEndPoint.Port, Repository.ConfigBody.Element("name").Value);
                     Task handle = new Task(executor.Execute);
                     handle.Start();
+                    Thread.Sleep(0);
                 }
             }
             catch (ThreadAbortException Abort) {

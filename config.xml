@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
 	<server>
-		<modules_dir>../../../Resourses/host_02/resource</modules_dir><!--Сборка(сборки) с модулями-->
+		<modules_dir>../../../HTTPHandlers/bin/Debug</modules_dir><!--Сборка(сборки) с модулями-->
 		<name>second host</name><!--имя хоста-->
 		<webserver>
 			<ip_adress>+</ip_adress><!--адрес хоста-->
@@ -36,7 +36,7 @@
 	</server>
 
 	<server>
-		<modules_dir>../../../Resourses/host_01/resource</modules_dir><!--Сборка(сборки) с модулями-->
+		<modules_dir>../../../HTTPHandlers/bin/Debug</modules_dir><!--Сборка(сборки) с модулями-->
 	  	<name>first host</name><!--имя хоста-->
 		<webserver>
 		  	<ip_adress>+</ip_adress><!--адрес хоста-->

@@ -176,8 +176,7 @@ namespace Host.ConnectionHandlers {
         public void Dispose() {
             if (reads_bytes != null) { reads_bytes.Dispose(); }
             if (_outputData != null) { _outputData.Dispose(); }
-            if (InputData != null) { InputData.Dispose(); }
-            Client.GetStream().Dispose();
+            //Client.GetStream().Dispose();
             Client.Close();
         }
     }

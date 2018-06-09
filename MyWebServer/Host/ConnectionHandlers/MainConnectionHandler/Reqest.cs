@@ -79,38 +79,37 @@ namespace Host.ConnectionHandlers
         private static byte[] new_line = new byte[] { 13, 10, 13, 10 };
 
         public string URL;
-        public Stream Data;
+        public MemoryStream Data;
         public Dictionary<string, string> varibles;//данные
         public Dictionary<string, string> preferens;//заголовки
         public Dictionary<string, string> cookies;
 
         public Reqest(TcpClient client)
         {
+            //if (client.Available == 0) { throw new ConnectionExecutorClose(); }
+
             varibles = new Dictionary<string, string>();
             preferens = new Dictionary<string, string>();
             cookies = new Dictionary<string, string>();
-            byte[] data = null;
 
             List<byte> input_data = new List<byte>();
-            byte[] buffer = new byte[1024];
-            int count = 0;
-            int index = 0;
-            while ((count = client.Client.Receive(buffer)) > 0)
-            {
-                input_data.AddRange(buffer.Take(count));
-                if (ExistSeqeunce(new_line, buffer, out index))
-                { //Запрос обрывается \r\n\r\n последовательностью
-                    index += (input_data.Count - count);
-                    break;
+            byte[] bytes = new byte[1024];
+            NetworkStream stream = client.GetStream();
+            int index = -1;
+            do {
+                int count = client.Client.Receive(bytes);
+                if (index == -1)
+                {
+                    ExistSeqeunce(0, count, new_line, bytes, out index);
+                    if (index != -1) { index = input_data.Count + index; }
                 }
-            }
-            if (count == 0) { throw new ConnectionExecutorClose(); }
+                input_data.AddRange(bytes.Take(count));
+            } while (stream.DataAvailable);
+            if (input_data.Count == 0) { throw new ConnectionExecutorClose(); }
+            index = Math.Max(0, index);
+            bytes = input_data.ToArray();
 
-            string headers_data = Encoding.UTF8.GetString(input_data.GetRange(0, index).ToArray());
-            if (index + 4 < input_data.Count)
-            {
-                data = input_data.GetRange(index + 4, input_data.Count - (index + 4)).ToArray();
-            }
+            string headers_data = Encoding.UTF8.GetString(bytes, 0, index);
             Reqest result = this;
             string[] elements = Regex.Split(headers_data, "\r\n");
             try
@@ -118,24 +117,17 @@ namespace Host.ConnectionHandlers
                 string[] header = elements[0].Split(' ');
                 ABSHttpHandler _handler = Repository.ReqestsHandlers[header[0] + header[2]];
                 _handler.ParseHeaders(ref result, elements.ToList().GetRange(1, elements.Length - 1).ToArray(), header[1]);
-                if (_handler.CanHasData(this))
+                if (_handler.CanHasData(this) && index+4 > bytes.Length)
                 {
-                    Data = new ReqestDataStream(data, _handler.GetDataLenght(this), client.GetStream());
-                    //byte[] d = new byte[Data.Length];
-                    //Data.Read(d, 0, d.Length);
-                    //string s = Encoding.UTF8.GetString(d);
+                    Data = new MemoryStream(bytes, index+4, bytes.Length-(index+4));
+                    Data.Seek(0, SeekOrigin.Begin);
                 }
             }
-            catch (Exception err)
-            {
-                if (err.GetType().IsSubclassOf(typeof(ExceptionCode)))
-                {
-                    throw err;
-                }
-                else
-                {
-                    throw Repository.ExceptionFabrics["Bad Request"].Create(null, null);
-                }
+            catch (ExceptionCode code) {
+                throw code;
+            }
+            catch (Exception err) {
+                throw Repository.ExceptionFabrics["Bad Request"].Create(null, null);
             }
         }
 
@@ -153,10 +145,10 @@ namespace Host.ConnectionHandlers
             throw Repository.ExceptionFabrics["Moved Permanently"].Create(null, new_url);
         }
 
-        private static bool ExistSeqeunce(byte[] sequence, IEnumerable<byte> array, out int index)
+        private static bool ExistSeqeunce(int start, int count, byte[] sequence, IEnumerable<byte> array, out int index)
         {
             int seq_i = 0;
-            for (int i = 0; i < array.Count(); i++)
+            for (int i = start; i < Math.Min(count, array.Count()-start); i++)
             {
                 if (array.ElementAt(i) != sequence[seq_i])
                 {

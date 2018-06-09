@@ -25,18 +25,18 @@ namespace Host.ConnectionHandlers
 		}
 
 		public void Execute() {
+            Console.WriteLine("start connection id: {0}", ID.ToString());
 			onConnectEvent();
 			while (true) {
-				if (is_start) {
-					Console.WriteLine("start connection id: {0}", ID.ToString());
-					is_start = false;
-				}
-				else {
-					Console.WriteLine("continue connection id: {0}", ID.ToString());
-				}
 				try {
                     Handler.Execute();
 					Handler = Handler.ExecuteHandler;
+                    if (is_start) {
+                        is_start = false;
+                    }
+                    else {
+                        Console.WriteLine("continue connection id: {0}", ID.ToString());
+                    }
 				}
 				catch (ConnectionExecutorClose close) {
 					break;
@@ -45,6 +45,7 @@ namespace Host.ConnectionHandlers
 					Console.WriteLine("in connection {0} runtime exception {1}", ID, err);
 					break;
 				}
+
 			}
 			onDisConnectEvent();
             Handler.Dispose();
