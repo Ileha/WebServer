@@ -56,6 +56,7 @@ namespace Resouces
 
 		public abstract string GetName();
 		public abstract string Extension { get; }
+		public abstract void RemoveThis();
 		//public abstract FileSystemInfo GetInfo();
 
 		public virtual Stream GetData() { throw new NotImplementedException(); }

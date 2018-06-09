@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWebServer", "MyWebServer\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HTTPHandlers", "HTTPHandlers\HTTPHandlers.csproj", "{ECDD3A13-B07A-47C2-AF7D-DDD946AC1F26}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirReader", "DirReader\DirReader.csproj", "{7FDAB8BF-8C5A-4BAB-8193-B5EE8ED240FB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -20,6 +22,10 @@ Global
 		{ECDD3A13-B07A-47C2-AF7D-DDD946AC1F26}.Debug|x86.Build.0 = Debug|Any CPU
 		{ECDD3A13-B07A-47C2-AF7D-DDD946AC1F26}.Release|x86.ActiveCfg = Release|Any CPU
 		{ECDD3A13-B07A-47C2-AF7D-DDD946AC1F26}.Release|x86.Build.0 = Release|Any CPU
+		{7FDAB8BF-8C5A-4BAB-8193-B5EE8ED240FB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7FDAB8BF-8C5A-4BAB-8193-B5EE8ED240FB}.Debug|x86.Build.0 = Debug|Any CPU
+		{7FDAB8BF-8C5A-4BAB-8193-B5EE8ED240FB}.Release|x86.ActiveCfg = Release|Any CPU
+		{7FDAB8BF-8C5A-4BAB-8193-B5EE8ED240FB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

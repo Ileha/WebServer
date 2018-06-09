@@ -42,5 +42,10 @@ namespace Resouces
 		public override Stream GetData() {
 			return Resource.OpenRead();
 		}
+
+		public override void RemoveThis()
+		{
+			Parent.Remove(this);
+		}
 	}
 }

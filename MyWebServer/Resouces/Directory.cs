@@ -155,8 +155,8 @@ namespace Resouces
             ConstructHelp(inf, null, Repository.Configurate.Users.DefaultGroup);
 
             try {
-                XElement el = data.Element("linker").Element("additive_dirs");
-                foreach (XElement add_dir in el.Elements()) {
+                XElement element = data.Element("linker").Element("additive_dirs");
+                foreach (XElement add_dir in element.Elements()) {
                     if (Directory.Exists(add_dir.Value)) {
                         AddItem(new LinkDirectory(new DirectoryInfo(add_dir.Value), this, Repository.Configurate.Users.DefaultGroup));
                     }
@@ -166,6 +166,14 @@ namespace Resouces
                 }
             }
             catch (Exception err) { }
+			XElement ele = data.Element("linker").Element("remove_dirs");
+            foreach (XElement rm_dir in ele.Elements()) {
+				try {
+					GetResourceByString(rm_dir.Value).RemoveThis();
+				}
+				catch (Exception err) {}
+            }
+
 
             foreach (XElement el in data.Element("linker").Element("resource_config").Elements()) {
                 IItem resource;
@@ -185,5 +193,16 @@ namespace Resouces
                 }
             }
         }
-    }
+
+		public override void RemoveThis()
+		{
+			if (Parent != null)
+			{
+				Parent.Remove(this);
+			}
+			else {
+				throw new Exception("unnable remove root");
+			}
+		}
+	}
 }
