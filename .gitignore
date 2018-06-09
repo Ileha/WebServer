@@ -265,6 +265,7 @@ Icon
 
 #dll
 *.dll
+*.exe
 
 # Files that might appear in the root of a volume
 .DocumentRevisions-V100
