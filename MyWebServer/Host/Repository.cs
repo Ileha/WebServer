@@ -13,17 +13,17 @@ namespace Host {
 		public static XElement ConfigBody {
 			get { return _body_conf; }
 		}
-		public static Dictionary<string, IHttpHandler> ReqestsHandlers;
-		public static Dictionary<string, IMIME> DataHandlers;
-		public static Dictionary<string, ExceptionFabric> ExceptionFabrics;
+		public static Dictionary<string, ABSHttpHandler> ReqestsHandlers;
+		public static Dictionary<string, ABSMIME> DataHandlers;
+		public static Dictionary<string, ABSExceptionFabric> ExceptionFabrics;
         public static WebServerConfig Configurate;
-        public static List<IGrub> Eventers;
+        public static List<ABSGrub> Eventers;
 
 		static Repository() {
-			ReqestsHandlers = new Dictionary<string, IHttpHandler>();
-            DataHandlers = new Dictionary<string, IMIME>();
-			ExceptionFabrics = new Dictionary<string, ExceptionFabric>();
-            Eventers = new List<IGrub>();
+			ReqestsHandlers = new Dictionary<string, ABSHttpHandler>();
+            DataHandlers = new Dictionary<string, ABSMIME>();
+			ExceptionFabrics = new Dictionary<string, ABSExceptionFabric>();
+            Eventers = new List<ABSGrub>();
 		}
 
         public static void RepositoryConstruct(XElement doc) {

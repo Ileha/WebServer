@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +7,7 @@ using Host.ConnectionHandlers;
 
 namespace Host.ServerExceptions
 {
-    public class ExceptionCodeUnauthorizedFabric : ExceptionFabric
+    public class ExceptionCodeUnauthorizedFabric : ABSExceptionFabric
     {
         public override string name
         {

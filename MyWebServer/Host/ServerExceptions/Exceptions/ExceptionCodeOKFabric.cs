@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using Host.ConnectionHandlers;
 
 namespace Host.ServerExceptions
 {
-	public class ExceptionCodeOKFabric : ExceptionFabric
+	public class ExceptionCodeOKFabric : ABSExceptionFabric
 	{
 		public ExceptionCodeOKFabric() {}
 

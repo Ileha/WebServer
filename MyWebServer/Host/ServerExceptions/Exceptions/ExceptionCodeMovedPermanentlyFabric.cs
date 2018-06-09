@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using Host.ConnectionHandlers;
 
 namespace Host.ServerExceptions
 {
-	public class ExceptionCodeMovedPermanentlyFabric : ExceptionFabric
+	public class ExceptionCodeMovedPermanentlyFabric : ABSExceptionFabric
 	{
 		public ExceptionCodeMovedPermanentlyFabric() {}
 

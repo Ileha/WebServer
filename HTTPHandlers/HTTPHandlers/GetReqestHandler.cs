@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using Host.ServerExceptions;
 using Host;
 using Host.HttpHandler;
@@ -7,7 +7,7 @@ using Host.ConnectionHandlers;
 
 namespace HttpHandlers
 {
-	public class GetReqestHandler : IHttpHandler
+	public class GetReqestHandler : ABSHttpHandler
 	{
 		Regex url_var = new Regex("^(?<url>[^=&]+)(\\?(?<var>[\\w=&]+))?");
 		Regex name_val = new Regex("(?<name>[\\w]+)=(?<val>[\\w]+)");

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -116,7 +116,7 @@ namespace Host.ConnectionHandlers
             try
             {
                 string[] header = elements[0].Split(' ');
-                IHttpHandler _handler = Repository.ReqestsHandlers[header[0] + header[2]];
+                ABSHttpHandler _handler = Repository.ReqestsHandlers[header[0] + header[2]];
                 _handler.ParseHeaders(ref result, elements.ToList().GetRange(1, elements.Length - 1).ToArray(), header[1]);
                 if (_handler.CanHasData(this))
                 {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 using Host.ConnectionHandlers;
@@ -7,11 +7,11 @@ using Resouces;
 
 namespace Host.MIME
 {
-	public class DirMIME : IMIME, OnWebServerStart {
+	public class DirMIME : ABSMIME, OnWebServerStart {
 		private string[] _file_extensions = { ".dir" };
-		public string[] file_extensions { get { return _file_extensions; } }
+		public override string[] file_extensions { get { return _file_extensions; } }
 
-		public void Handle(ref IConnetion connection) {
+		public override void Handle(ref IConnetion connection) {
 			StringBuilder sb = new StringBuilder();
 			sb.AppendFormat("<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"utf-8\">\n<title>{0}</title>\n</head>\n<body>\n", connection.ReadData.Resourse.GetName());
 			sb.AppendFormat("<p><a href=\"{0}\"><img src=\"WebServerResourses/folder.png\" height=\"20\"></img>.</a></p>\n", connection.ReadData.Resourse.GetPath());
@@ -33,11 +33,11 @@ namespace Host.MIME
 			connection.OutputData.Seek(0, SeekOrigin.Begin);
 		}
 
-		public void Headers(ref Response response, ref Reqest reqest, ref Reader read) {
+		public override void Headers(ref Response response, ref Reqest reqest, ref Reader read) {
 			response.AddToHeader("Content-Type", "text/html; charset=UTF-8", AddMode.rewrite);
 		}
 
-		public void OnStart(EventArgs data) {
+		public void OnStart(HostEventData data) {
 			Console.WriteLine("Test event start");
 			Repository.Configurate.ResourceLinker.AddItem(new LinkDirectory(new DirectoryInfo("../../../Resourses/WebServerResourses"), Repository.Configurate.ResourceLinker, Repository.Configurate.Users.DefaultGroup));
 		}

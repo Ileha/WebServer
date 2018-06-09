@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 namespace Host.ServerExceptions
 {
-	public class ExceptionCodeInternalServerErrorFabric : ExceptionFabric {
+	public class ExceptionCodeInternalServerErrorFabric : ABSExceptionFabric {
 		public ExceptionCodeInternalServerErrorFabric() {}
 
 		public override string name { get { return "Internal Server Error"; } }

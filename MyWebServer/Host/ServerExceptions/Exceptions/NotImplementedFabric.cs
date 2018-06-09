@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 
 namespace Host.ServerExceptions {
-	public class NotImplementedFabric : ExceptionFabric {
+	public class NotImplementedFabric : ABSExceptionFabric {
 		public NotImplementedFabric() {}
 
 		public override string name { get { return "Not Implemented"; } }

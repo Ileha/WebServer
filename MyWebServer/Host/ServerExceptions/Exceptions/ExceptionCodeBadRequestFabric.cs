@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 
 namespace Host.ServerExceptions
 {
-	public class ExceptionCodeBadRequestFabric : ExceptionFabric
+	public class ExceptionCodeBadRequestFabric : ABSExceptionFabric
 	{
 		public ExceptionCodeBadRequestFabric() {}
 

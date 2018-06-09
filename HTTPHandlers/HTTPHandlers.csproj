@@ -48,6 +48,7 @@
     <Compile Include="MIMEHandlers\CSVMIME.cs" />
     <Compile Include="MIMEHandlers\HtmlMIME.cs" />
     <Compile Include="MIMEHandlers\DirMIME.cs" />
+    <Compile Include="MIMEHandlers\UhtmlMIME.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MyWebServer\MyWebServer.csproj">

@@ -23,8 +23,8 @@ namespace Host {
         public event HostEvent onStartHost;
         public event HostEvent onStopHost;
 
-		private event HostEvent onConnect;
-		private event HostEvent onDisConnect;
+		private event ConnectionEvent onConnect;
+		private event ConnectionEvent onDisConnect;
 
         private string[] names = new string[] { "webserver" };
 		public string[] ConfigName {
@@ -42,38 +42,52 @@ namespace Host {
         public void ConfigureEvents() {
             Type onStart = typeof(OnWebServerStart);
 			Type onStop = typeof(OnWebServerStop);
-   //         if (Repository.DirReader != null && Repository.DirReader.GetType().GetInterfaces().Contains(onStart)) {;
-			//	onStartHost += (Repository.DirReader as OnWebServerStart).OnStart;
-   //         }
-			//if (Repository.DirReader != null && Repository.DirReader.GetType().GetInterfaces().Contains(onStop)) {
-			//	onStartHost += (Repository.DirReader as OnWebServerStop).OnStop;
-   //         }
+			Type tonConnect = typeof(OnWebServerConntect);
+			Type tonDisconnect = typeof(OnWebServerDisConntect);
 
-            foreach (KeyValuePair<string, IHttpHandler> el in Repository.ReqestsHandlers) {
+            foreach (KeyValuePair<string, ABSHttpHandler> el in Repository.ReqestsHandlers) {
                 if (el.Value.GetType().GetInterfaces().Contains(onStart)) {
                     onStartHost += (el.Value as OnWebServerStart).OnStart;
                 }
 				if (el.Value.GetType().GetInterfaces().Contains(onStop)) {
-					onStartHost += (el.Value as OnWebServerStop).OnStop;
+					onStopHost += (el.Value as OnWebServerStop).OnStop;
+                }
+				if (el.Value.GetType().GetInterfaces().Contains(tonConnect)) {
+                    onConnect += (el.Value as OnWebServerConntect).OnConntect;
+                }
+				if (el.Value.GetType().GetInterfaces().Contains(tonDisconnect)) {
+					onDisConnect += (el.Value as OnWebServerDisConntect).OnDisConntect;
                 }
             }
-            foreach (KeyValuePair<string, IMIME> el in Repository.DataHandlers) {
+            foreach (KeyValuePair<string, ABSMIME> el in Repository.DataHandlers) {
                 if (el.Value.GetType().GetInterfaces().Contains(onStart)) {
                     onStartHost += (el.Value as OnWebServerStart).OnStart;
                 }
 				if (el.Value.GetType().GetInterfaces().Contains(onStop)) {
-					onStartHost += (el.Value as OnWebServerStop).OnStop;
+					onStopHost += (el.Value as OnWebServerStop).OnStop;
+                }
+				if (el.Value.GetType().GetInterfaces().Contains(tonConnect)) {
+                    onConnect += (el.Value as OnWebServerConntect).OnConntect;
+                }
+				if (el.Value.GetType().GetInterfaces().Contains(tonDisconnect)) {
+					onDisConnect += (el.Value as OnWebServerDisConntect).OnDisConntect;
                 }
             }
-			foreach (KeyValuePair<string, ExceptionFabric> el in Repository.ExceptionFabrics) {
+			foreach (KeyValuePair<string, ABSExceptionFabric> el in Repository.ExceptionFabrics) {
                 if (el.Value.GetType().GetInterfaces().Contains(onStart)) {
                     onStartHost += (el.Value as OnWebServerStart).OnStart;
                 }
 				if (el.Value.GetType().GetInterfaces().Contains(onStop)) {
-					onStartHost += (el.Value as OnWebServerStop).OnStop;
+					onStopHost += (el.Value as OnWebServerStop).OnStop;
+                }
+				if (el.Value.GetType().GetInterfaces().Contains(tonConnect)) {
+                    onConnect += (el.Value as OnWebServerConntect).OnConntect;
+                }
+				if (el.Value.GetType().GetInterfaces().Contains(tonDisconnect)) {
+					onDisConnect += (el.Value as OnWebServerDisConntect).OnDisConntect;
                 }
             }
-            foreach (IGrub eve in Repository.Eventers) {
+            foreach (ABSGrub eve in Repository.Eventers) {
 				onStartHost += eve.OnStart;
 				onStopHost += eve.OnStop;
 				onConnect += eve.OnConntect;
@@ -94,7 +108,7 @@ namespace Host {
                     //Программа приостанавливается, ожидая входящее соединение
                     TcpClient handler = sListener.AcceptTcpClient();
 					ConnectionExecutor executor = new ConnectionExecutor(new ConnectionHandler(handler), onConnect, onDisConnect);
-					Console.WriteLine("хост {1}, новое соединение через порт {0}", ipEndPoint, Repository.ConfigBody.Element("name").Value);
+					Console.WriteLine("хост {2}, новое соединение через {0}:{1}", ipEndPoint.Address, ipEndPoint.Port, Repository.ConfigBody.Element("name").Value);
                     Task handle = new Task(executor.Execute);
                     handle.Start();
                 }

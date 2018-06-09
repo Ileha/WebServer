@@ -1,4 +1,4 @@
-﻿using Host.MIME;
+using Host.MIME;
 using Host.Session;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ namespace Host.ConnectionHandlers
     {
         private TcpClient client;
         private Reader reads_bytes;
-        public IMIME DataHandle;
+        public ABSMIME DataHandle;
         public UserConnect UserData;
         private WebSocketStream SocketStream;
 

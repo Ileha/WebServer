@@ -3,23 +3,23 @@ using Host.ConnectionHandlers;
 
 namespace Host.Eventer
 {
-	public delegate void HostEvent(EventArgs data);
+	public delegate void HostEvent(HostEventData data);
+	public delegate void ConnectionEvent(ConnectionEventData data);
 
-	public interface OnWebServerStart
-	{
-		void OnStart(EventArgs data);
+	public interface OnWebServerStart {
+		void OnStart(HostEventData data);
 	}
 	public interface OnWebServerStop
 	{
-		void OnStop(EventArgs data);
+		void OnStop(HostEventData data);
 	}
 	public interface OnWebServerConntect
 	{
-		void OnConntect(EventArgs data);
+		void OnConntect(ConnectionEventData data);
 	}
 	public interface OnWebServerDisConntect
 	{
-		void OnDisConntect(EventArgs data);
+		void OnDisConntect(ConnectionEventData data);
 	}
 
 
@@ -31,6 +31,6 @@ namespace Host.Eventer
 	public class ConnectionEventData : EventArgs {
 		public IConnetion connect;
 
-		public ConnectionEventData(IConnetion connect) { this.connect = connect; }	
+		public ConnectionEventData(IConnetion connect) { this.connect = connect; }
 	}
 }

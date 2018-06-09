@@ -41,14 +41,14 @@
     <Compile Include="Host\ConnectionHandlers\Controll\ExecutorExceptions\ConnectionExecutorException.cs" />
     <Compile Include="Host\ConnectionHandlers\Controll\IConnetion.cs" />
     <Compile Include="Host\ConnectionHandlers\websocket\WebSocketHandler.cs" />
-    <Compile Include="Host\Eventer\IGrub.cs" />
+    <Compile Include="Host\Eventer\ABSGrub.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Host\Reader.cs" />
     <Compile Include="Host\Repository.cs" />
     <Compile Include="Host\WebSerwer.cs" />
-    <Compile Include="Host\HttpHandler\IHttpHandler.cs" />
-    <Compile Include="Host\MIME\IMIME.cs" />
+    <Compile Include="Host\HttpHandler\ABSHttpHandler.cs" />
+    <Compile Include="Host\MIME\ABSMIME.cs" />
     <Compile Include="Host\ServerExceptions\ExceptionCode.cs" />
     <Compile Include="Config\ErrorServerConfig.cs" />
     <Compile Include="Config\WebServerConfig.cs" />
@@ -61,7 +61,7 @@
     <Compile Include="Config\RedirectConfig.cs" />
     <Compile Include="Config\IConfigurate.cs" />
     <Compile Include="Host\Session\SessionCollect.cs" />
-    <Compile Include="Host\ServerExceptions\ExceptionFabric.cs" />
+    <Compile Include="Host\ServerExceptions\ABSExceptionFabric.cs" />
     <Compile Include="Host\ServerExceptions\Exceptions\ExceptionCodeOKFabric.cs" />
     <Compile Include="Host\ServerExceptions\Exceptions\ExceptionCodeBadRequestFabric.cs" />
     <Compile Include="Host\ServerExceptions\Exceptions\ExceptionCodeNotFoundFabric.cs" />

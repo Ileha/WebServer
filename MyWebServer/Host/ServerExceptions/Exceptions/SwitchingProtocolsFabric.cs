@@ -1,7 +1,7 @@
-﻿using Host.ConnectionHandlers;
+using Host.ConnectionHandlers;
 
 namespace Host.ServerExceptions {
-	public class SwitchingProtocolsFabric : ExceptionFabric {
+	public class SwitchingProtocolsFabric : ABSExceptionFabric {
 		public SwitchingProtocolsFabric() {}
 
 		public override string name {

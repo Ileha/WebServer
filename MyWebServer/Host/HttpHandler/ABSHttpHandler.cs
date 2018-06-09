@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using Host.ConnectionHandlers;
 using Config;
 using System.Net.Sockets;
 
 namespace Host.HttpHandler {
-    public abstract class IHttpHandler {
+    public abstract class ABSHttpHandler {
         public abstract string HandlerType { get; }
 		public abstract string HandlerVersion { get; }
 		private string _id = null;

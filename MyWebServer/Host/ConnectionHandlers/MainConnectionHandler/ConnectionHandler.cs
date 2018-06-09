@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net.Sockets;
 using Host.ServerExceptions;
 using Config;
@@ -24,7 +24,7 @@ namespace Host.ConnectionHandlers {
         private Reqest obj_request;
         private Response response;
         private UserConnect UserData;
-        private IMIME DataHandle;
+        private ABSMIME DataHandle;
         private UserInfo User;
         private IConnectionHandler actual_handler;
 		public TcpClient Client { get { return connection; } }

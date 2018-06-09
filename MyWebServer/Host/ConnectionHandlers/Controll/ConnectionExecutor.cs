@@ -10,12 +10,12 @@ namespace Host.ConnectionHandlers
 		private Guid ID;
 		private bool is_start;
 
-        private event HostEvent onConnect;
-        private event HostEvent onDisconnect;
+        private event ConnectionEvent onConnect;
+        private event ConnectionEvent onDisconnect;
 
         private ConnectionEventData data;
 
-        public ConnectionExecutor(IConnectionHandler connection_handler, HostEvent onConnect, HostEvent onDisconnect) {
+        public ConnectionExecutor(IConnectionHandler connection_handler, ConnectionEvent onConnect, ConnectionEvent onDisconnect) {
 			Handler = connection_handler;
 			ID = Guid.NewGuid();
 			is_start = true;

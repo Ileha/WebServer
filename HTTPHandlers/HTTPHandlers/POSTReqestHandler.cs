@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Host.ServerExceptions;
 using Host;
 using Host.HttpHandler;
@@ -10,7 +10,7 @@ using Host.ConnectionHandlers;
 
 namespace HttpHandlers
 {
-	public class POSTReqestHandler : IHttpHandler
+	public class POSTReqestHandler : ABSHttpHandler
 	{
 		Regex pref_val = new Regex("(?<name>[\\w-]+):[ ]?(?<val>.+)");
 		Regex TwoPoints = new Regex("\\.{2}");

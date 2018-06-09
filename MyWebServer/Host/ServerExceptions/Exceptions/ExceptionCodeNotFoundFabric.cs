@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 namespace Host.ServerExceptions
 {
-	public class ExceptionCodeNotFoundFabric : ExceptionFabric
+	public class ExceptionCodeNotFoundFabric : ABSExceptionFabric
 	{
 		public ExceptionCodeNotFoundFabric() {}
 

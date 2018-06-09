@@ -2,10 +2,10 @@
 
 namespace Host.ServerExceptions
 {
-	public abstract class ExceptionFabric {
+	public abstract class ABSExceptionFabric {
 		public abstract string name { get; }
 
-		public ExceptionFabric() {}
+		public ABSExceptionFabric() {}
 
 		public abstract ExceptionCode Create(ExceptionUserCode userCode, object data);
 	}
