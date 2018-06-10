@@ -67,17 +67,16 @@ namespace Host.ConnectionHandlers
 
         public void Execute()
         {
-            byte[] data = new byte[1024];
-            string str = "";
-            do
-            {
-                int count = SocketStream.Read(data, 0, 1024);
-                str += Encoding.UTF8.GetString(data, 0, count);
-            } while (SocketStream.CanRead);
-            IConnetion this_connection = this;
-            //DataHandle.Handle(ref this_connection);
-            byte[] h = Encoding.UTF8.GetBytes(str);
-            OutputData.Write(h, 0, h.Length);
+            //byte[] data = new byte[1024];
+            //string str = "";
+            //do
+            //{
+            //    int count = SocketStream.Read(data, 0, 1024);
+                //str += Encoding.UTF8.GetString(data, 0, count);
+            //} while (SocketStream.CanRead);
+            DataHandle.Handle(this);
+            //byte[] h = Encoding.UTF8.GetBytes(str);
+            //OutputData.Write(h, 0, h.Length);
         }
 
         public void Dispose()
@@ -85,5 +84,8 @@ namespace Host.ConnectionHandlers
             client.GetStream().Dispose();
             client.Close();
         }
+
+
+        public void Reset() {}
     }
 }

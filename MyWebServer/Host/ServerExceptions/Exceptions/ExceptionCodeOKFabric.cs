@@ -1,5 +1,6 @@
 using System;
 using Host.ConnectionHandlers;
+using System.Text;
 
 namespace Host.ServerExceptions
 {
@@ -21,9 +22,23 @@ namespace Host.ServerExceptions
             : base(userCode)
         {
 			Code = "200 OK";
-			_IsFatal = false;
 		}
 
-		public override void ExceptionHandleCode(ref Reqest request, ref Response response, IConnetion handler) {}
+        public override void ExceptionHandleCode(MIME.ABSMIME Handler, Reqest request, Response response, IConnetion data)
+        {
+            try {
+                Handler.Headers(response, request, data.ReadData);
+                Handler.Handle(data);
+            }
+            catch (ExceptionCode err) {
+                throw err;
+            }
+            catch (Exception err) {
+                response.Clear();
+                response.AddToHeader("Content-Type", "text/html; charset=UTF-8", AddMode.rewrite);
+                byte[] exce = Encoding.UTF8.GetBytes(err.ToString());
+                data.OutputData.Write(exce, 0, exce.Length);
+            }
+        }
 	}
 }

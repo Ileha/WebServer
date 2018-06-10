@@ -7,5 +7,6 @@ namespace Host.ConnectionHandlers
         IConnetion GetConnetion { get; }
         IConnectionHandler ExecuteHandler { get; }
 		void Execute();
+        void Reset();
 	}
 }

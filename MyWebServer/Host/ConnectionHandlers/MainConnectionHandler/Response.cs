@@ -16,7 +16,7 @@ namespace Host.ConnectionHandlers
 		rewrite
 	}
 
-	public class Response
+	public class Response : IDisposable
     {
 //HTTP/1.1 200 OK\r\n
 //Server: MyWebServer(0.0.0.1) (Unix) (Red-Hat/Linux)\r\n
@@ -33,21 +33,40 @@ namespace Host.ConnectionHandlers
 //
 //";
         private string bolvanka = "HTTP/1.1 {0}{1}\r\n\r\n";
-        public ExceptionCode code;
+        public ExceptionCode code { get; private set; }
 		private Dictionary<string, string> http_headers;
 		private Dictionary<string, string> http_cookie;
-		private List<byte[]> http_body;
 		private List<string> forbidden_http_headers;
+        private MemoryStream OutData;
+        private NetworkStream _writable_data;
 
-        private bool IsFatal {
-            get { return code.IsFatal; }
+        public static Response Create(TcpClient client, out Func<Stream> Input) {
+            Response res = new Response(client);
+            Input = () => res.OutData;
+            return res;
         }
 
-        public Response() {
+        public Response(TcpClient client) {
 			http_headers = new Dictionary<string, string>();
 			http_cookie = new Dictionary<string, string>();
-			http_body = new List<byte[]>();
 			forbidden_http_headers = new List<string>();
+            OutData = new MemoryStream();
+            _writable_data = client.GetStream();
+            code = Repository.ExceptionFabrics["OK"].Create(null, null);
+        }
+
+        public void Clear() {
+            http_headers.Clear();
+            http_cookie.Clear();
+            if (OutData.Length != 0) { 
+                OutData.Dispose();
+                OutData = new MemoryStream();
+            }
+            forbidden_http_headers.Clear();
+        }
+
+        public void SetCode(ExceptionCode new_code) {
+            code = new_code;
         }
 
 		public void AddForbiddenHeader(string header_title) {
@@ -80,18 +99,9 @@ namespace Host.ConnectionHandlers
 			http_cookie.Add(name, adding_cookie);
 		}
 
-		public void SendData(Reqest request, IConnetion Data, Stream output) {
-			if (code.IsFatal) {
-				http_body.Clear();
-				http_headers.Clear();
-				http_cookie.Clear();
-			}
+		public void SendData(Reqest request) {
 			AddToHeader("Server", "MyWebServer(0.0.0.1) (Unix) (Red-Hat/Linux)", AddMode.rewrite);
-			Response response = this;
-			code.ExceptionHandle(ref request, ref response, Data);
-
-			long data_length = Data.OutputData.Length;
-
+			long data_length = OutData.Length;
 			AddToHeader("Content-Length", data_length.ToString(), AddMode.rewrite);
 			bool keep_alive = true;
 			try {
@@ -127,10 +137,14 @@ namespace Host.ConnectionHandlers
             }
             string req_header_string = string.Format(bolvanka, code.GetExeptionCode(), httpbody.ToString());
 			byte[] header = Encoding.UTF8.GetBytes(req_header_string);
-            //MemoryStream stream = new MemoryStream();
-			output.Write(header, 0, header.Length);
-            Data.OutputData.Seek(0, SeekOrigin.Begin);
-			Data.OutputData.CopyTo(output);
+			_writable_data.Write(header, 0, header.Length);
+            OutData.Seek(0, SeekOrigin.Begin);
+            OutData.CopyTo(_writable_data);
+        }
+
+        public void Dispose()
+        {
+            OutData.Dispose();
         }
     }
 }

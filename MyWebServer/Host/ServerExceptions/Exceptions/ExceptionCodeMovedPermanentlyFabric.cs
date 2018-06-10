@@ -22,10 +22,10 @@ namespace Host.ServerExceptions
             : base(userCode)
         {
 			Code = "301 Moved Permanently";
-			_IsFatal = true;
 			this.targeURL = targeURL;
 		}
-        public override void ExceptionHandleCode(ref Reqest request, ref Response response, IConnetion handler) {
+        public override void ExceptionHandleCode(MIME.ABSMIME Handler, Reqest request, Response response, IConnetion handler)
+        {
 			response.AddToHeader("Location", targeURL, AddMode.rewrite);
 		}
 	}

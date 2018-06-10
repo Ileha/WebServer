@@ -18,8 +18,6 @@ using Host.ConnectionHandlers.ExecutorExceptions;
 namespace Host.ConnectionHandlers {
     public class ConnectionHandler : IConnectionHandler, IConnetion {
         private TcpClient connection;
-
-        private ExceptionCode code;
         private Reader reads_bytes;
         private Reqest obj_request;
         private Response response;
@@ -27,21 +25,21 @@ namespace Host.ConnectionHandlers {
         private ABSMIME DataHandle;
         private UserInfo User;
         private IConnectionHandler actual_handler;
+        private Func<Stream> out_data;
+        private Func<Stream> in_data;
+
 		public TcpClient Client { get { return connection; } }
-		private Stream _outputData;
 
 		public ConnectionHandler(TcpClient Connection) {
             connection = Connection;
-            code = Repository.ExceptionFabrics["OK"].Create(null, null);
-			_outputData = new MemoryStream();
         }
 
         public Stream InputData {
-            get { return obj_request.Data; }
+            get { return in_data(); }
         }
 
         public Stream OutputData {
-			get { return _outputData; }
+			get { return out_data(); }
         }
 
         public UserConnect UserConnectData {
@@ -70,10 +68,10 @@ namespace Host.ConnectionHandlers {
 
         public void Execute() {
             actual_handler = this;
-            response = new Response(); //создание экземпляра класса ответа
+            response = Response.Create(Client, out out_data);//создание экземпляра класса ответа
 
             try {
-                obj_request = new Reqest(Client);//создание экземпляра класса запроса;
+                obj_request = Reqest.Create(Client, out in_data);//создание экземпляра класса запроса;
                 obj_request.CheckTabelOfRedirect();//проверка таблицы перенаправлений
                 try {//попытка найти данные к запросу
                     UserData = UserConnect.GetUserDataFromID(obj_request.cookies[Repository.ConfigBody.Element("webserver").Element("guid").Value.ToString()]);
@@ -112,7 +110,7 @@ namespace Host.ConnectionHandlers {
                     DataHandle = Repository.DataHandlers[reads_bytes.file_extension];
                 }
                 catch (Exception err) {//при неудачной попытки бросаем исключение
-                    throw Repository.ExceptionFabrics["Internal Server Error"].Create(null, null);
+                    throw Repository.ExceptionFabrics["Not Implemented"].Create(null, null);
                 }
                 //websocket
                 try {
@@ -120,7 +118,8 @@ namespace Host.ConnectionHandlers {
                         actual_handler = new WebSocketHandler(Client, reads_bytes, UserData);
                         string[] data = new string[] { "websocket" };
                         throw Repository.ExceptionFabrics["Switching Protocols"].Create(
-                            (ref Reqest _request, ref Response _response, IConnetion dat) => {
+                            (handle, _request, _response, dat, func) => {
+                                func(handle, _request, _response, dat);
                                 string str = _request.preferens["Sec-WebSocket-Key"] + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
                                 byte[] bytes = Encoding.UTF8.GetBytes(str);
                                 var sha1 = SHA1.Create();
@@ -131,53 +130,35 @@ namespace Host.ConnectionHandlers {
                     }
                 }
                 catch (KeyNotFoundException err) { }
-                DataHandle.Headers(ref response, ref obj_request, ref reads_bytes);//вызов обработчика данных для заголовков
-                try {
-                    IConnetion conn = this;
-                    DataHandle.Handle(ref conn);//вызов обработчика данных
-                }
-                catch (Exception err) {
-                    response.AddToHeader("Content-Type", "text/html; charset=UTF-8", AddMode.rewrite);
-                    byte[] exce = Encoding.UTF8.GetBytes(err.ToString());
-                    OutputData.Write(exce, 0, exce.Length);
-                }
             }
             catch (ExceptionCode err) {
-                code = err;
+                response.SetCode(err);
             }
-
-            response.code = code;
-            response.SendData(obj_request, this, connection.GetStream());
+            response.code.ExceptionHandle(DataHandle, obj_request, response, this);
+            response.SendData(obj_request);
 
             if (response.GetHeader("Connection") == "close") {
                 throw new ConnectionExecutorClose();
             }
-            Clear();
         }
 
-        private void Clear() {
-            code = Repository.ExceptionFabrics["OK"].Create(null, null);
+        public void Dispose() {
+            Client.GetStream().Dispose();
+            Client.Close();
+        }
+
+
+        public void Reset()
+        {
             if (reads_bytes != null) {
                 reads_bytes.Dispose();
                 reads_bytes = null;
             }
             DataHandle = null;
-            if (_outputData != null) {
-                _outputData.Dispose();
-            }
-            _outputData = new MemoryStream();
-            if (InputData != null) { InputData.Dispose(); }
+            response.Dispose();
             response = null;
+            obj_request.Dispose();
             obj_request = null;
-            UserData = null;
-            User = null;
-        }
-
-        public void Dispose() {
-            if (reads_bytes != null) { reads_bytes.Dispose(); }
-            if (_outputData != null) { _outputData.Dispose(); }
-            //Client.GetStream().Dispose();
-            Client.Close();
         }
     }
 }

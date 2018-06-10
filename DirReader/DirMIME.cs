@@ -11,7 +11,7 @@ namespace Host.MIME
 		private string[] _file_extensions = { ".dir" };
 		public override string[] file_extensions { get { return _file_extensions; } }
 
-		public override void Handle(ref IConnetion connection) {
+		public override void Handle(IConnetion connection) {
 			StringBuilder sb = new StringBuilder();
 			sb.AppendFormat("<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"utf-8\">\n<title>{0}</title>\n</head>\n<body>\n", connection.ReadData.Resourse.GetName());
 			sb.AppendFormat("<p><a href=\"{0}\"><img src=\"WebServerResourses/folder.png\" height=\"20\"></img>.</a></p>\n", connection.ReadData.Resourse.GetPath());
@@ -33,7 +33,7 @@ namespace Host.MIME
 			connection.OutputData.Seek(0, SeekOrigin.Begin);
 		}
 
-		public override void Headers(ref Response response, ref Reqest reqest, ref Reader read) {
+		public override void Headers(Response response, Reqest reqest, Reader read) {
 			response.AddToHeader("Content-Type", "text/html; charset=UTF-8", AddMode.rewrite);
 		}
 

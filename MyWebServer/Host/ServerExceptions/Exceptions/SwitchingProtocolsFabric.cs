@@ -1,4 +1,5 @@
 using Host.ConnectionHandlers;
+using System.Text;
 
 namespace Host.ServerExceptions {
 	public class SwitchingProtocolsFabric : ABSExceptionFabric {
@@ -22,20 +23,20 @@ namespace Host.ServerExceptions {
         {
 			this.protocols = protocols;
 			Code = "101 Switching Protocols";
-			_IsFatal = true;
 		}
 
-		public override void ExceptionHandleCode(ref Reqest request, ref Response response, IConnetion handler) {
-			string prot = "";
+        public override void ExceptionHandleCode(MIME.ABSMIME Handler, Reqest request, Response response, IConnetion handler)
+        {
+            StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < protocols.Length; i++) {
 				if (i == protocols.Length - 1) {
-					prot += protocols[i];
+                    sb.Append(protocols[i]);
 				}
 				else {
-					prot += protocols[i] + ", ";
+					sb.AppendFormat("{0}, ", protocols[i]);
 				}
 			}
-			response.AddToHeader("Upgrade", prot, AddMode.rewrite);
+			response.AddToHeader("Upgrade", sb.ToString(), AddMode.rewrite);
             response.AddToHeader("Connection", "Upgrade", AddMode.rewrite);
 			response.AddForbiddenHeader("Content-Length");
 			response.AddForbiddenHeader("Server");

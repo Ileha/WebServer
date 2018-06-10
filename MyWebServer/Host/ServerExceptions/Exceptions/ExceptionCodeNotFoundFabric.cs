@@ -18,7 +18,6 @@ namespace Host.ServerExceptions
             : base(userCode)
         {
 			Code = "404 Not Found";
-			_IsFatal = true;
 		}	
 	}
 }

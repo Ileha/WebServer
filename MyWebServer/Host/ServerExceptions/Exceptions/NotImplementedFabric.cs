@@ -15,7 +15,6 @@ namespace Host.ServerExceptions {
 
 		public NotImplemented(ExceptionUserCode userCode, string message) : base(userCode) {
 			Code = "501 Not Implemented";
-			_IsFatal = true;
 		}
 	}
 }

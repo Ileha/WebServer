@@ -21,7 +21,6 @@ namespace Host.ServerExceptions
             : base(userCode)
         {
 			Code = "400 Bad Request";
-			_IsFatal = true;
-		}
+        }
 	}
 }

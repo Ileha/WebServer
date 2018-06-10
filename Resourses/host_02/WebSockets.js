@@ -1,6 +1,6 @@
 var socket;
 function connect() {
-  socket = new WebSocket("ws://localhost:11001");
+  socket = new WebSocket("ws://localhost:11001/test.uhtml");
 
   socket.onopen = function() {
     alert("Соединение установлено.");

@@ -31,6 +31,7 @@ namespace Host.ConnectionHandlers
 				try {
                     Handler.Execute();
 					Handler = Handler.ExecuteHandler;
+                    Handler.Reset();//сброс для следующих данных
                     if (is_start) {
                         is_start = false;
                     }

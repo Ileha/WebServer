@@ -11,78 +11,21 @@ using Host.ConnectionHandlers.ExecutorExceptions;
 
 namespace Host.ConnectionHandlers
 {
-    public class ReqestDataStream : Stream
-    {
-        private byte[] _data;
-        private long _lenght;
-        private long _index;
-        private NetworkStream _client;
-
-        public ReqestDataStream(byte[] data, long lenght_client, NetworkStream client)
-        {
-            _index = 0;
-            _data = data;
-            _lenght = lenght_client;
-            _client = client;
-        }
-
-        public override bool CanRead
-        {
-            get
-            {
-                if (_index >= _lenght) { return false; }
-                else { return true; }
-            }
-        }
-        public override bool CanSeek { get { return false; } }
-        public override bool CanWrite { get { return false; } }
-        public override long Length { get { return _lenght; } }
-        public override long Position { get { return _index; } set { throw new NotImplementedException(); } }
-        public override void Flush() { throw new NotImplementedException(); }
-        protected override void Dispose(bool disposing)
-        { //убирает данные из потока 
-            if (disposing)
-            {
-                byte[] d = new byte[Length-_index];
-                Read(d, 0, d.Length);
-            }
-        }
-
-        public override int Read(byte[] buffer, int offset, int count)
-        {
-            int res = 0;
-            try
-            {
-                for (int i = 0; i < count; i++)
-                {
-                    buffer[_index] = _data[i + offset];
-                    _index++;
-                    res++;
-                }
-            }
-            catch (Exception err)
-            {
-                int k = _client.Read(buffer, res + offset, count - res);
-                res += k;
-                _index += k;
-            }
-            return res;
-        }
-
-        public override long Seek(long offset, SeekOrigin origin) { throw new NotImplementedException(); }
-        public override void SetLength(long value) { throw new NotImplementedException(); }
-        public override void Write(byte[] buffer, int offset, int count) { throw new NotImplementedException(); }
-    }
-
-    public class Reqest
+    public class Reqest : IDisposable
     {
         private static byte[] new_line = new byte[] { 13, 10, 13, 10 };
 
         public string URL;
-        public MemoryStream Data;
+        private MemoryStream Data;
         public Dictionary<string, string> varibles;//данные
         public Dictionary<string, string> preferens;//заголовки
         public Dictionary<string, string> cookies;
+
+        public static Reqest Create(TcpClient client, out Func<Stream> Input) {
+            Reqest res = new Reqest(client);
+            Input = () => res.Data;
+            return res;
+        }
 
         public Reqest(TcpClient client)
         {
@@ -92,43 +35,60 @@ namespace Host.ConnectionHandlers
             preferens = new Dictionary<string, string>();
             cookies = new Dictionary<string, string>();
 
-            List<byte> input_data = new List<byte>();
+            StringBuilder res = new StringBuilder();
             byte[] bytes = new byte[1024];
             NetworkStream stream = client.GetStream();
             int index = -1;
+            Reqest result = this;
+            string[] elements;
+
+            string headers_data = "";
             do {
                 int count = client.Client.Receive(bytes);
                 if (index == -1)
                 {
                     ExistSeqeunce(0, count, new_line, bytes, out index);
-                    if (index != -1) { index = input_data.Count + index; }
+                    if (index == -1) {
+                        res.Append(Encoding.UTF8.GetString(bytes, 0, count));
+                    }
+                    else {
+                        res.Append(Encoding.UTF8.GetString(bytes, 0, index));
+                        headers_data = res.ToString();
+                        elements = Regex.Split(headers_data, "\r\n");
+                        try
+                        {
+                            string[] header = elements[0].Split(' ');
+                            ABSHttpHandler _handler = Repository.ReqestsHandlers[header[0] + header[2]];
+                            _handler.ParseHeaders(ref result, elements.ToList().GetRange(1, elements.Length - 1).ToArray(), header[1]);
+                            if (_handler.CanHasData(this) && index + 4 < count)
+                            {
+                                Data = new MemoryStream(bytes, index + 4, count - (index + 4));
+                            }
+                        }
+                        catch (ExceptionCode code)
+                        {
+                            throw code;
+                        }
+                        catch (Exception err)
+                        {
+                            throw Repository.ExceptionFabrics["Bad Request"].Create(null, null);
+                        }
+                    }
+                    
                 }
-                input_data.AddRange(bytes.Take(count));
-            } while (stream.DataAvailable);
-            if (input_data.Count == 0) { throw new ConnectionExecutorClose(); }
-            index = Math.Max(0, index);
-            bytes = input_data.ToArray();
+                else {
+                    if (Data == null) {
+                        Data = new MemoryStream(bytes, 0, count);
+                    }
+                    else {
+                        Data.Write(bytes, 0, count);
+                    }
+                }
 
-            string headers_data = Encoding.UTF8.GetString(bytes, 0, index);
-            Reqest result = this;
-            string[] elements = Regex.Split(headers_data, "\r\n");
-            try
-            {
-                string[] header = elements[0].Split(' ');
-                ABSHttpHandler _handler = Repository.ReqestsHandlers[header[0] + header[2]];
-                _handler.ParseHeaders(ref result, elements.ToList().GetRange(1, elements.Length - 1).ToArray(), header[1]);
-                if (_handler.CanHasData(this) && index+4 > bytes.Length)
-                {
-                    Data = new MemoryStream(bytes, index+4, bytes.Length-(index+4));
-                    Data.Seek(0, SeekOrigin.Begin);
-                }
-            }
-            catch (ExceptionCode code) {
-                throw code;
-            }
-            catch (Exception err) {
-                throw Repository.ExceptionFabrics["Bad Request"].Create(null, null);
-            }
+            } while (stream.DataAvailable);
+            if (headers_data.Count() == 0) { throw new ConnectionExecutorClose(); }
+
+            if (Data != null) { Data.Seek(0, SeekOrigin.Begin);}
         }
 
         public void CheckTabelOfRedirect()
@@ -169,5 +129,12 @@ namespace Host.ConnectionHandlers
             return false;
         }
 
+
+        public void Dispose()
+        {
+            if (Data != null) {
+                Data.Dispose();
+            }
+        }
     }
 }

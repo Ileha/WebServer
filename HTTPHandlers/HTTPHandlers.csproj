@@ -47,7 +47,6 @@
     <Compile Include="MIMEHandlers\PlainTextMIME.cs" />
     <Compile Include="MIMEHandlers\CSVMIME.cs" />
     <Compile Include="MIMEHandlers\HtmlMIME.cs" />
-    <Compile Include="MIMEHandlers\UhtmlMIME.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MyWebServer\MyWebServer.csproj">
@@ -55,9 +54,6 @@
       <Name>MyWebServer</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="HTTPHandlers\" />
-    <Folder Include="MIMEHandlers\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

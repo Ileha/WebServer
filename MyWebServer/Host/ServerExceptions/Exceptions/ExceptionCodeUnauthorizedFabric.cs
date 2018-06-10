@@ -27,11 +27,11 @@ namespace Host.ServerExceptions
             : base(userCode)
         {
             Code = "401 Unauthorized";
-            _IsFatal = true;
 			this.message = message;
         }
 
-		public override void ExceptionHandleCode(ref Reqest request, ref Response response, IConnetion handler) {
+        public override void ExceptionHandleCode(MIME.ABSMIME Handler, Reqest request, Response response, IConnetion handler)
+        {
 			response.AddToHeader("WWW-Authenticate", "Basic realm=\""+message+"\"", AddMode.rewrite);
 		}
     }

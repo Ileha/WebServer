@@ -17,7 +17,6 @@ namespace Host.ServerExceptions
             : base(userCode)
         {
 			Code = "500 Internal Server Error";
-			_IsFatal = true;
 		}	
 	}
 }

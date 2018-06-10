@@ -132,7 +132,7 @@ namespace MainProgramm
 
         public void GetPluginInfo()
         {
-            Console.WriteLine("\vHTTP Handlers:");
+            Console.WriteLine("\r\nHTTP Handlers:");
             foreach (KeyValuePair<string, ABSHttpHandler> handler in Repository.ReqestsHandlers)
             {
                 Console.WriteLine("\tHTTP type {0}", handler.Key.ToString());
