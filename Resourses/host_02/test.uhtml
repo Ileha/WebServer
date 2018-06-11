@@ -1,8 +1,10 @@
-<root>
+﻿<root>
   <header>
     <name>UModule.Test.TestHandler</name>
   </header>
   <body>
-    you write: 
+  <body>
+  </body>
+<button onclick="connect()">connect form WebSocket</button><br/>
   </body>
 </root>

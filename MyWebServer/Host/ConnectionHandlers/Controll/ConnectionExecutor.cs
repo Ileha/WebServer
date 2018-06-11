@@ -27,11 +27,15 @@ namespace Host.ConnectionHandlers
 		public void Execute() {
             Console.WriteLine("start connection id: {0}", ID.ToString());
 			onConnectEvent();
+            IConnectionHandler next_handler = null;
 			while (true) {
 				try {
                     Handler.Execute();
-					Handler = Handler.ExecuteHandler;
-                    Handler.Reset();//сброс для следующих данных
+                    next_handler = Handler.ExecuteHandler;
+                    if (Handler == next_handler) {
+                        next_handler.Reset();//сброс для следующих данных
+                    }
+                    Handler = next_handler;
                     if (is_start) {
                         is_start = false;
                     }

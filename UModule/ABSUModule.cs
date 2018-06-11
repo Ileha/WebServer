@@ -19,6 +19,6 @@ namespace UModule
         public virtual void PreRender() {}
         public abstract void Render();//запись в поток
         public abstract void Unload();//конец
-
+        public abstract string ContentType { get; }
     }
 }

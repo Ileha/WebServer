@@ -15,13 +15,14 @@ namespace MIMEHandlers
 		private string[] _file_extensions = { ".jpg", ".JPG" };
         public override string[] file_extensions { get { return _file_extensions; } }
 
-		public override void Handle(IConnetion connection) {
+        public override void Handle(IConnetion Connection, out Action<Response, Reqest> Headers)
+        {
 			//connection.OutputData.Write(connection.ReadData.data, 0, connection.ReadData.data.Length);
-			connection.ReadData.data.CopyTo(connection.OutputData);
-		}
-
-		public override void Headers(Response response, Reqest reqest, Reader read) {
-			response.AddToHeader("Content-Type", "image/jpg", AddMode.rewrite);
+            Connection.ReadData.Data.CopyTo(Connection.OutputData);
+            Headers = (response, reqest) =>
+            {
+                response.AddToHeader("Content-Type", "image/jpg", AddMode.rewrite);
+            };
 		}
 	}
 }

@@ -12,7 +12,7 @@ namespace Host.ConnectionHandlers
         Stream InputData { get; }
         Stream OutputData { get; }
         UserConnect UserConnectData { get; }
-        Reader ReadData { get; }
+        IReader ReadData { get; }
         ConnectionType ConnectType { get; }
     }
 }

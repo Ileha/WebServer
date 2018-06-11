@@ -13,29 +13,32 @@ namespace Host.ConnectionHandlers
     public class WebSocketHandler : IConnectionHandler, IConnetion
     {
         private TcpClient client;
-        private Reader reads_bytes;
+        private IReader reads_bytes;
         public ABSMIME DataHandle;
         public UserConnect UserData;
         private WebSocketStream SocketStream;
+        private MemoryStream InputDataStream;
+        private MemoryStream OutputDataStream;
 
-        public WebSocketHandler(TcpClient client, Reader data, UserConnect user_data)
+        public WebSocketHandler(TcpClient client, IReader data, UserConnect user_data)
         {
             this.client = client;
             reads_bytes = data;
-            DataHandle = Repository.DataHandlers[reads_bytes.file_extension];
+            DataHandle = Repository.DataHandlers[reads_bytes.FileExtension];
             UserData = user_data;
             SocketStream = new WebSocketStream(client.GetStream());
+            InputDataStream = new MemoryStream();
+            OutputDataStream = new MemoryStream();
         }
 
         public Stream InputData
         {
-            get { return SocketStream; }
+            get { return InputDataStream; }
         }
 
         public Stream OutputData
         {
-            get { return SocketStream; }
-            set { throw new NotImplementedException(); }
+            get { return OutputDataStream; }
         }
 
         public UserConnect UserConnectData
@@ -43,7 +46,7 @@ namespace Host.ConnectionHandlers
             get { return UserData; }
         }
 
-        public Reader ReadData
+        public IReader ReadData
         {
             get { return reads_bytes; }
         }
@@ -67,14 +70,18 @@ namespace Host.ConnectionHandlers
 
         public void Execute()
         {
-            //byte[] data = new byte[1024];
+            byte[] data = new byte[1024];
             //string str = "";
-            //do
-            //{
-            //    int count = SocketStream.Read(data, 0, 1024);
-                //str += Encoding.UTF8.GetString(data, 0, count);
-            //} while (SocketStream.CanRead);
-            DataHandle.Handle(this);
+            do
+            {
+                int count = SocketStream.Read(data, 0, 1024);
+                InputDataStream.Write(data, 0, count);
+            } while (SocketStream.CanRead);
+            InputDataStream.Seek(0, SeekOrigin.Begin);
+            Action<Response, Reqest> headers;
+            DataHandle.Handle(this, out headers);
+            OutputDataStream.Seek(0, SeekOrigin.Begin);
+            OutputDataStream.CopyTo(SocketStream);
             //byte[] h = Encoding.UTF8.GetBytes(str);
             //OutputData.Write(h, 0, h.Length);
         }
@@ -86,6 +93,12 @@ namespace Host.ConnectionHandlers
         }
 
 
-        public void Reset() {}
+        public void Reset() {
+            InputDataStream.Dispose();
+            InputDataStream = new MemoryStream();
+            OutputDataStream.Dispose();
+            OutputDataStream = new MemoryStream();
+            reads_bytes.UpdateData();
+        }
     }
 }

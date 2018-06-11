@@ -8,18 +8,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using System.Text.RegularExpressions;
 
 namespace UModule
 {
     public class Interactive
     {
+
         public Interactive(IConnetion data, XElement readData) {
             InputData = data.InputData;
             OutputData = data.OutputData;
             UserConnectData = data.UserConnectData;
             ConnectType = data.ConnectType;
             ReadData = new MemoryStream();
-            readData.Save(ReadData);
+            byte[] s_data = Encoding.UTF8.GetBytes(readData.ToString());
+            ReadData.Write(s_data, 0, s_data.Length);
             ReadData.Seek(0, SeekOrigin.Begin);
         }
 

@@ -27,8 +27,9 @@ namespace Host.ServerExceptions
         public override void ExceptionHandleCode(MIME.ABSMIME Handler, Reqest request, Response response, IConnetion data)
         {
             try {
-                Handler.Headers(response, request, data.ReadData);
-                Handler.Handle(data);
+                Action<Response, Reqest> headers;
+                Handler.Handle(data, out headers);
+                headers(response, request);
             }
             catch (ExceptionCode err) {
                 throw err;

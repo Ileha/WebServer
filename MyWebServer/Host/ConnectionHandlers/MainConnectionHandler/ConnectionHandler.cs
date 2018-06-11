@@ -18,7 +18,7 @@ using Host.ConnectionHandlers.ExecutorExceptions;
 namespace Host.ConnectionHandlers {
     public class ConnectionHandler : IConnectionHandler, IConnetion {
         private TcpClient connection;
-        private Reader reads_bytes;
+        private IReader reads_bytes;
         private Reqest obj_request;
         private Response response;
         private UserConnect UserData;
@@ -46,7 +46,7 @@ namespace Host.ConnectionHandlers {
             get { return UserData; }
         }
 
-        public Reader ReadData {
+        public IReader ReadData {
             get { return reads_bytes; }
         }
 
@@ -107,7 +107,7 @@ namespace Host.ConnectionHandlers {
 
                 reads_bytes = new Reader(obj_request.URL, User);//нахождение и получение запрошенных данных
                 try {//попытка найти обработчик данных
-                    DataHandle = Repository.DataHandlers[reads_bytes.file_extension];
+                    DataHandle = Repository.DataHandlers[reads_bytes.FileExtension];
                 }
                 catch (Exception err) {//при неудачной попытки бросаем исключение
                     throw Repository.ExceptionFabrics["Not Implemented"].Create(null, null);

@@ -41,7 +41,7 @@ namespace Host.ConnectionHandlers
             int index = -1;
             Reqest result = this;
             string[] elements;
-
+            Data = new MemoryStream();
             string headers_data = "";
             do {
                 int count = client.Client.Receive(bytes);
@@ -62,7 +62,7 @@ namespace Host.ConnectionHandlers
                             _handler.ParseHeaders(ref result, elements.ToList().GetRange(1, elements.Length - 1).ToArray(), header[1]);
                             if (_handler.CanHasData(this) && index + 4 < count)
                             {
-                                Data = new MemoryStream(bytes, index + 4, count - (index + 4));
+                                Data.Write(bytes, index + 4, count - (index + 4));
                             }
                         }
                         catch (ExceptionCode code)
@@ -77,18 +77,13 @@ namespace Host.ConnectionHandlers
                     
                 }
                 else {
-                    if (Data == null) {
-                        Data = new MemoryStream(bytes, 0, count);
-                    }
-                    else {
-                        Data.Write(bytes, 0, count);
-                    }
+                    Data.Write(bytes, 0, count);
                 }
 
             } while (stream.DataAvailable);
             if (headers_data.Count() == 0) { throw new ConnectionExecutorClose(); }
 
-            if (Data != null) { Data.Seek(0, SeekOrigin.Begin);}
+            Data.Seek(0, SeekOrigin.Begin);
         }
 
         public void CheckTabelOfRedirect()

@@ -2,6 +2,7 @@ using Host.MIME;
 using Host;
 using Host.ConnectionHandlers;
 using System.IO;
+using System;
 
 namespace MIMEHandlers
 {
@@ -10,13 +11,15 @@ namespace MIMEHandlers
 		private string[] _file_extensions = { ".css" };
 		public override string[] file_extensions { get { return _file_extensions; } }
 
-        public override void Headers(Response response, Reqest reqest, Reader read) {
-            response.AddToHeader("Content-Type", "text/css; charset=UTF-8", AddMode.rewrite);
+        public override void Handle(IConnetion Connection, out Action<Response, Reqest> Headers)
+        {
+			//connection.OutputData.Write(connection.ReadData.data, 0, connection.ReadData.data.Length);
+            Connection.ReadData.Data.CopyTo(Connection.OutputData);
+            Headers = (response, reqest) =>
+            {
+                response.AddToHeader("Content-Type", "text/css; charset=UTF-8", AddMode.rewrite);
+            };
         }
 
-        public override void Handle(IConnetion connection) {
-			//connection.OutputData.Write(connection.ReadData.data, 0, connection.ReadData.data.Length);
-			connection.ReadData.data.CopyTo(connection.OutputData);
-        }
     }
 }

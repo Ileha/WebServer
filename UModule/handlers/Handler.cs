@@ -14,5 +14,10 @@ namespace UModule.handlers
         public override void Render() {}
 
         public override void Unload() {}
+
+        public override string ContentType
+        {
+            get { return "text/plain; charset=UTF-8"; }
+        }
     }
 }

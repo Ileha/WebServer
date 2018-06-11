@@ -11,7 +11,7 @@ namespace Resouces
     public class LinkFile : IItem
     {
         private FileInfo Resource;
-        private IItem _parent;
+        //private IItem _parent;
 
 		public override string Extension {
 			get { return Resource.Extension; }
