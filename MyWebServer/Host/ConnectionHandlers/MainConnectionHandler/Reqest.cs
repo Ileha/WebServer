@@ -43,6 +43,7 @@ namespace Host.ConnectionHandlers
 
 			do {
 				int count = client.Client.Receive(bytes);
+                if (count == 0) { throw new ConnectionExecutorClose(); }
                 ExistSeqeunce(0, count, new_line, bytes, out index);
 				if (index == -1)
 				{
@@ -62,9 +63,13 @@ namespace Host.ConnectionHandlers
 								int data_lenght = Convert.ToInt32(preferens["Content-Length"]);
 								Data = new MemoryStream(data_lenght);
 								Data.Write(bytes, 0, count - (index + 4));
-								bytes = new byte[data_lenght-(count - (index + 4))];
-								count = client.Client.Receive(bytes);
-								Data.Write(bytes, 0, count);
+                                data_lenght -= (count - (index + 4));
+                                while (data_lenght > 0)
+                                {
+								    count = client.Client.Receive(bytes);
+								    Data.Write(bytes, 0, count);
+                                    data_lenght -= count;
+                                }
 								Data.Seek(0, SeekOrigin.Begin);
 							}
 							catch (Exception err) {
