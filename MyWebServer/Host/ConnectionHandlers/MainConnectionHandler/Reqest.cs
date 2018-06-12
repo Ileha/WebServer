@@ -29,8 +29,6 @@ namespace Host.ConnectionHandlers
 
         public Reqest(TcpClient client)
         {
-            //if (client.Available == 0) { throw new ConnectionExecutorClose(); }
-
             varibles = new Dictionary<string, string>();
             preferens = new Dictionary<string, string>();
             cookies = new Dictionary<string, string>();
@@ -41,49 +39,52 @@ namespace Host.ConnectionHandlers
             int index = -1;
             Reqest result = this;
             string[] elements;
-            Data = new MemoryStream();
             string headers_data = "";
-            do {
-                int count = client.Client.Receive(bytes);
-                if (index == -1)
-                {
-                    ExistSeqeunce(0, count, new_line, bytes, out index);
-                    if (index == -1) {
-                        res.Append(Encoding.UTF8.GetString(bytes, 0, count));
-                    }
-                    else {
-                        res.Append(Encoding.UTF8.GetString(bytes, 0, index));
-                        headers_data = res.ToString();
-                        elements = Regex.Split(headers_data, "\r\n");
-                        try
-                        {
-                            string[] header = elements[0].Split(' ');
-                            ABSHttpHandler _handler = Repository.ReqestsHandlers[header[0] + header[2]];
-                            _handler.ParseHeaders(ref result, elements.ToList().GetRange(1, elements.Length - 1).ToArray(), header[1]);
-                            if (_handler.CanHasData(this) && index + 4 < count)
-                            {
-                                Data.Write(bytes, index + 4, count - (index + 4));
-                            }
-                        }
-                        catch (ExceptionCode code)
-                        {
-                            throw code;
-                        }
-                        catch (Exception err)
-                        {
-                            throw Repository.ExceptionFabrics["Bad Request"].Create(null, null);
-                        }
-                    }
-                    
-                }
-                else {
-                    Data.Write(bytes, 0, count);
-                }
 
-            } while (stream.DataAvailable);
-            if (headers_data.Count() == 0) { throw new ConnectionExecutorClose(); }
+			do {
+				int count = client.Client.Receive(bytes);
+                ExistSeqeunce(0, count, new_line, bytes, out index);
+				if (index == -1)
+				{
+					res.Append(Encoding.UTF8.GetString(bytes, 0, count));
+				}
+				else {
+					res.Append(Encoding.UTF8.GetString(bytes, 0, index));
+					headers_data = res.ToString();
+                    elements = Regex.Split(headers_data, "\r\n");
+                    try {
+                        string[] header = elements[0].Split(' ');
+						ABSHttpHandler _handler = Repository.ReqestsHandlers[header[0] + header[2]];
+						_handler.ParseHeaders(ref result, elements.ToList().GetRange(1, elements.Length - 1).ToArray(), header[1]);
+						if (_handler.CanHasData(this)) {
+							try
+							{
+								int data_lenght = Convert.ToInt32(preferens["Content-Length"]);
+								Data = new MemoryStream(data_lenght);
+								Data.Write(bytes, 0, count - (index + 4));
+								bytes = new byte[data_lenght-(count - (index + 4))];
+								count = client.Client.Receive(bytes);
+								Data.Write(bytes, 0, count);
+								Data.Seek(0, SeekOrigin.Begin);
+							}
+							catch (Exception err) {
+								Data = new MemoryStream();
+							}
+						}
+						else {
+							Data = new MemoryStream();
+						}
+					}
+                    catch (ExceptionCode code) {
+                        throw code;
+                    }
+                    catch (Exception err) {
+                        throw Repository.ExceptionFabrics["Bad Request"].Create(null, null);
+                    }
+				}
+			} while (index == -1);
 
-            Data.Seek(0, SeekOrigin.Begin);
+            
         }
 
         public void CheckTabelOfRedirect()
