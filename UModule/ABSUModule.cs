@@ -10,7 +10,7 @@ namespace UModule
 {
     public abstract class ABSUModule
     {
-        protected Interactive Interact;
+        public Interactive Interact { get; private set; }
         public void Build(IConnetion Interact, XElement data) {
             this.Interact = new Interactive(Interact, data);
         }

@@ -30,7 +30,7 @@ namespace HTTPHandlers
             {
                 response.AddToHeader("Content-Type", page.ContentType, AddMode.rewrite);
             };
-            
+            page.Interact.Send();
         }
     }
 }

@@ -14,6 +14,7 @@ namespace UModule
 {
     public class Interactive
     {
+        private Stream SendStream;
 
         public Interactive(IConnetion data, XElement readData) {
             InputData = data.InputData;
@@ -24,6 +25,14 @@ namespace UModule
             byte[] s_data = Encoding.UTF8.GetBytes(readData.ToString());
             ReadData.Write(s_data, 0, s_data.Length);
             ReadData.Seek(0, SeekOrigin.Begin);
+            OutputData = new MemoryStream();
+            SendStream = data.OutputData;
+        }
+
+        public void Send()
+        {
+            OutputData.Seek(0, SeekOrigin.Begin);
+            OutputData.CopyTo(SendStream);
         }
 
         public Stream InputData

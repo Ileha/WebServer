@@ -35,6 +35,11 @@ namespace Host.ConnectionHandlers
                     if (Handler == next_handler) {
                         next_handler.Reset();//сброс для следующих данных
                     }
+                    else {
+                        onDisConnectEvent();
+                        data = new ConnectionEventData(next_handler.GetConnetion);
+                        onConnectEvent();
+                    }
                     Handler = next_handler;
                     if (is_start) {
                         is_start = false;

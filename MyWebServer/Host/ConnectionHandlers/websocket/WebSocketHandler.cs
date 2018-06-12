@@ -18,7 +18,6 @@ namespace Host.ConnectionHandlers
         public UserConnect UserData;
         private WebSocketStream SocketStream;
         private MemoryStream InputDataStream;
-        private MemoryStream OutputDataStream;
 
         public WebSocketHandler(TcpClient client, IReader data, UserConnect user_data)
         {
@@ -28,7 +27,6 @@ namespace Host.ConnectionHandlers
             UserData = user_data;
             SocketStream = new WebSocketStream(client.GetStream());
             InputDataStream = new MemoryStream();
-            OutputDataStream = new MemoryStream();
         }
 
         public Stream InputData
@@ -38,7 +36,7 @@ namespace Host.ConnectionHandlers
 
         public Stream OutputData
         {
-            get { return OutputDataStream; }
+            get { return SocketStream; }
         }
 
         public UserConnect UserConnectData
@@ -71,7 +69,6 @@ namespace Host.ConnectionHandlers
         public void Execute()
         {
             byte[] data = new byte[1024];
-            //string str = "";
             do
             {
                 int count = SocketStream.Read(data, 0, 1024);
@@ -80,10 +77,6 @@ namespace Host.ConnectionHandlers
             InputDataStream.Seek(0, SeekOrigin.Begin);
             Action<Response, Reqest> headers;
             DataHandle.Handle(this, out headers);
-            OutputDataStream.Seek(0, SeekOrigin.Begin);
-            OutputDataStream.CopyTo(SocketStream);
-            //byte[] h = Encoding.UTF8.GetBytes(str);
-            //OutputData.Write(h, 0, h.Length);
         }
 
         public void Dispose()
@@ -96,8 +89,6 @@ namespace Host.ConnectionHandlers
         public void Reset() {
             InputDataStream.Dispose();
             InputDataStream = new MemoryStream();
-            OutputDataStream.Dispose();
-            OutputDataStream = new MemoryStream();
             reads_bytes.UpdateData();
         }
     }
