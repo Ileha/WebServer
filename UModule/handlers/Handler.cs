@@ -9,15 +9,11 @@ namespace UModule.handlers
 {
     public class Handler : ABSUModule
     {
-        public override void Init() {}
-
-        public override void Render() {}
-
-        public override void Unload() {}
-
         public override string ContentType
         {
             get { return "text/plain; charset=UTF-8"; }
         }
+
+        public override void Handle() {}
     }
 }

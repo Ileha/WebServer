@@ -23,12 +23,20 @@ namespace Host.ConnectionHandlers
         {
             ConnectionEventData data = new ConnectionEventData(ConnectHandler.GetEventConnetion);
             onConnectEvent(data);
-            do {
-                ConnectHandler.Reset();
-                ConnectHandler.Execute();
-                Console.WriteLine("continue connection id: {0}", ID.ToString());
-            }while(ConnectHandler == ConnectHandler.ExecuteHandler);
-            onDisconnect(data);
+            try { 
+                do {
+                    ConnectHandler.Reset();
+                    ConnectHandler.Execute();
+                    Console.WriteLine("continue connection id: {0}", ID.ToString());
+                }while(ConnectHandler == ConnectHandler.ExecuteHandler);
+            }
+            catch (ConnectionExecutorException err) {
+                onDisconnect(data);
+                throw err;
+            }
+            catch (Exception err) {
+                throw err;
+            }
             ConnectHandler = ConnectHandler.ExecuteHandler;
         }
 

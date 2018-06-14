@@ -14,25 +14,15 @@ namespace UModule
 {
     public class Interactive
     {
-        private Stream SendStream;
-
-        public Interactive(IConnetion data, XElement readData) {
+        public Interactive(IConnetion data, Stream writableStream, XElement readData) {
             InputData = data.InputData;
-            OutputData = data.OutputData;
             UserConnectData = data.UserConnectData;
             ConnectType = data.ConnectType;
             ReadData = new MemoryStream();
             byte[] s_data = Encoding.UTF8.GetBytes(readData.ToString());
             ReadData.Write(s_data, 0, s_data.Length);
             ReadData.Seek(0, SeekOrigin.Begin);
-            OutputData = new MemoryStream();
-            SendStream = data.OutputData;
-        }
-
-        public void Send()
-        {
-            OutputData.Seek(0, SeekOrigin.Begin);
-            OutputData.CopyTo(SendStream);
+            OutputData = writableStream;
         }
 
         public Stream InputData

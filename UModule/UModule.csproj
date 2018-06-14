@@ -41,7 +41,7 @@
   <ItemGroup>
     <Compile Include="ABSUModule.cs" />
     <Compile Include="handlers\Handler.cs" />
-    <Compile Include="handlers\PageHandler.cs" />
+    <Compile Include="handlers\Page\PageHandler.cs" />
     <Compile Include="Interactive.cs" />
     <Compile Include="Loader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
