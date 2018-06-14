@@ -43,7 +43,7 @@ namespace Config
             Users = new UserBank();
             Users.Configurate(GetElements(Users));
 
-            LinkDirectory d = new LinkDirectory();
+            RootDir d = new RootDir();
             ResourceLinker = d;
             d.Configurate(GetElements(d));
 

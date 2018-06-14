@@ -40,6 +40,8 @@
     <Compile Include="Config\ReactorPull.cs" />
     <Compile Include="Host\ConnectionHandlers\Controll\ExecutorExceptions\ConnectionExecutorException.cs" />
     <Compile Include="Host\ConnectionHandlers\Controll\IConnetion.cs" />
+    <Compile Include="Host\ConnectionHandlers\MainConnectionHandler\HttpEventConnection.cs" />
+    <Compile Include="Host\ConnectionHandlers\websocket\WebsocketConnection.cs" />
     <Compile Include="Host\Reader\Reader.cs" />
     <Compile Include="Host\ConnectionHandlers\websocket\WebSocketHandler.cs" />
     <Compile Include="Host\Eventer\ABSGrub.cs" />
@@ -82,6 +84,7 @@
     <Compile Include="Assets\MyRandom.cs" />
     <Compile Include="Host\Eventer\IHostEvents.cs" />
     <Compile Include="Host\ServerExceptions\Exceptions\NotImplementedFabric.cs" />
+    <Compile Include="Resouces\RootDir.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

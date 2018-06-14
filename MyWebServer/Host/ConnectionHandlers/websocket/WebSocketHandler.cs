@@ -1,3 +1,4 @@
+using Host.ConnectionHandlers.ExecutorExceptions;
 using Host.MIME;
 using Host.Session;
 using System;
@@ -49,15 +50,12 @@ namespace Host.ConnectionHandlers
             get { return reads_bytes; }
         }
 
-        public ConnectionType ConnectType
-        {
-            get
-            {
+        public ConnectionType ConnectType {
+            get {
                 return ConnectionType.websocket;
             }
         }
-        public IConnetion GetConnetion
-        {
+        public IConnetion GetConnetion {
             get { return this; }
         }
 
@@ -90,6 +88,11 @@ namespace Host.ConnectionHandlers
             InputDataStream.Dispose();
             InputDataStream = new MemoryStream();
             reads_bytes.UpdateData();
+        }
+
+        public IConnetion GetEventConnetion
+        {
+            get { return new WebsocketConnection(this); }
         }
     }
 }

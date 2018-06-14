@@ -8,8 +8,6 @@ namespace Host.ConnectionHandlers.ExecutorExceptions
 {
     public class ConnectionExecutorException : Exception { }
 
-    public class ConnectionExecutorClose : ConnectionExecutorException
-    {
-
-    }
+    public class ConnectionExecutorClose : ConnectionExecutorException {}
+    public class ConnectionExecutorBadAccess : ConnectionExecutorException { }
 }

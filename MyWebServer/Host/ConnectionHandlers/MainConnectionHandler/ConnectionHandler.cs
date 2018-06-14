@@ -35,19 +35,27 @@ namespace Host.ConnectionHandlers {
         }
 
         public Stream InputData {
-            get { return in_data(); }
+            get {
+                return in_data();
+            }
         }
 
         public Stream OutputData {
-			get { return out_data(); }
+			get {
+                return out_data();
+            }
         }
 
         public UserConnect UserConnectData {
-            get { return UserData; }
+            get {
+                return UserData;
+            }
         }
 
         public IReader ReadData {
-            get { return reads_bytes; }
+            get {
+                return reads_bytes;
+            }
         }
 
         public ConnectionType ConnectType {
@@ -148,17 +156,25 @@ namespace Host.ConnectionHandlers {
         }
 
 
-        public void Reset()
-        {
+        public void Reset() {
             if (reads_bytes != null) {
                 reads_bytes.Dispose();
                 reads_bytes = null;
             }
             DataHandle = null;
-            response.Dispose();
-            response = null;
-            obj_request.Dispose();
-            obj_request = null;
+            if (response != null) { 
+                response.Dispose();
+                response = null;
+            }
+            if (obj_request != null) { 
+                obj_request.Dispose();
+                obj_request = null;
+            }
+        }
+
+        public IConnetion GetEventConnetion
+        {
+            get { return new HttpEventConnection(this); }
         }
     }
 }
