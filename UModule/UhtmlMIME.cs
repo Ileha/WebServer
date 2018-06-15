@@ -23,7 +23,6 @@ namespace HTTPHandlers
                 page = Connection.UserConnectData.GetData<ABSUModule>("data_handle");
             }
             catch (UserDataNotFound err) {
-                
                 string class_name = doc.Root.Element("header").Element("name").Value;
                 Type NeedType = Type.GetType(class_name, true);
                 page = (ABSUModule)Activator.CreateInstance(NeedType);
