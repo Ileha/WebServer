@@ -1,0 +1,17 @@
+<root>
+  <header>
+    <name>UModule.Test.TestPage</name>
+  </header>
+  <body>
+	<!DOCTYPE html>
+	<html>
+	  <head>
+		<meta charset="utf-8">
+		<title>Test page UModule</title>
+	  </head>
+	  <body>
+		<UButton name="button"></UButton>
+	  </body>
+	</html>
+  </body>
+</root>

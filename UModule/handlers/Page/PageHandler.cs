@@ -7,12 +7,13 @@ using UModule;
 using System.Reflection;
 using UModule.handlers.Page.Controlls;
 using System.Xml.Linq;
+using CsQuery;
 
 namespace UModule.handlers.Page
 {
     public class PageHandler : ABSUModule
     {
-        private XDocument Page;
+        private CQ Page;
 
         public sealed override void Handle()
         {
@@ -23,15 +24,15 @@ namespace UModule.handlers.Page
         }
         
         public void Init() {
-            //код
-            Page = XDocument.Load(Interact.ReadData);
+            Page = CQ.CreateDocument(Interact.ReadData);
             FieldInfo[] controlls = this.GetType().GetFields();
+            Type master = typeof(ABSElement);
             for (int i = 0; i < controlls.Length; i++) {
                 Type need_type = controlls[i].DeclaringType;
+                if (!need_type.IsSubclassOf(master)) { continue; }
                 ABSElement element = (ABSElement)Activator.CreateInstance(need_type);
-                //element.Init();
+                element.Init(Page[string.Format("[title=\"{0}\"", controlls[i].Name)]);
                 controlls[i].SetValue(this, element);
-
             }
             OnInit();
         }

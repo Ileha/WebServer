@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CsQuery">
+      <HintPath>..\packages\CsQuery.1.3.4\lib\net40\CsQuery.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,11 +45,13 @@
     <Compile Include="ABSUModule.cs" />
     <Compile Include="handlers\Handler.cs" />
     <Compile Include="handlers\Page\Controlls\ABSElement.cs" />
+    <Compile Include="handlers\Page\Controlls\UButton.cs" />
     <Compile Include="handlers\Page\PageHandler.cs" />
     <Compile Include="Interactive.cs" />
     <Compile Include="Loader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Test\TestHandler.cs" />
+    <Compile Include="Test\TestPage.cs" />
     <Compile Include="UhtmlMIME.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -54,6 +59,9 @@
       <Project>{6a3f8c5a-0060-450b-8ac1-431c42f85528}</Project>
       <Name>MyWebServer</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
