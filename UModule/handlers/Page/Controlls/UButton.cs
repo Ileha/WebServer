@@ -9,8 +9,9 @@ namespace UModule.handlers.Page.Controlls
 {
     public class UButton : ABSElement
     {
-        public override void Init(CQ domObject) {
-
+        protected override void OnInit(CQ domObject) {
+            
+            //string s = domObject.ToString();
         }
         public override void Render(ABSUModule handler) {
 

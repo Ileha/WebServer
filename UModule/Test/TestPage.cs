@@ -9,6 +9,6 @@ using UModule.handlers.Page.Controlls;
 namespace UModule.Test
 {
     public class TestPage : PageHandler {
-        UButton button;
+        public UButton button;
     }
 }

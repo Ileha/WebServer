@@ -28,10 +28,11 @@ namespace UModule.handlers.Page
             FieldInfo[] controlls = this.GetType().GetFields();
             Type master = typeof(ABSElement);
             for (int i = 0; i < controlls.Length; i++) {
-                Type need_type = controlls[i].DeclaringType;
+                Type need_type = controlls[i].FieldType;
                 if (!need_type.IsSubclassOf(master)) { continue; }
                 ABSElement element = (ABSElement)Activator.CreateInstance(need_type);
-                element.Init(Page[string.Format("[title=\"{0}\"", controlls[i].Name)]);
+                string find = string.Format("[name=\"{0}\"]", controlls[i].Name);
+                element.Init(Page[find]);
                 controlls[i].SetValue(this, element);
             }
             OnInit();

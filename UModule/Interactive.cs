@@ -19,7 +19,7 @@ namespace UModule
             UserConnectData = data.UserConnectData;
             ConnectType = data.ConnectType;
             ReadData = new MemoryStream();
-            byte[] s_data = Encoding.UTF8.GetBytes(readData.ToString());
+            byte[] s_data = Encoding.UTF8.GetBytes(readData.Value);
             ReadData.Write(s_data, 0, s_data.Length);
             ReadData.Seek(0, SeekOrigin.Begin);
             OutputData = writableStream;

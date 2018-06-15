@@ -18,7 +18,6 @@ namespace UModule
         }
         public abstract void Handle(); 
         public abstract string ContentType { get; }
-
         protected void Write(string data) {
             byte[] _data = Encoding.UTF8.GetBytes(data);
             Interact.OutputData.Write(_data, 0, _data.Length);

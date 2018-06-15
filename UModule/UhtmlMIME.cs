@@ -19,12 +19,16 @@ namespace HTTPHandlers
         {
             ABSUModule page = null;
             XDocument doc = XDocument.Load(Connection.ReadData.Data);
-            try { 
+            string class_name = doc.Root.Element("header").Element("name").Value;
+            Type NeedType = Type.GetType(class_name, true);
+            try {
                 page = Connection.UserConnectData.GetData<ABSUModule>("data_handle");
+                if (page.GetType() != NeedType) {
+                    page = (ABSUModule)Activator.CreateInstance(NeedType);
+                    Connection.UserConnectData.AddData("data_handle", page);
+                }
             }
-            catch (UserDataNotFound err) {
-                string class_name = doc.Root.Element("header").Element("name").Value;
-                Type NeedType = Type.GetType(class_name, true);
+            catch (Exception err) {
                 page = (ABSUModule)Activator.CreateInstance(NeedType);
                 Connection.UserConnectData.AddData("data_handle", page);
             }

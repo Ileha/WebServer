@@ -3,8 +3,10 @@
     <name>UModule.Test.TestHandler</name>
   </header>
   <body>
-  <body>
-  </body>
-<button onclick="connect()">connect form WebSocket</button><br/>
+  <![CDATA[
+		<body>
+		</body>
+		<button onclick="connect()">connect form WebSocket</button><br/>
+	]]>
   </body>
 </root>
