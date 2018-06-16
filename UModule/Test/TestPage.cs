@@ -10,5 +10,10 @@ namespace UModule.Test
 {
     public class TestPage : PageHandler {
         public UButton button;
+        public UText textbox;
+
+        public override void Load() {
+            textbox.Text = "This page generate from code";
+        }
     }
 }

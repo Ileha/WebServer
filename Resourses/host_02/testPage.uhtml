@@ -11,7 +11,8 @@
 			<title>Test page UModule</title>
 		  </head>
 		  <body>
-			<UButton name="button"></UButton>
+			<UTextBox name="textbox"></UTextBox>
+			<UButton name="button" some_attribute="true">Button Text</UButton>
 		  </body>
 		</html>
 	]]>

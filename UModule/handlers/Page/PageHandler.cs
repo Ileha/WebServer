@@ -7,13 +7,14 @@ using UModule;
 using System.Reflection;
 using UModule.handlers.Page.Controlls;
 using System.Xml.Linq;
-using CsQuery;
+using HtmlAgilityPack;
 
 namespace UModule.handlers.Page
 {
     public class PageHandler : ABSUModule
     {
-        private CQ Page;
+        private HtmlDocument Page;
+        private List<ABSElement> elements;
 
         public sealed override void Handle()
         {
@@ -24,26 +25,33 @@ namespace UModule.handlers.Page
         }
         
         public void Init() {
-            Page = CQ.CreateDocument(Interact.ReadData);
+            Page = new HtmlDocument();
+            Page.Load(Interact.ReadData);
+            elements = new List<ABSElement>();
             FieldInfo[] controlls = this.GetType().GetFields();
             Type master = typeof(ABSElement);
             for (int i = 0; i < controlls.Length; i++) {
                 Type need_type = controlls[i].FieldType;
                 if (!need_type.IsSubclassOf(master)) { continue; }
                 ABSElement element = (ABSElement)Activator.CreateInstance(need_type);
-                string find = string.Format("[name=\"{0}\"]", controlls[i].Name);
-                element.Init(Page[find]);
+                element.Init(Page.DocumentNode.SelectSingleNode(string.Format("//*[@name=\"{0}\"]", controlls[i].Name)));
                 controlls[i].SetValue(this, element);
+                elements.Add(element);
             }
+            //string s = Page.DocumentNode.InnerHtml;
             OnInit();
         }
         public virtual void OnInit() { }
         public virtual void Load() { }
         public void Render() {
-        
+            foreach (ABSElement el in elements) {
+                el.Render();
+            }
         }
         public void Unload() {
-            
+            string res = Page.DocumentNode.InnerHtml;
+            byte[] buffer = Encoding.UTF8.GetBytes(res);
+            Interact.OutputData.Write(buffer, 0, buffer.Length);
         }
         //Init
         //Load
