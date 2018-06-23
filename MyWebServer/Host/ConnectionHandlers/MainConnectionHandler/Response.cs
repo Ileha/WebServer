@@ -105,7 +105,8 @@ namespace Host.ConnectionHandlers
 			AddToHeader("Content-Length", data_length.ToString(), AddMode.rewrite);
 			bool keep_alive = true;
 			try {
-				if (request.preferens["Connection"] == "close") {
+                if (request.headers["Connection"] == "close")
+                {
 					keep_alive = false;
 				}
 			}

@@ -10,9 +10,9 @@
 			<meta charset="utf-8">
 			<title>Test page UModule</title>
 		  </head>
-		  <body>
-			<UTextBox name="textbox"></UTextBox>
-			<UButton name="button" some_attribute="true">Button Text</UButton>
+		  <body>			
+			<UTextBox id="textbox"></UTextBox>
+			<UButton id="button" some_attribute="true">Button Text</UButton>
 		  </body>
 		</html>
 	]]>

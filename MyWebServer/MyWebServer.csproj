@@ -41,6 +41,7 @@
     <Compile Include="Host\ConnectionHandlers\Controll\ExecutorExceptions\ConnectionExecutorException.cs" />
     <Compile Include="Host\ConnectionHandlers\Controll\IConnetion.cs" />
     <Compile Include="Host\ConnectionHandlers\MainConnectionHandler\HttpEventConnection.cs" />
+    <Compile Include="Host\ConnectionHandlers\MainConnectionHandler\RequestDataStream.cs" />
     <Compile Include="Host\ConnectionHandlers\websocket\WebsocketConnection.cs" />
     <Compile Include="Host\Reader\Reader.cs" />
     <Compile Include="Host\ConnectionHandlers\websocket\WebSocketHandler.cs" />

@@ -2,6 +2,7 @@ using System;
 using Host.ConnectionHandlers;
 using Config;
 using System.Net.Sockets;
+using System.IO;
 
 namespace Host.HttpHandler {
     public abstract class ABSHttpHandler {
@@ -9,14 +10,7 @@ namespace Host.HttpHandler {
 		public abstract string HandlerVersion { get; }
 		private string _id = null;
 
-		//public IHttpHandler() {
-		//	_id = HandlerType + HandlerVersion;
-		//}
-
-        public abstract void ParseHeaders(ref Reqest output, string[] reqest, string URI);
-		//public abstract void ParseData(ref Reqest output, string string_data);
-		public abstract bool CanHasData(Reqest output);
-		public abstract long GetDataLenght(Reqest output);
+        public abstract void ParseHeaders(ref Reqest output, Stream reqest);
 
 		public string IDHandler() {
 			if (_id == null) { _id = HandlerType + HandlerVersion; }

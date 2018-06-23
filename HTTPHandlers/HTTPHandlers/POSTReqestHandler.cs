@@ -7,15 +7,17 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Text;
 using Host.ConnectionHandlers;
+using System.IO;
 
 namespace HttpHandlers
 {
 	public class POSTReqestHandler : ABSHttpHandler
 	{
+        private static byte[] new_line = new byte[] { 13, 10, 13, 10 };
 		Regex pref_val = new Regex("(?<name>[\\w-]+):[ ]?(?<val>.+)");
 		Regex TwoPoints = new Regex("\\.{2}");
 		Regex for_cookie = new Regex("(?<name>[^\\s=;]+)=(?<val>[^=;]+)");
-		Regex data_type01 = new Regex("(?<name>[^\\s=&]+)=(?<val>[^=&]+)");
+		//Regex data_type01 = new Regex("(?<name>[^\\s=&]+)=(?<val>[^=&]+)");
 
 		public override string HandlerType { get { return "POST"; } }
 
@@ -60,14 +62,33 @@ namespace HttpHandlers
 		//	}
 		//}
 
-		public override void ParseHeaders(ref Reqest output, string[] reqest, string URI)
+        public override void ParseHeaders(ref Reqest output, Stream reqest)
 		{
-			output.URL = URI;
+            StringBuilder res = new StringBuilder();
+            byte[] bytes = new byte[1024];
+            int _index = -1;
+            int _count;
+            do
+            {
+                _count = reqest.Read(bytes, 0, bytes.Length);
+                RequestDataStream.ExistSeqeunce(0, _count, new_line, bytes, out _index);
+                if (_index == -1) {
+                    res.Append(Encoding.UTF8.GetString(bytes, 0, _count));
+                }
+                else {
+                    res.Append(Encoding.UTF8.GetString(bytes, 0, _index));
+                }
+                
+            } while (_index == -1);
+            string[] headers = Regex.Split(res.ToString(), "\r\n");
+            output.Data.Write(bytes, _index + 4, _count - (_index + 4));
+
+            output.URL = headers[0].Split(' ')[1];
             if (TwoPoints.IsMatch(output.URL)) {//проверить на наличие двух точек подряд
                 throw Repository.ExceptionFabrics["Bad Request"].Create(null, null);
             }
-            foreach (string s in reqest) {
-                Match m_pref = pref_val.Match(s);
+            for (int i = 1; i < headers.Length; i++) {
+                Match m_pref = pref_val.Match(headers[i]);
 				string head = m_pref.Groups["name"].Value;
 				if (head == "Cookie") {
 					MatchCollection elements = for_cookie.Matches(m_pref.Groups["val"].Value);
@@ -76,27 +97,18 @@ namespace HttpHandlers
 					}
 				}
 				else if (head != "") {
-					output.preferens.Add(head, m_pref.Groups["val"].Value);
+					output.headers.Add(head, m_pref.Groups["val"].Value);
                 }
             }
-		}
-
-		public override bool CanHasData(Reqest output) {
-			try {
-				if (Convert.ToInt32(output.preferens["Content-Length"]) != 0) {
-					return true;
-				}
-				else {
-					return false;
-				}
-			}
-			catch (Exception err) {
-				return false;
-			}
-		}
-
-		public override long GetDataLenght(Reqest output) {
-			return Convert.ToInt64(output.preferens["Content-Length"]);
+            try {
+                bytes = new byte[Convert.ToInt32(output.headers["Content-Length"]) - (_count - (_index + 4))];
+            }
+            catch(Exception err) {
+                throw Repository.ExceptionFabrics["Bad Request"].Create(null, null);
+            }
+            reqest.Read(bytes, 0, bytes.Length);
+            output.Data.Write(bytes, 0, bytes.Length);
+            output.Data.Seek(0, SeekOrigin.Begin);
 		}
 	}
 }

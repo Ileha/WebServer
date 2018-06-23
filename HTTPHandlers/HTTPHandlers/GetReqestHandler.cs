@@ -4,54 +4,62 @@ using Host;
 using Host.HttpHandler;
 using System;
 using Host.ConnectionHandlers;
+using System.IO;
+using System.Text;
 
 namespace HttpHandlers
 {
-	public class GetReqestHandler : ABSHttpHandler
-	{
-		Regex url_var = new Regex("^(?<url>[^=&]+)(\\?(?<var>[\\w=&]+))?");
-		Regex name_val = new Regex("(?<name>[\\w]+)=(?<val>[\\w]+)");
-		Regex pref_val = new Regex("(?<name>[\\w-]+):[ ]?(?<val>.+)");
-		Regex TwoPoints = new Regex("\\.{2}");
-		Regex for_cookie = new Regex("(?<name>[^\\s=;]+)=(?<val>[^=;]+)");
+    public class GetReqestHandler : ABSHttpHandler
+    {
+        private static byte[] new_line = new byte[] { 13, 10, 13, 10 };
+        Regex url_var = new Regex("^(?<url>[^=&]+)(\\?(?<var>[\\w=&]+))?");
+        //Regex name_val = new Regex("(?<name>[\\w]+)=(?<val>[\\w]+)");
+        Regex pref_val = new Regex("(?<name>[\\w-]+):[ ]?(?<val>.+)");
+        Regex TwoPoints = new Regex("\\.{2}");
+        Regex for_cookie = new Regex("(?<name>[^\\s=;]+)=(?<val>[^=;]+)");
 
-		public override string HandlerType { get { return "GET"; } }
-		public override string HandlerVersion { get { return "HTTP/1.1"; } }
+        public override string HandlerType { get { return "GET"; } }
+        public override string HandlerVersion { get { return "HTTP/1.1"; } }
 
-		public override void ParseHeaders(ref Reqest output, string[] reqest, string URI) {
-			Match m = url_var.Match(URI);
-			output.URL = m.Groups["url"].Value;
-			if (TwoPoints.IsMatch(output.URL)) {//проверить на наличие двух точек подряд
+        public override void ParseHeaders(ref Reqest output, Stream reqest)
+        {
+            StringBuilder res = new StringBuilder();
+            byte[] bytes = new byte[1024];
+            int _index = -1;
+            do
+            {
+                int _count = reqest.Read(bytes, 0, bytes.Length);
+                RequestDataStream.ExistSeqeunce(0, _count, new_line, bytes, out _index);
+                res.Append(Encoding.UTF8.GetString(bytes, 0, Math.Max(_index, _count)));
+            } while (_index == -1);
+            string[] headers = Regex.Split(res.ToString(), "\r\n");
+
+            Match m = url_var.Match(headers[0].Split(' ')[1]);
+            output.URL = m.Groups["url"].Value;
+            if (TwoPoints.IsMatch(output.URL)) {
+                //проверить на наличие двух точек подряд
                 throw Repository.ExceptionFabrics["Bad Request"].Create(null, null);
-			}
-			foreach (Match s in name_val.Matches(m.Groups["var"].Value)) {//парсинг данных
-				output.varibles.Add(s.Groups["name"].Value, s.Groups["val"].Value);
-			}
-			foreach (string s in reqest) {//парсинг заголовков
-				Match m_pref = pref_val.Match(s);
-				string head = m_pref.Groups["name"].Value;
-				if (head == "Cookie") {
-					MatchCollection elements = for_cookie.Matches(m_pref.Groups["val"].Value);
-					foreach (Match element_of_elements in elements) {
-						output.cookies.Add(element_of_elements.Groups["name"].Value, element_of_elements.Groups["val"].Value);
-					}
-				}
-				else if (head != "") {
-					output.preferens.Add(head, m_pref.Groups["val"].Value);
-				}
-			}
-		}
-		//public override void ParseData(ref Reqest output, string data_sourse) {
-		//	throw new NotImplementedException();
-		//}
-
-		public override bool CanHasData(Reqest output) {
-			return false;
-		}
-
-		public override long GetDataLenght(Reqest output)
-		{
-			throw new NotImplementedException();
-		}
-	}
+            }
+            byte[] data = Encoding.UTF8.GetBytes(m.Groups["var"].Value);
+            output.Data.Write(data, 0, data.Length);
+            output.Data.Seek(0, SeekOrigin.Begin);
+            for (int i = 1; i < headers.Length; i++) {
+                //парсинг заголовков
+                Match m_pref = pref_val.Match(headers[i]);
+                string head = m_pref.Groups["name"].Value;
+                if (head == "Cookie")
+                {
+                    MatchCollection elements = for_cookie.Matches(m_pref.Groups["val"].Value);
+                    foreach (Match element_of_elements in elements)
+                    {
+                        output.cookies.Add(element_of_elements.Groups["name"].Value, element_of_elements.Groups["val"].Value);
+                    }
+                }
+                else if (head != "")
+                {
+                    output.headers.Add(head, m_pref.Groups["val"].Value);
+                }
+            }
+        }
+    }
 }

@@ -11,7 +11,6 @@ namespace UModule.handlers.Page.Controlls
         public string Text;
         protected override HtmlNode OnInit(HtmlNode domObject)
         {
-
             HtmlNode newNode = domObject.CloneNode("p");
             domObject.ParentNode.ReplaceChild(newNode, domObject);
             Text = newNode.InnerText;
