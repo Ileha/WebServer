@@ -1,9 +1,12 @@
 using System;
 using System.IO;
 using System.Text;
-using Host.ConnectionHandlers;
-using Host.Eventer;
-using Resouces;
+using DataHandlers;
+using Configurate.Host.Connection;
+using Configurate.Host.Connection.HTTPConnection;
+using Events;
+using Configurate.Resouces;
+using Configurate.Resouces.Items;
 
 namespace Host.MIME
 {

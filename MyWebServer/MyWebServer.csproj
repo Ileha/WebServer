@@ -32,60 +32,67 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CommadInterfaces, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\CommadInterfaces.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Config\ReactorPull.cs" />
-    <Compile Include="Host\ConnectionHandlers\Controll\ExecutorExceptions\ConnectionExecutorException.cs" />
-    <Compile Include="Host\ConnectionHandlers\Controll\IConnetion.cs" />
-    <Compile Include="Host\ConnectionHandlers\MainConnectionHandler\HttpEventConnection.cs" />
-    <Compile Include="Host\ConnectionHandlers\MainConnectionHandler\RequestDataStream.cs" />
-    <Compile Include="Host\ConnectionHandlers\websocket\WebsocketConnection.cs" />
-    <Compile Include="Host\Reader\Reader.cs" />
-    <Compile Include="Host\ConnectionHandlers\websocket\WebSocketHandler.cs" />
-    <Compile Include="Host\Eventer\ABSGrub.cs" />
+    <Compile Include="HostInteractive\Client.cs" />
+    <Compile Include="HostInteractive\Server.cs" />
+    <Compile Include="HostInteractive\StringDataParser.cs" />
+    <Compile Include="HostInteractive\StringOIInterface.cs" />
+    <Compile Include="Main\Configurate\Redirect\Exception\RedirectNotFound.cs" />
+    <Compile Include="Main\Configurate\Redirect\RedirectConfig.cs" />
+    <Compile Include="Main\Configurate\Host\Connection\Exceptions\ConnectionExecutorException.cs" />
+    <Compile Include="Main\Configurate\Host\Connection\IConnetion.cs" />
+    <Compile Include="Main\Configurate\Host\Connection\HTTPConnectionHandler\HttpEventConnection.cs" />
+    <Compile Include="Main\Configurate\Host\Connection\HTTPConnectionHandler\RequestDataStream.cs" />
+    <Compile Include="Main\Configurate\Host\Connection\WebsocketConnectionHandler\WebsocketConnection.cs" />
+    <Compile Include="Main\Configurate\Host\Connection\Reader\Reader.cs" />
+    <Compile Include="Main\Configurate\Host\Connection\WebsocketConnectionHandler\WebSocketHandler.cs" />
+    <Compile Include="Main\Events\ABSGrub.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Host\Reader\IReader.cs" />
-    <Compile Include="Host\Repository.cs" />
-    <Compile Include="Host\WebSerwer.cs" />
-    <Compile Include="Host\HttpHandler\ABSHttpHandler.cs" />
-    <Compile Include="Host\MIME\ABSMIME.cs" />
-    <Compile Include="Host\ServerExceptions\ExceptionCode.cs" />
-    <Compile Include="Config\ErrorServerConfig.cs" />
-    <Compile Include="Config\WebServerConfig.cs" />
+    <Compile Include="Main\Configurate\Host\Connection\Reader\IReader.cs" />
+    <Compile Include="Main\Repository.cs" />
+    <Compile Include="Main\Configurate\Host\WebSerwer.cs" />
+    <Compile Include="Main\RequestHandlers\ABSHttpHandler.cs" />
+    <Compile Include="Main\DataHandlers\ABSMIME.cs" />
+    <Compile Include="Main\ExceptionFabrics\ExceptionCode.cs" />
+    <Compile Include="Main\Configurate\WebServerConfig.cs" />
     <Compile Include="Resident.cs" />
-    <Compile Include="Resouces\Directory.cs" />
-    <Compile Include="Resouces\File.cs" />
-    <Compile Include="Resouces\IItem.cs" />
-    <Compile Include="Host\Session\UserConnect.cs" />
-    <Compile Include="Host\Session\UserNotFound.cs" />
-    <Compile Include="Config\RedirectConfig.cs" />
-    <Compile Include="Config\IConfigurate.cs" />
-    <Compile Include="Host\Session\SessionCollect.cs" />
-    <Compile Include="Host\ServerExceptions\ABSExceptionFabric.cs" />
-    <Compile Include="Host\ServerExceptions\Exceptions\ExceptionCodeOKFabric.cs" />
-    <Compile Include="Host\ServerExceptions\Exceptions\ExceptionCodeBadRequestFabric.cs" />
-    <Compile Include="Host\ServerExceptions\Exceptions\ExceptionCodeNotFoundFabric.cs" />
-    <Compile Include="Host\ServerExceptions\Exceptions\ExceptionCodeInternalServerErrorFabric.cs" />
-    <Compile Include="Host\ServerExceptions\Exceptions\ExceptionCodeMovedPermanentlyFabric.cs" />
-    <Compile Include="Host\ServerExceptions\Exceptions\ExceptionCodeUnauthorizedFabric.cs" />
-    <Compile Include="Host\Users\UserBank.cs" />
-    <Compile Include="Host\Users\UserInfo.cs" />
-    <Compile Include="Host\Users\GroupInfo.cs" />
-    <Compile Include="Host\ServerExceptions\Exceptions\SwitchingProtocolsFabric.cs" />
-    <Compile Include="Host\ConnectionHandlers\Controll\IConnectionHandler.cs" />
-    <Compile Include="Host\ConnectionHandlers\Controll\ConnectionExecutor.cs" />
-    <Compile Include="Host\ConnectionHandlers\MainConnectionHandler\ConnectionHandler.cs" />
-    <Compile Include="Host\ConnectionHandlers\MainConnectionHandler\Reqest.cs" />
-    <Compile Include="Host\ConnectionHandlers\MainConnectionHandler\Response.cs" />
-    <Compile Include="Host\ConnectionHandlers\websocket\WebSocketStream.cs" />
+    <Compile Include="Main\Configurate\Linker\Items\Directory.cs" />
+    <Compile Include="Main\Configurate\Linker\Items\File.cs" />
+    <Compile Include="Main\Configurate\Linker\IItem.cs" />
+    <Compile Include="Main\Configurate\Session\UserConnect.cs" />
+    <Compile Include="Main\Configurate\Session\Exception\UserNotFound.cs" />
+    <Compile Include="Main\Configurate\IConfigurate.cs" />
+    <Compile Include="Main\Configurate\Session\SessionCollect.cs" />
+    <Compile Include="Main\ExceptionFabrics\ABSExceptionFabric.cs" />
+    <Compile Include="Main\Configurate\Host\Connection\HTTPConnectionHandler\HTTPExceptions\OKFabric.cs" />
+    <Compile Include="Main\Configurate\Host\Connection\HTTPConnectionHandler\HTTPExceptions\BadRequestFabric.cs" />
+    <Compile Include="Main\Configurate\Host\Connection\HTTPConnectionHandler\HTTPExceptions\NotFoundFabric.cs" />
+    <Compile Include="Main\Configurate\Host\Connection\HTTPConnectionHandler\HTTPExceptions\InternalServerErrorFabric.cs" />
+    <Compile Include="Main\Configurate\Host\Connection\HTTPConnectionHandler\HTTPExceptions\MovedPermanentlyFabric.cs" />
+    <Compile Include="Main\Configurate\Host\Connection\HTTPConnectionHandler\HTTPExceptions\UnauthorizedFabric.cs" />
+    <Compile Include="Main\Configurate\Users\UserBank.cs" />
+    <Compile Include="Main\Configurate\Users\UserInfo.cs" />
+    <Compile Include="Main\Configurate\Users\GroupInfo.cs" />
+    <Compile Include="Main\Configurate\Host\Connection\HTTPConnectionHandler\HTTPExceptions\SwitchingProtocolsFabric.cs" />
+    <Compile Include="Main\Configurate\Host\Connection\IConnectionHandler.cs" />
+    <Compile Include="Main\Configurate\Host\Connection\ConnectionExecutor.cs" />
+    <Compile Include="Main\Configurate\Host\Connection\HTTPConnectionHandler\ConnectionHandler.cs" />
+    <Compile Include="Main\Configurate\Host\Connection\HTTPConnectionHandler\Reqest.cs" />
+    <Compile Include="Main\Configurate\Host\Connection\HTTPConnectionHandler\Response.cs" />
+    <Compile Include="Main\Configurate\Host\Connection\WebsocketConnectionHandler\WebSocketStream.cs" />
     <Compile Include="Assets\MyRandom.cs" />
-    <Compile Include="Host\Eventer\IHostEvents.cs" />
-    <Compile Include="Host\ServerExceptions\Exceptions\NotImplementedFabric.cs" />
-    <Compile Include="Resouces\RootDir.cs" />
+    <Compile Include="Main\Events\IHostEvents.cs" />
+    <Compile Include="Main\Configurate\Host\Connection\HTTPConnectionHandler\HTTPExceptions\NotImplementedFabric.cs" />
+    <Compile Include="Main\Configurate\Linker\Items\RootDir.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

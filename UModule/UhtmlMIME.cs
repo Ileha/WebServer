@@ -1,12 +1,10 @@
 ﻿using System;
-using Host.MIME;
-using Host;
-using Host.ConnectionHandlers;
-using System.IO;
-using System.Xml.Linq;
-using System.Reflection;
+using DataHandlers;
+using Configurate.Host.Connection;
+using Configurate.Host.Connection.HTTPConnection;
 using UModule;
-using Host.Session;
+using System.Xml.Linq;
+using System.IO;
 
 namespace HTTPHandlers
 {

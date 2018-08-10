@@ -2,7 +2,7 @@
 <root>
 	<server>
 		<modules_dir>../../../UModule/bin/Debug</modules_dir><!--Сборка(сборки) с модулями-->
-		<name>second host</name><!--имя хоста-->
+		<name>second host</name><!--имя хоста не менять во время работы-->
 		<webserver>
 			<ip_adress>+</ip_adress><!--адрес хоста-->
 			<port>11001</port><!--порт хоста-->
@@ -37,7 +37,7 @@
 
 	<server>
 		<modules_dir>../../../HTTPHandlers/bin/Debug</modules_dir><!--Сборка(сборки) с модулями-->
-	  	<name>first host</name><!--имя хоста-->
+	  	<name>first host</name><!--имя хоста не менять во время работы-->
 		<webserver>
 		  	<ip_adress>+</ip_adress><!--адрес хоста-->
 			<port>11000</port><!--порт хоста-->

@@ -1,13 +1,12 @@
 using System;
-using Host.ServerExceptions;
 using Host;
-using Host.HttpHandler;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Text;
-using Host.ConnectionHandlers;
 using System.IO;
+using RequestHandlers;
+using Configurate.Host.Connection.HTTPConnection;
 
 namespace HttpHandlers
 {

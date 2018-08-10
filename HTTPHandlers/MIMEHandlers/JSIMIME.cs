@@ -1,8 +1,7 @@
-using Host.MIME;
-using Host;
-using Host.ConnectionHandlers;
 using System;
-using System.IO;
+using DataHandlers;
+using Configurate.Host.Connection;
+using Configurate.Host.Connection.HTTPConnection;
 
 namespace MIMEHandlers
 {

@@ -1,7 +1,4 @@
-﻿using Host;
-using Host.ConnectionHandlers;
-using Host.Session;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Text.RegularExpressions;
+using Configurate.Host.Connection;
+using Configurate.Session;
 
 namespace UModule
 {

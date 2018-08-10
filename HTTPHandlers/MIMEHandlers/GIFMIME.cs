@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Host.MIME;
-using Host;
-using Host.ConnectionHandlers;
 using System.IO;
+using DataHandlers;
+using Configurate.Host.Connection;
+using Configurate.Host.Connection.HTTPConnection;
 
 namespace HTTPHandlers
 {

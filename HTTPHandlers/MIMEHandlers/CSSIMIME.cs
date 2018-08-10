@@ -1,8 +1,10 @@
 using Host.MIME;
 using Host;
-using Host.ConnectionHandlers;
 using System.IO;
 using System;
+using DataHandlers;
+using Configurate.Host.Connection;
+using Configurate.Host.Connection.HTTPConnection;
 
 namespace MIMEHandlers
 {

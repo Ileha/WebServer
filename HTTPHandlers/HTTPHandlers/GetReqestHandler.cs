@@ -1,11 +1,9 @@
 using System.Text.RegularExpressions;
-using Host.ServerExceptions;
-using Host;
-using Host.HttpHandler;
 using System;
-using Host.ConnectionHandlers;
 using System.IO;
 using System.Text;
+using RequestHandlers;
+using Configurate.Host.Connection.HTTPConnection;
 
 namespace HttpHandlers
 {
@@ -26,7 +24,7 @@ namespace HttpHandlers
             StringBuilder res = new StringBuilder();
             byte[] bytes = new byte[1024];
             int _index = -1;
-            do
+            do 
             {
                 int _count = reqest.Read(bytes, 0, bytes.Length);
                 RequestDataStream.ExistSeqeunce(0, _count, new_line, bytes, out _index);

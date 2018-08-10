@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Configurate.Host.Connection;
+using Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Host.Eventer;
-using Host.ConnectionHandlers;
 
 namespace UModule
 {

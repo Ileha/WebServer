@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Host.ConnectionHandlers;
 using System.Xml.Linq;
 using System.IO;
+using Configurate.Host.Connection;
 
 namespace UModule
 {
