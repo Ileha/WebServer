@@ -34,7 +34,7 @@ namespace Configurate.Host.Connection.WebsocketConnection
             get { return main_connection.UserConnectData; }
         }
 
-        public IReader ReadData
+        public Reader.Reader ReadData
         {
             get { return main_connection.ReadData; }
         }

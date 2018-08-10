@@ -15,13 +15,13 @@ namespace Configurate.Host.Connection.WebsocketConnection
     public class WebSocketHandler : IConnectionHandler, IConnetion
     {
         private TcpClient client;
-        private IReader reads_bytes;
+        private Reader.Reader reads_bytes;
         public ABSMIME DataHandle;
         public UserConnect UserData;
         private WebSocketStream SocketStream;
         private MemoryStream InputDataStream;
 
-        public WebSocketHandler(TcpClient client, IReader data, UserConnect user_data)
+        public WebSocketHandler(TcpClient client, Reader.Reader data, UserConnect user_data)
         {
             this.client = client;
             reads_bytes = data;
@@ -46,7 +46,7 @@ namespace Configurate.Host.Connection.WebsocketConnection
             get { return UserData; }
         }
 
-        public IReader ReadData
+        public Reader.Reader ReadData
         {
             get { return reads_bytes; }
         }
@@ -88,7 +88,7 @@ namespace Configurate.Host.Connection.WebsocketConnection
         public void Reset() {
             InputDataStream.Dispose();
             InputDataStream = new MemoryStream();
-            reads_bytes.UpdateData();
+            reads_bytes.Data.Seek(0, SeekOrigin.Begin);
         }
 
         public IConnetion GetEventConnetion

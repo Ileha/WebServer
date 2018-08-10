@@ -12,7 +12,7 @@ namespace Configurate
 {
 	public class WebServerConfig : IDisposable {
 		public RedirectConfig RedirectConfigure;
-        public IItem ResourceLinker;
+        public IitemRead ResourceLinker;
 		public WebSerwer Host;
 		public SessionCollect Collector;
 		public UserBank Users;

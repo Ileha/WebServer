@@ -13,7 +13,7 @@ namespace Configurate.Host.Connection
         Stream InputData { get; }
         Stream OutputData { get; }
         UserConnect UserConnectData { get; }
-        IReader ReadData { get; }
+        Reader.Reader ReadData { get; }
         ConnectionType ConnectType { get; }
     }
 }

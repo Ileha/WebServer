@@ -40,7 +40,7 @@ namespace Configurate.Host.Connection.HTTPConnection
             }
         }
 
-        public IReader ReadData
+        public Reader.Reader ReadData
         {
             get { throw new ConnectionExecutorBadAccess(); }
         }

@@ -45,6 +45,7 @@
     <Compile Include="HostInteractive\Server.cs" />
     <Compile Include="HostInteractive\StringDataParser.cs" />
     <Compile Include="HostInteractive\StringOIInterface.cs" />
+    <Compile Include="Main\Configurate\Linker\IitemRead.cs" />
     <Compile Include="Main\Configurate\Redirect\Exception\RedirectNotFound.cs" />
     <Compile Include="Main\Configurate\Redirect\RedirectConfig.cs" />
     <Compile Include="Main\Configurate\Host\Connection\Exceptions\ConnectionExecutorException.cs" />
@@ -57,7 +58,6 @@
     <Compile Include="Main\Events\ABSGrub.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Main\Configurate\Host\Connection\Reader\IReader.cs" />
     <Compile Include="Main\Repository.cs" />
     <Compile Include="Main\Configurate\Host\WebSerwer.cs" />
     <Compile Include="Main\RequestHandlers\ABSHttpHandler.cs" />

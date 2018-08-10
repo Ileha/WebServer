@@ -7,8 +7,9 @@ using Configurate.Users;
 
 namespace Configurate.Resouces.Items
 {
-    public class LinkDirectory : IItem {
-        public Dictionary<string, IItem> contain;
+    public class LinkDirectory : IitemRead
+    {
+        public Dictionary<string, IitemRead> contain;
         public DirectoryInfo Resource;
         private DirectoryInfo directoryInfo;
         private FileSystemWatcher watcher;
@@ -18,24 +19,24 @@ namespace Configurate.Resouces.Items
 
 		public LinkDirectory() : base() { }
 
-        public LinkDirectory(DirectoryInfo inf, IItem parent, params GroupInfo[] valid_groups) : base() {
+        public LinkDirectory(DirectoryInfo inf, IitemRead parent, params GroupInfo[] valid_groups)
+            : base()
+        {
             ConstructHelp(inf, parent, valid_groups);
         }
 
-        protected void ConstructHelp(DirectoryInfo inf, IItem parent, params GroupInfo[] valid_groups) {
-            contain = new Dictionary<string, IItem>();
+        protected void ConstructHelp(DirectoryInfo inf, IitemRead parent, params GroupInfo[] valid_groups)
+        {
+            contain = new Dictionary<string, IitemRead>();
             Resource = inf;
             Parent = parent;
-            for (int i = 0; i < valid_groups.Length; i++)
-            {
+            for (int i = 0; i < valid_groups.Length; i++) {
                 Groups.Add(valid_groups[i]);
             }
-            foreach (DirectoryInfo d in inf.GetDirectories())
-            {
+            foreach (DirectoryInfo d in inf.GetDirectories()) {
                 AddItem(new LinkDirectory(d, this, valid_groups));
             }
-            foreach (FileInfo f in inf.GetFiles())
-            {
+            foreach (FileInfo f in inf.GetFiles()) {
                 AddItem(new LinkFile(f, this, valid_groups));
             }
             watcher = new FileSystemWatcher();
@@ -72,7 +73,7 @@ namespace Configurate.Resouces.Items
                 }
             }
             catch (Exception err) { return; }
-            IItem t = contain[e.OldName];
+            IitemRead t = contain[e.OldName];
             t.SetInfo(f, this);
             contain.Remove(e.OldName);
             AddItem(t);
@@ -88,7 +89,8 @@ namespace Configurate.Resouces.Items
             throw new FileNotFoundException(path);
         }
 
-        public override void AddItem(IItem adder_item) {
+        public override void AddItem(IitemRead adder_item)
+        {
             contain.Add(adder_item.GetName(), adder_item);
             adder_item.Parent = this;
         }
@@ -97,14 +99,16 @@ namespace Configurate.Resouces.Items
             return Resource.Name;
         }
 
-        public override void Remove(IItem rem_item) {
+        public override void Remove(IitemRead rem_item)
+        {
             contain.Remove(rem_item.GetName());
             rem_item.Parent = null;
         }
 
-        public override IItem GetResourceByString(string path) {
+        public override IitemRead GetResourceByString(string path)
+        {
             string[] path_arr = path.Split('/');
-            IItem result = this;
+            IitemRead result = this;
             foreach (string bit in path_arr) {
                 try {
                     if (bit == ".") { }
@@ -122,7 +126,8 @@ namespace Configurate.Resouces.Items
             return result;
         }
 
-        public override IItem Element(string name) {
+        public override IitemRead Element(string name)
+        {
             return contain[name];
         }
 
@@ -132,7 +137,8 @@ namespace Configurate.Resouces.Items
         }
 
 
-        public override void SetInfo(FileSystemInfo target, IItem New_parent) {
+        public override void SetInfo(FileSystemInfo target, IitemRead New_parent)
+        {
             if (target is DirectoryInfo) {
                 directoryInfo = target as DirectoryInfo;
                 Parent = New_parent;

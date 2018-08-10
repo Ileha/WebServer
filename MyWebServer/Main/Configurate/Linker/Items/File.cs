@@ -8,16 +8,17 @@ using Configurate.Users;
 
 namespace Configurate.Resouces.Items
 {
-    public class LinkFile : IItem
+    public class LinkFile : IitemRead
     {
         private FileInfo Resource;
-        //private IItem _parent;
 
 		public override string Extension {
 			get { return Resource.Extension; }
 		}
 
-		public LinkFile(FileInfo inf, IItem _parent, params GroupInfo[] valid_groups) : base() {
+        public LinkFile(FileInfo inf, IitemRead _parent, params GroupInfo[] valid_groups)
+            : base()
+        {
             Resource = inf;
             Parent = _parent;
             for (int i = 0; i < valid_groups.Length; i++) {
@@ -29,7 +30,8 @@ namespace Configurate.Resouces.Items
             return Resource.Name;
         }
 
-        public override void SetInfo(FileSystemInfo target, IItem New_parent) {
+        public override void SetInfo(FileSystemInfo target, IitemRead New_parent)
+        {
             if (target is FileInfo) {
                 Resource = target as FileInfo;
                 Parent = New_parent;
@@ -40,7 +42,7 @@ namespace Configurate.Resouces.Items
         }
 
 		public override Stream GetData() {
-			return Resource.OpenRead();
+            return Resource.OpenRead();
 		}
 
 		public override void RemoveThis()

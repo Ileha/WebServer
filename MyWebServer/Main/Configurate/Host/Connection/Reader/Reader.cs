@@ -10,44 +10,37 @@ using System.Threading.Tasks;
 
 namespace Configurate.Host.Connection.Reader
 {
-    public class Reader : IReader
+    public class Reader
     {
-
         private string _url;
-        private Stream _data;
+        private MemoryStream _data;
         private IItem _resourse;
 
         public Reader(string URL, UserInfo target_user) {
-            try
-            {
-                IItem res = null;
-                try
-                {
+            try {
+                IitemRead res = null;
+                try {
                     res = Repository.Configurate.ResourceLinker.GetResourceByString(URL);
                     _url = URL;
                 }
-                catch (FileNotFoundException err)
-                {
+                catch (FileNotFoundException err) {
                     throw Repository.ExceptionFabrics["Not Found"].Create(null, null);
                 }
-                if (!res.IsUserEnter(target_user))
-                {
+                if (!res.IsUserEnter(target_user)) {
                     throw Repository.ExceptionFabrics["Unauthorized"].Create(null, "Access to staging site");
                 }
-                try
-                {
+                try {
                     _resourse = res;
-                    try
-                    {
-                        _data = res.GetData();
+                    try {
+                        _data = new MemoryStream();
+                        res.GetData().CopyTo(_data);
+                        _data.Seek(0, SeekOrigin.Begin);
                     }
-                    catch (NotImplementedException err)
-                    {
+                    catch (NotImplementedException err) {
                         _data = null;
                     }
                 }
-                catch (Exception err)
-                {
+                catch (Exception err) {
                     throw Repository.ExceptionFabrics["Internal Server Error"].Create(null, null);
                 }
             }
@@ -66,9 +59,10 @@ namespace Configurate.Host.Connection.Reader
             }
         }
 
-        public Stream Data
-        {
-            get { return _data; }
+        public Stream Data {
+            get { 
+                return _data; 
+            }
         }
 
         public string FileExtension
@@ -80,15 +74,6 @@ namespace Configurate.Host.Connection.Reader
         {
             get { return _resourse; }
         }
-
-        public void UpdateData()
-        {
-            Dispose();
-            if (_resourse != null) {
-                _data = _resourse.GetData();
-            }
-        }
-
 
         public string URL
         {

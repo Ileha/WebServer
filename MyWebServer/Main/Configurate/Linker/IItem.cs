@@ -26,17 +26,15 @@ namespace Configurate.Resouces
 		public void ClearAllGroupe() {
 			Groups.Clear();
 		}
-		public void AddGroupe(GroupInfo groupe_name) {
-			Groups.Add(groupe_name);
-		}
-        public void AddGroupe(GroupInfo[] groupes_name) {
+        public void AddGroupe(params GroupInfo[] groupes_name) {
             for (int i = 0; i < groupes_name.Length; i++) {
                 Groups.Add(groupes_name[i]);
             }
         }
 
-		private IItem _parent;
-		public IItem Parent { 
+        private IitemRead _parent;
+        public IitemRead Parent
+        { 
 			get { return _parent; }
 			set { _parent = value; }
 		}
@@ -57,16 +55,13 @@ namespace Configurate.Resouces
 		public abstract string GetName();
 		public abstract string Extension { get; }
 		public abstract void RemoveThis();
-		//public abstract FileSystemInfo GetInfo();
-
-		public virtual Stream GetData() { throw new NotImplementedException(); }
-		public virtual void SetInfo(FileSystemInfo target, IItem New_parent) { throw new NotImplementedException(); }
-		public virtual void SetInfo(byte[] data, IItem New_parent, string _name) { throw new NotImplementedException(); }
-		public virtual void SetInfo(byte[] data, IItem New_parent, string _name, string _extension) { throw new NotImplementedException(); }
-		public virtual void AddItem(IItem adder_item) { throw new NotImplementedException(); }
-        public virtual void Remove(IItem rem_item) { throw new NotImplementedException(); }
-        public virtual IItem GetResourceByString(string path) { throw new NotImplementedException(); }
-        public virtual IItem Element(string name) { throw new NotImplementedException(); }
+        public virtual void SetInfo(FileSystemInfo target, IitemRead New_parent) { throw new NotImplementedException(); }
+        public virtual void SetInfo(byte[] data, IitemRead New_parent, string _name) { throw new NotImplementedException(); }
+        public virtual void SetInfo(byte[] data, IitemRead New_parent, string _name, string _extension) { throw new NotImplementedException(); }
+        public virtual void AddItem(IitemRead adder_item) { throw new NotImplementedException(); }
+        public virtual void Remove(IitemRead rem_item) { throw new NotImplementedException(); }
+        public virtual IitemRead GetResourceByString(string path) { throw new NotImplementedException(); }
+        public virtual IitemRead Element(string name) { throw new NotImplementedException(); }
         public virtual IEnumerator GetEnumerator() { throw new NotImplementedException(); }
 	}
 }

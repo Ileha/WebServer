@@ -19,7 +19,7 @@ namespace Configurate.Host.Connection.HTTPConnection
 {
     public class ConnectionHandler : IConnectionHandler, IConnetion {
         private TcpClient connection;
-        private IReader reads_bytes;
+        private Reader.Reader reads_bytes;
         private Reqest obj_request;
         private Response response;
         private UserConnect UserData;
@@ -53,7 +53,8 @@ namespace Configurate.Host.Connection.HTTPConnection
             }
         }
 
-        public IReader ReadData {
+        public Reader.Reader ReadData
+        {
             get {
                 return reads_bytes;
             }
