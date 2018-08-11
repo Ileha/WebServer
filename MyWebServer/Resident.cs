@@ -149,7 +149,7 @@ namespace MainProgramm
                 {
                     try
                     {
-                        Repository.Write(Repository.HostInfo());
+                        Repository.WriteLine(Repository.HostInfo());
                     }
                     catch (Exception err)
                     {
@@ -184,6 +184,23 @@ namespace MainProgramm
                     try
                     {
                         Repository.Stop();
+                    }
+                    catch (Exception err)
+                    {
+                        Repository.Write("exception \r\n{0}", err);
+                    }
+                };//executable code
+            });
+            array.AddCommand(c =>
+            {
+                c.Name = () => "status";//name of command
+                c.ArgumentsCount = () => 0;//count of arguments in input
+                c.MyData = () => null;//specific data of command
+                c.Execute = (object[] arguments) =>
+                {
+                    try
+                    {
+                        Repository.WriteLine(Repository.Status());
                     }
                     catch (Exception err)
                     {

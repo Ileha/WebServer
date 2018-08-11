@@ -57,6 +57,7 @@ public static class Repository
     {
         StringBuilder sb = new StringBuilder();
         sb.AppendFormat("\r\n### {0} ###", host_name);
+        sb.AppendFormat("\r\n### {0} ###", Status());
         sb.Append("\r\nHTTP Handlers:");
         foreach (KeyValuePair<string, ABSHttpHandler> handler in Repository.ReqestsHandlers)
         {
@@ -83,6 +84,15 @@ public static class Repository
                       select el).First();
         Configurate = new WebServerConfig();
         Configurate.Configurate();
+    }
+
+    public static string Status() {
+        if (Configurate == null) {
+            return string.Format("host {0} is stopped", host_name);
+        }
+        else {
+            return string.Format("host {0} is run", host_name);
+        }
     }
 
     public static void Stop() {

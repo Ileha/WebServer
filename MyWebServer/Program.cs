@@ -111,7 +111,7 @@ namespace MainProgramm {
                 {
                     while (true)
                     {
-                        Console.WriteLine(client.Read());
+                        Console.Write(client.Read());
                     }
                 }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
             });
