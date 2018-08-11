@@ -34,7 +34,7 @@
   <ItemGroup>
     <Reference Include="CommadInterfaces, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\CommadInterfaces.dll</HintPath>
+      <HintPath>..\Libs\CommadInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml.Linq" />

@@ -265,6 +265,7 @@ Icon
 
 #dll
 *.dll
+!libs/*.dll
 *.exe
 
 # Files that might appear in the root of a volume
