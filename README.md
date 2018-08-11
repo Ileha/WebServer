@@ -13,12 +13,12 @@ git reset --hard origin/имя_ветки
 ### About  
 There is a web-server written on C#, you can easily extend this server through your own modules, like HTTP or mime handlers, exception and resource viewer. Each of these modules should be compiled, and copied onto the directory, specified in the config
 
-######Web-server support commands:  
+###### Web-server supports commands:  
 * lshost - display available hosts
 * host <your_host_name> <command> - send <command> to host with name <your_host_name>
 * exit - end web-server work
   
-######Host support commands:  
+###### Host supports commands:  
 * loadintplug - load internal plugins
 * loadexplug - load external plugins
 * info - display HTTP handlers, MIME handler, Exceptions and status
@@ -26,7 +26,7 @@ There is a web-server written on C#, you can easily extend this server through y
 * stop - stop host
 * status - display run/stop state of host
   
-Web-server send command to host by order loadexplug -> loadintplug -> start on default  
+Web-server sends command to host in order loadexplug -> loadintplug -> start on default  
 
 It's necessary to implement abstract class Host.HttpHandler.IHttpHandler to add a new HTTP handler. This class will notify program with the needed HTTP version and method. Moreover, it contains the actual logic which is supposed to handle request headers and parameters.  
 *code example for http handler*
