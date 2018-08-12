@@ -149,7 +149,6 @@ namespace MainProgramm {
                     Console.WriteLine(err);
                 }
             }
-            Console.ReadLine();
         }
     }
 }

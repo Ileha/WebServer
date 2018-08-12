@@ -34,44 +34,36 @@ namespace Configurate.Host.Connection.HTTPConnection
 		public ConnectionHandler(TcpClient Connection) {
             connection = Connection;
         }
-
         public Stream InputData {
             get {
                 return in_data();
             }
         }
-
         public Stream OutputData {
 			get {
                 return out_data();
             }
         }
-
         public UserConnect UserConnectData {
             get {
                 return UserData;
             }
         }
-
         public Reader.Reader ReadData
         {
             get {
                 return reads_bytes;
             }
         }
-
         public ConnectionType ConnectType {
             get {
                 return ConnectionType.http;
             }
         }
-
         public IConnetion GetConnetion
         {
             get { return this; }
         }
-
-
         public IConnectionHandler ExecuteHandler {
             get { return actual_handler; }
         }

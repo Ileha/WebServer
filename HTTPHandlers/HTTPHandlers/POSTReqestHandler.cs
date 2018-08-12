@@ -70,7 +70,7 @@ namespace HttpHandlers
             do
             {
                 _count = reqest.Read(bytes, 0, bytes.Length);
-                RequestDataStream.ExistSeqeunce(0, _count, new_line, bytes, out _index);
+                Reqest.ExistSeqeunce(0, _count, new_line, bytes, out _index);
                 if (_index == -1) {
                     res.Append(Encoding.UTF8.GetString(bytes, 0, _count));
                 }

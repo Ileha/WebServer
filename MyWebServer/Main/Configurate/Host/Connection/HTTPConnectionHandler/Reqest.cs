@@ -15,16 +15,41 @@ namespace Configurate.Host.Connection.HTTPConnection
     {
         private static byte[] new_line = new byte[] { 13, 10 };
 
-        public string URL;
-        public MemoryStream Data { get; private set; }
-        public Dictionary<string, string> headers { get; private set; }//заголовки
-        public Dictionary<string, string> cookies { get; private set; }
-
-        public static Reqest Create(TcpClient client, out Func<Stream> Input) {
+        public static Reqest Create(TcpClient client, out Func<Stream> Input)
+        {
             Reqest res = new Reqest(client);
             Input = () => res.Data;
             return res;
         }
+
+        public static bool ExistSeqeunce(int start, int count, byte[] sequence, IEnumerable<byte> array, out int index)
+        {
+            int seq_i = 0;
+            for (int i = start; i < Math.Min(count, array.Count() - start); i++)
+            {
+                if (array.ElementAt(i) != sequence[seq_i])
+                {
+                    i = i - seq_i;
+                    seq_i = 0;
+                }
+                else
+                {
+                    if (seq_i == sequence.Length - 1)
+                    {
+                        index = i - seq_i;
+                        return true;
+                    }
+                    seq_i++;
+                }
+            }
+            index = -1;
+            return false;
+        }
+
+        public string URL;
+        public MemoryStream Data { get; private set; }
+        public Dictionary<string, string> headers { get; private set; }//заголовки
+        public Dictionary<string, string> cookies { get; private set; }
 
         public Reqest(TcpClient client)
         {
@@ -43,7 +68,7 @@ namespace Configurate.Host.Connection.HTTPConnection
                 int _count = _receive.Read(bytes, 0, bytes.Length);
                 if (_count == 0) { throw new ConnectionExecutorClose(); }
                 _receive_data.Write(bytes, 0, _count);
-                RequestDataStream.ExistSeqeunce(0, _count, new_line, bytes, out _index);
+                ExistSeqeunce(0, _count, new_line, bytes, out _index);
                 if (_index == -1) {
                     additive += _count;
                 }

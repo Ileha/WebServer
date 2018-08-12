@@ -27,7 +27,7 @@ namespace HttpHandlers
             do 
             {
                 int _count = reqest.Read(bytes, 0, bytes.Length);
-                RequestDataStream.ExistSeqeunce(0, _count, new_line, bytes, out _index);
+                Reqest.ExistSeqeunce(0, _count, new_line, bytes, out _index);
                 res.Append(Encoding.UTF8.GetString(bytes, 0, Math.Max(_index, _count)));
             } while (_index == -1);
             string[] headers = Regex.Split(res.ToString(), "\r\n");

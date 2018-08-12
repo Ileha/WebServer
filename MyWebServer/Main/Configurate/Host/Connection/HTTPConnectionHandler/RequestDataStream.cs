@@ -38,7 +38,7 @@ namespace Configurate.Host.Connection.HTTPConnection
             {
                 for (int i = 0; i < count; i++)
                 {
-                    buffer[_index] = _data[i + offset];
+                    buffer[offset+i] = _data[_index];
                     _index++;
                     res++;
                 }
@@ -55,29 +55,5 @@ namespace Configurate.Host.Connection.HTTPConnection
         public override long Seek(long offset, SeekOrigin origin) { throw new NotImplementedException(); }
         public override void SetLength(long value) { throw new NotImplementedException(); }
         public override void Write(byte[] buffer, int offset, int count) { throw new NotImplementedException(); }
-
-        public static bool ExistSeqeunce(int start, int count, byte[] sequence, IEnumerable<byte> array, out int index)
-        {
-            int seq_i = 0;
-            for (int i = start; i < Math.Min(count, array.Count() - start); i++)
-            {
-                if (array.ElementAt(i) != sequence[seq_i])
-                {
-                    i = i - seq_i;
-                    seq_i = 0;
-                }
-                else
-                {
-                    if (seq_i == sequence.Length - 1)
-                    {
-                        index = i - seq_i;
-                        return true;
-                    }
-                    seq_i++;
-                }
-            }
-            index = -1;
-            return false;
-        }
     }
 }
