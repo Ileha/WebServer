@@ -84,7 +84,7 @@ namespace HttpHandlers
 
             output.URL = headers[0].Split(' ')[1];
             if (TwoPoints.IsMatch(output.URL)) {//проверить на наличие двух точек подряд
-                throw Repository.ExceptionFabrics["Bad Request"].Create(null, null);
+                throw Repository.ExceptionFabrics["Bad Request"].Create();
             }
             for (int i = 1; i < headers.Length; i++) {
                 Match m_pref = pref_val.Match(headers[i]);
@@ -103,7 +103,7 @@ namespace HttpHandlers
                 bytes = new byte[Convert.ToInt32(output.headers["Content-Length"]) - (_count - (_index + 4))];
             }
             catch(Exception err) {
-                throw Repository.ExceptionFabrics["Bad Request"].Create(null, null);
+                throw Repository.ExceptionFabrics["Bad Request"].Create();
             }
             reqest.Read(bytes, 0, bytes.Length);
             output.Data.Write(bytes, 0, bytes.Length);

@@ -49,7 +49,7 @@ namespace Configurate.Host.Connection.HTTPConnection
 			forbidden_http_headers = new List<string>();
             OutData = new MemoryStream();
             _writable_data = client.GetStream();
-            code = Repository.ExceptionFabrics["OK"].Create(null, null);
+            code = Repository.ExceptionFabrics["OK"].Create();
         }
 
         public void Clear() {

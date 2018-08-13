@@ -112,7 +112,7 @@ namespace Configurate.Host.Connection.HTTPConnection
                     DataHandle = Repository.DataHandlers[reads_bytes.FileExtension];
                 }
                 catch (Exception err) {//при неудачной попытки бросаем исключение
-                    throw Repository.ExceptionFabrics["Not Implemented"].Create(null, null);
+                    throw Repository.ExceptionFabrics["Not Implemented"].Create();
                 }
                 //websocket
                 try {

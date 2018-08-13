@@ -99,7 +99,7 @@ namespace Configurate.Host.Connection.HTTPConnection
             {
                 return;
             }
-            throw Repository.ExceptionFabrics["Moved Permanently"].Create(null, new_url);
+            throw Repository.ExceptionFabrics["Moved Permanently"].Create(new_url);
         }
 
         public void Dispose()

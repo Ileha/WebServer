@@ -36,7 +36,7 @@ namespace HttpHandlers
             output.URL = m.Groups["url"].Value;
             if (TwoPoints.IsMatch(output.URL)) {
                 //проверить на наличие двух точек подряд
-                throw Repository.ExceptionFabrics["Bad Request"].Create(null, null);
+                throw Repository.ExceptionFabrics["Bad Request"].Create();
             }
             byte[] data = Encoding.UTF8.GetBytes(m.Groups["var"].Value);
             output.Data.Write(data, 0, data.Length);

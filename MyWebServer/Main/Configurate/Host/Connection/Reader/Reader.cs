@@ -24,10 +24,10 @@ namespace Configurate.Host.Connection.Reader
                     _url = URL;
                 }
                 catch (FileNotFoundException err) {
-                    throw Repository.ExceptionFabrics["Not Found"].Create(null, null);
+                    throw Repository.ExceptionFabrics["Not Found"].Create();
                 }
                 if (!res.IsUserEnter(target_user)) {
-                    throw Repository.ExceptionFabrics["Unauthorized"].Create(null, "Access to staging site");
+                    throw Repository.ExceptionFabrics["Unauthorized"].Create("Access to staging site");
                 }
                 try {
                     _resourse = res;
@@ -41,14 +41,14 @@ namespace Configurate.Host.Connection.Reader
                     }
                 }
                 catch (Exception err) {
-                    throw Repository.ExceptionFabrics["Internal Server Error"].Create(null, null);
+                    throw Repository.ExceptionFabrics["Internal Server Error"].Create();
                 }
             }
             catch (ExceptionCode err) {
                 throw err;
             } 
             catch (Exception err) {
-                throw Repository.ExceptionFabrics["Internal Server Error"].Create(null, null);
+                throw Repository.ExceptionFabrics["Internal Server Error"].Create();
             }
         }
 
