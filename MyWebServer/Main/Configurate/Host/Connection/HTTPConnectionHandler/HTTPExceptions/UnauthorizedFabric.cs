@@ -15,17 +15,16 @@ namespace Configurate.Host.Connection.HTTPConnection.HTTPException
             get { return "Unauthorized"; }
         }
 
-        public override ExceptionCode Create(ExceptionUserCode userCode, object data)
+        public override ExceptionCode Create(params object[] data)
         {
-			return new Unauthorized((string)data, userCode);
+			return new Unauthorized((string)data[0]);
         }
     }
     public class Unauthorized : ExceptionCode
     {
 		private string message;
 
-        public Unauthorized(string message, ExceptionUserCode userCode)
-            : base(userCode)
+        public Unauthorized(string message)
         {
             Code = "401 Unauthorized";
 			this.message = message;

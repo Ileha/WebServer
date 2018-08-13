@@ -8,16 +8,14 @@ namespace Configurate.Host.Connection.HTTPConnection.HTTPException
 
 		public override string name { get { return "Internal Server Error"; } }
 
-        public override ExceptionCode Create(ExceptionUserCode userCode, object data)
+        public override ExceptionCode Create(params object[] data)
 		{
-			return new InternalServerError(userCode);
+			return new InternalServerError();
 		}
 	}
 
 	public class InternalServerError : ExceptionCode {
-        public InternalServerError(ExceptionUserCode userCode)
-            : base(userCode)
-        {
+        public InternalServerError() {
 			Code = "500 Internal Server Error";
 		}	
 	}

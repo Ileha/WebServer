@@ -8,16 +8,14 @@ namespace Configurate.Host.Connection.HTTPConnection.HTTPException
 
 		public override string name { get { return "Not Found"; } }
 
-        public override ExceptionCode Create(ExceptionUserCode userCode, object data)
+        public override ExceptionCode Create(params object[] data)
 		{
-			return new NotFound(userCode);
+			return new NotFound();
 		}
 	}
 
 	public class NotFound : ExceptionCode {
-        public NotFound(ExceptionUserCode userCode)
-            : base(userCode)
-        {
+        public NotFound() {
 			Code = "404 Not Found";
 		}	
 	}

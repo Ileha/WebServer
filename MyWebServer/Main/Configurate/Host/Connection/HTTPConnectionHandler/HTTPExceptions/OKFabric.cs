@@ -9,20 +9,15 @@ namespace Configurate.Host.Connection.HTTPConnection.HTTPException
 	public class ExceptionCodeOKFabric : ABSExceptionFabric
 	{
 		public ExceptionCodeOKFabric() {}
-
 		public override string name { get { return "OK"; } }
-
-        public override ExceptionCode Create(ExceptionUserCode userCode, object data)
-        {
-			return new OK(userCode);
-		}
-	}
+        public override ExceptionCode Create(params object[] data) {
+            return new OK();
+        }
+    }
 
 	public class OK : ExceptionCode {
 
-        public OK(ExceptionUserCode userCode)
-            : base(userCode)
-        {
+        public OK() {
 			Code = "200 OK";
 		}
 

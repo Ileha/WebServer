@@ -9,18 +9,15 @@ namespace Configurate.Host.Connection.HTTPConnection.HTTPException
 
 		public override string name { get { return "Bad Request"; } }
 
-        public override ExceptionCode Create(ExceptionUserCode userCode, object data)
+        public override ExceptionCode Create(params object[] data)
 		{
-			return new BadRequest(userCode);
+			return new BadRequest();
 		}
 	}
 
 	public class BadRequest : ExceptionCode
 	{
-
-        public BadRequest(ExceptionUserCode userCode)
-            : base(userCode)
-        {
+        public BadRequest() {
 			Code = "400 Bad Request";
         }
 	}

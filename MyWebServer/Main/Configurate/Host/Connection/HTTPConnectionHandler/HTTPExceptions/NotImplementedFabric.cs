@@ -8,14 +8,14 @@ namespace Configurate.Host.Connection.HTTPConnection.HTTPException
 
 		public override string name { get { return "Not Implemented"; } }
 
-		public override ExceptionCode Create(ExceptionUserCode userCode, object data) {
-			return new NotImplemented(userCode, (string)data);
+		public override ExceptionCode Create(params object[] data) {
+			return new NotImplemented();
 		}
 	}
 
 	public class NotImplemented  : ExceptionCode {
 
-		public NotImplemented(ExceptionUserCode userCode, string message) : base(userCode) {
+		public NotImplemented() {
 			Code = "501 Not Implemented";
 		}
 	}

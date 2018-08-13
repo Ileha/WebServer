@@ -1,5 +1,6 @@
 using DataHandlers;
 using ExceptionFabric;
+using System;
 using System.Text;
 
 namespace Configurate.Host.Connection.HTTPConnection.HTTPException
@@ -13,18 +14,19 @@ namespace Configurate.Host.Connection.HTTPConnection.HTTPException
 			}
 		}
 
-        public override ExceptionCode Create(ExceptionUserCode userCode, object data)
+        public override ExceptionCode Create(params object[] data)
         {
-			return new SwitchingProtocols(userCode, data as string[]);
+			return new SwitchingProtocols(data[0] as Action, data[1] as string[]);
 		}
 	}
 	public class SwitchingProtocols : ExceptionCode {
 		private string[] protocols;
-
-        public SwitchingProtocols(ExceptionUserCode userCode, params string[] protocols) : base(userCode)
+        private Action user_code;
+        public SwitchingProtocols(Action userCode, string[] protocols)
         {
 			this.protocols = protocols;
 			Code = "101 Switching Protocols";
+            user_code = userCode;
 		}
 
         public override void ExceptionHandleCode(ABSMIME Handler, Reqest request, Response response, IConnetion handler)
@@ -42,6 +44,7 @@ namespace Configurate.Host.Connection.HTTPConnection.HTTPException
             response.AddToHeader("Connection", "Upgrade", AddMode.rewrite);
 			response.AddForbiddenHeader("Content-Length");
 			response.AddForbiddenHeader("Server");
+            user_code();
 		}
 	}
 }

@@ -10,18 +10,16 @@ namespace Configurate.Host.Connection.HTTPConnection.HTTPException
 
 		public override string name { get { return "Moved Permanently"; } }
 
-        public override ExceptionCode Create(ExceptionUserCode userCode, object data)
+        public override ExceptionCode Create(params object[] data)
 		{
-			return new MovedPermanently((string)data,userCode);
+			return new MovedPermanently((string)data[0]);
 		}
 	}
 
 	public class MovedPermanently : ExceptionCode {
 		private string targeURL;
 
-        public MovedPermanently(string targeURL, ExceptionUserCode userCode)
-            : base(userCode)
-        {
+        public MovedPermanently(string targeURL) {
 			Code = "301 Moved Permanently";
 			this.targeURL = targeURL;
 		}

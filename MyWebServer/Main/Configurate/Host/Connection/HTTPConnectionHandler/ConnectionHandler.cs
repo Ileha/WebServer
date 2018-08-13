@@ -120,16 +120,15 @@ namespace Configurate.Host.Connection.HTTPConnection
                     {
                         actual_handler = new WebSocketHandler(Client, reads_bytes, UserData);
                         string[] data = new string[] { "websocket" };
-                        throw Repository.ExceptionFabrics["Switching Protocols"].Create(
-                            (handle, _request, _response, dat, func) => {
-                                func(handle, _request, _response, dat);
-                                string str = _request.headers["Sec-WebSocket-Key"] + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
-                                byte[] bytes = Encoding.UTF8.GetBytes(str);
-                                var sha1 = SHA1.Create();
-                                byte[] hashBytes = sha1.ComputeHash(bytes);
-                                _response.AddToHeader("Sec-WebSocket-Accept", Convert.ToBase64String(hashBytes), AddMode.rewrite);
-                            },
-                        data);
+                        Action func = () =>
+                        {
+                            string str = obj_request.headers["Sec-WebSocket-Key"] + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+                            byte[] bytes = Encoding.UTF8.GetBytes(str);
+                            var sha1 = SHA1.Create();
+                            byte[] hashBytes = sha1.ComputeHash(bytes);
+                            response.AddToHeader("Sec-WebSocket-Accept", Convert.ToBase64String(hashBytes), AddMode.rewrite);
+                        };
+                        throw Repository.ExceptionFabrics["Switching Protocols"].Create(func, data);
                     }
                 }
                 catch (KeyNotFoundException err) { }
@@ -137,7 +136,7 @@ namespace Configurate.Host.Connection.HTTPConnection
             catch (ExceptionCode err) {
                 response.SetCode(err);
             }
-            response.code.ExceptionHandle(DataHandle, obj_request, response, this);
+            response.code.ExceptionHandleCode(DataHandle, obj_request, response, this);
             response.SendData(obj_request);
 
             if (response.GetHeader("Connection") == "close") {

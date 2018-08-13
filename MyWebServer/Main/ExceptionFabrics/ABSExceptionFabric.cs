@@ -7,6 +7,6 @@ namespace ExceptionFabric
 
 		public ABSExceptionFabric() {}
 
-		public abstract ExceptionCode Create(ExceptionUserCode userCode, object data);
+		public abstract ExceptionCode Create(params object[] data);
 	}
 }
