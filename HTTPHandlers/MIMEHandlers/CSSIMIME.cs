@@ -13,14 +13,11 @@ namespace MIMEHandlers
 		private string[] _file_extensions = { ".css" };
 		public override string[] file_extensions { get { return _file_extensions; } }
 
-        public override void Handle(IConnetion Connection, out Action<Response, Reqest> Headers)
+        public override void Handle(IConnetion Connection, Action<string, string> add_to_http_header_request)
         {
 			//connection.OutputData.Write(connection.ReadData.data, 0, connection.ReadData.data.Length);
             Connection.ReadData.Data.CopyTo(Connection.OutputData);
-            Headers = (response, reqest) =>
-            {
-                response.AddToHeader("Content-Type", "text/css; charset=UTF-8", AddMode.rewrite);
-            };
+            add_to_http_header_request("Content-Type", "text/css; charset=UTF-8");
         }
 
     }

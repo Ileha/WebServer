@@ -15,12 +15,9 @@ namespace Host.MIME
         private string[] _file_extensions = { ".dir" };
         public override string[] file_extensions { get { return _file_extensions; } }
 
-        public override void Handle(IConnetion Connection, out Action<Response, Reqest> Headers)
+        public override void Handle(IConnetion Connection, Action<string, string> add_to_http_header_request)
         {
-            Headers = (response, reqest) =>
-            {
-                response.AddToHeader("Content-Type", "text/html; charset=UTF-8", AddMode.rewrite);
-            };
+            add_to_http_header_request("Content-Type", "text/html; charset=UTF-8");
 
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"utf-8\">\n<title>{0}</title>\n</head>\n<body>\n", Connection.ReadData.Resourse.GetName());

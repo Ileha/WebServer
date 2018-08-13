@@ -74,8 +74,8 @@ namespace Configurate.Host.Connection.WebsocketConnection
                 InputDataStream.Write(data, 0, count);
             } while (SocketStream.CanRead);
             InputDataStream.Seek(0, SeekOrigin.Begin);
-            Action<Response, Reqest> headers;
-            DataHandle.Handle(this, out headers);
+            Action<string, string> add_headers = (name, value) => { };
+            DataHandle.Handle(this, add_headers);
         }
 
         public void Dispose()

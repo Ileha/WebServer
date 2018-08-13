@@ -24,9 +24,10 @@ namespace Configurate.Host.Connection.HTTPConnection.HTTPException
         public override void ExceptionHandleCode(ABSMIME Handler, Reqest request, Response response, IConnetion data)
         {
             try {
-                Action<Response, Reqest> headers;
-                Handler.Handle(data, out headers);
-                headers(response, request);
+                Action<string, string> add_headers = (name, value) => {
+                    response.AddToHeader(name, value, AddMode.rewrite);
+                };
+                Handler.Handle(data, add_headers);
             }
             catch (ExceptionCode err) {
                 throw err;
