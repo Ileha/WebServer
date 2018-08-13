@@ -13,7 +13,7 @@ namespace Configurate.Host.Connection.Reader
     public class Reader
     {
         private string _url;
-        private MemoryStream _data;
+        private Stream _data;
         private IItem _resourse;
 
         public Reader(string URL, UserInfo target_user) {
@@ -32,9 +32,7 @@ namespace Configurate.Host.Connection.Reader
                 try {
                     _resourse = res;
                     try {
-                        _data = new MemoryStream();
-                        res.GetData().CopyTo(_data);
-                        _data.Seek(0, SeekOrigin.Begin);
+                        _data = res.GetData();
                     }
                     catch (NotImplementedException err) {
                         _data = null;
@@ -60,7 +58,7 @@ namespace Configurate.Host.Connection.Reader
         }
 
         public Stream Data {
-            get { 
+            get {
                 return _data; 
             }
         }

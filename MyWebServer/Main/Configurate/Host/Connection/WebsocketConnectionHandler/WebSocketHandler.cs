@@ -51,10 +51,9 @@ namespace Configurate.Host.Connection.WebsocketConnection
             get { return reads_bytes; }
         }
 
-        public ConnectionType ConnectType {
-            get {
-                return ConnectionType.websocket;
-            }
+        public string ConnectionType
+        {
+            get { return "webSocket"; }
         }
         public IConnetion GetConnetion {
             get { return this; }

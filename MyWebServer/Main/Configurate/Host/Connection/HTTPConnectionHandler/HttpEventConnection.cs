@@ -45,9 +45,9 @@ namespace Configurate.Host.Connection.HTTPConnection
             get { throw new ConnectionExecutorBadAccess(); }
         }
 
-        public ConnectionType ConnectType
+        public string ConnectionType
         {
-            get { return main_connection.ConnectType; }
+            get { return "http"; }
         }
     }
 }

@@ -39,9 +39,9 @@ namespace Configurate.Host.Connection.WebsocketConnection
             get { return main_connection.ReadData; }
         }
 
-        public ConnectionType ConnectType
+        public string ConnectionType
         {
-            get { return main_connection.ConnectType; }
+            get { return "websocket"; }
         }
     }
 }

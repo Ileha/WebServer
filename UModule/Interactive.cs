@@ -16,7 +16,7 @@ namespace UModule
         public Interactive(IConnetion data, Stream writableStream, XElement readData) {
             InputData = data.InputData;
             UserConnectData = data.UserConnectData;
-            ConnectType = data.ConnectType;
+            ConnectionType = data.ConnectionType;
             ReadData = new MemoryStream();
             byte[] s_data = Encoding.UTF8.GetBytes(readData.Value);
             ReadData.Write(s_data, 0, s_data.Length);
@@ -48,7 +48,7 @@ namespace UModule
             private set;
         }
 
-        public ConnectionType ConnectType
+        public string ConnectionType
         {
             get;
             private set;

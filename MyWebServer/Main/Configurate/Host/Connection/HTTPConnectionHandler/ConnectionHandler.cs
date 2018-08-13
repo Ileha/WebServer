@@ -55,10 +55,9 @@ namespace Configurate.Host.Connection.HTTPConnection
                 return reads_bytes;
             }
         }
-        public ConnectionType ConnectType {
-            get {
-                return ConnectionType.http;
-            }
+        public string ConnectionType
+        {
+            get { return "http"; }
         }
         public IConnetion GetConnetion
         {
