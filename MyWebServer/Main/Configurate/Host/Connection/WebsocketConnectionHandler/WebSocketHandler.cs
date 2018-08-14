@@ -20,6 +20,7 @@ namespace Configurate.Host.Connection.WebsocketConnection
         public UserConnect UserData;
         private WebSocketStream SocketStream;
         private MemoryStream InputDataStream;
+        private MemoryStream OutputDataStream;
 
         public WebSocketHandler(TcpClient client, Reader.Reader data, UserConnect user_data)
         {
@@ -29,6 +30,7 @@ namespace Configurate.Host.Connection.WebsocketConnection
             UserData = user_data;
             SocketStream = new WebSocketStream(client.GetStream());
             InputDataStream = new MemoryStream();
+            OutputDataStream = new MemoryStream();
         }
 
         public Stream InputData
@@ -38,7 +40,7 @@ namespace Configurate.Host.Connection.WebsocketConnection
 
         public Stream OutputData
         {
-            get { return SocketStream; }
+            get { return OutputDataStream; }
         }
 
         public UserConnect UserConnectData
@@ -53,7 +55,7 @@ namespace Configurate.Host.Connection.WebsocketConnection
 
         public string ConnectionType
         {
-            get { return "webSocket"; }
+            get { return "websocket"; }
         }
         public IConnetion GetConnetion {
             get { return this; }
@@ -75,6 +77,8 @@ namespace Configurate.Host.Connection.WebsocketConnection
             InputDataStream.Seek(0, SeekOrigin.Begin);
             Action<string, string> add_headers = (name, value) => { };
             DataHandle.Handle(this, add_headers);
+            OutputDataStream.Seek(0, SeekOrigin.Begin);
+            OutputDataStream.CopyTo(SocketStream);
         }
 
         public void Dispose()
@@ -85,8 +89,8 @@ namespace Configurate.Host.Connection.WebsocketConnection
 
 
         public void Reset() {
-            InputDataStream.Dispose();
             InputDataStream = new MemoryStream();
+            OutputDataStream = new MemoryStream();
             reads_bytes.Data.Seek(0, SeekOrigin.Begin);
         }
 

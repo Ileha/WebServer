@@ -21,7 +21,8 @@ namespace UModule
         public override void OnConntect(ConnectionEventData data) 
         {
             Console.WriteLine("Connect {0}", data.connect.ConnectionType);
-            if (data.connect.ConnectionType == "websocket") {
+            if (data.connect.ConnectionType == "websocket")
+            {
                 byte[] _data = Encoding.UTF8.GetBytes("you connect");
                 data.connect.OutputData.Write(_data, 0, _data.Length);
             }

@@ -31,12 +31,9 @@ namespace HTTPHandlers
                 Connection.UserConnectData.AddData("data_handle", page);
             }
             
-            Stream stream_with_data;
-            page.Build(Connection, out stream_with_data, doc.Root.Element("body"));
-            page.Handle(); 
+            page.Build(Connection, doc.Root.Element("body"));
+            page.Handle();
             add_to_http_header_request("Content-Type", page.ContentType);
-            stream_with_data.Seek(0, SeekOrigin.Begin);
-            stream_with_data.CopyTo(Connection.OutputData);
         }
     }
 }

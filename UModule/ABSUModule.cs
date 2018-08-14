@@ -12,9 +12,8 @@ namespace UModule
     public abstract class ABSUModule
     {
         public Interactive Interact { get; private set; }
-        public void Build(IConnetion Interact, out Stream data_stream, XElement data) {
-            data_stream = new MemoryStream();
-            this.Interact = new Interactive(Interact, data_stream, data);
+        public void Build(IConnetion Interact, XElement data) {
+            this.Interact = new Interactive(Interact, data);
         }
         public abstract void Handle(); 
         public abstract string ContentType { get; }

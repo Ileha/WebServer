@@ -13,7 +13,7 @@ namespace UModule
 {
     public class Interactive
     {
-        public Interactive(IConnetion data, Stream writableStream, XElement readData) {
+        public Interactive(IConnetion data, XElement readData) {
             InputData = data.InputData;
             UserConnectData = data.UserConnectData;
             ConnectionType = data.ConnectionType;
@@ -21,7 +21,7 @@ namespace UModule
             byte[] s_data = Encoding.UTF8.GetBytes(readData.Value);
             ReadData.Write(s_data, 0, s_data.Length);
             ReadData.Seek(0, SeekOrigin.Begin);
-            OutputData = writableStream;
+            OutputData = data.OutputData;
         }
 
         public Stream InputData
