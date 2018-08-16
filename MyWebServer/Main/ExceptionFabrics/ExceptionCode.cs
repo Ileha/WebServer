@@ -10,7 +10,7 @@ namespace ExceptionFabric
 	public abstract class ExceptionCode : Exception
 	{
 		protected string Code;
-        public virtual void ExceptionHandleCode(ABSMIME Handler, Reqest request, Response response, IConnetion data) {
+        public virtual void ExceptionHandleCode(Response response, IConnetion data) {
             response.Clear();
             response.AddToHeader("Content-Type", "text/html; charset=UTF-8", AddMode.rewrite);
 			byte[] _data = Encoding.UTF8.GetBytes("<html><body><h2>An error has occurred code of error " + Code + "</h2></body></html>");

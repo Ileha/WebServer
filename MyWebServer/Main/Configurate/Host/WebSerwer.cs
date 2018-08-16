@@ -105,11 +105,7 @@ namespace Configurate.Host
                 while (IsWork) {
                     //Программа приостанавливается, ожидая входящее соединение
                     TcpClient handler = sListener.AcceptTcpClient();
-					ConnectionExecutor executor = new ConnectionExecutor(new ConnectionHandler(handler), onConnect, onDisConnect);
-					Console.WriteLine("хост {2}, новое соединение через {0}:{1}", ipEndPoint.Address, ipEndPoint.Port, Repository.ConfigBody.Element("name").Value);
-                    Task handle = new Task(executor.Execute);
-                    handle.Start();
-                    Thread.Sleep(0);
+					ConnectionExecutor executor = new ConnectionExecutor(new HTTPConnectionHandler(handler), onConnect, onDisConnect);
                 }
             }
             catch (ThreadAbortException Abort) {

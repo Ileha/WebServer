@@ -30,7 +30,7 @@ namespace Configurate.Host.Connection.HTTPConnection.HTTPException
 			this.message = message;
         }
 
-        public override void ExceptionHandleCode(ABSMIME Handler, Reqest request, Response response, IConnetion handler)
+        public override void ExceptionHandleCode(Response response, IConnetion data)
         {
 			response.AddToHeader("WWW-Authenticate", "Basic realm=\""+message+"\"", AddMode.rewrite);
 		}

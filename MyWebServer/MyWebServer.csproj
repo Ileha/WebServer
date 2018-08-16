@@ -45,14 +45,16 @@
     <Compile Include="HostInteractive\Server.cs" />
     <Compile Include="HostInteractive\StringDataParser.cs" />
     <Compile Include="HostInteractive\StringOIInterface.cs" />
+    <Compile Include="Main\Configurate\Host\Connection\HTTPConnectionHandler\HTTPConnections\HTTPConnection.cs" />
+    <Compile Include="Main\Configurate\Host\Connection\WebsocketConnectionHandler\WebSocketConnections\WebSocketConnection.cs" />
     <Compile Include="Main\Configurate\Linker\IitemRead.cs" />
     <Compile Include="Main\Configurate\Redirect\Exception\RedirectNotFound.cs" />
     <Compile Include="Main\Configurate\Redirect\RedirectConfig.cs" />
     <Compile Include="Main\Configurate\Host\Connection\Exceptions\ConnectionExecutorException.cs" />
     <Compile Include="Main\Configurate\Host\Connection\IConnetion.cs" />
-    <Compile Include="Main\Configurate\Host\Connection\HTTPConnectionHandler\HttpEventConnection.cs" />
+    <Compile Include="Main\Configurate\Host\Connection\HTTPConnectionHandler\HTTPConnections\HttpEventConnection.cs" />
     <Compile Include="Main\Configurate\Host\Connection\HTTPConnectionHandler\RequestDataStream.cs" />
-    <Compile Include="Main\Configurate\Host\Connection\WebsocketConnectionHandler\WebsocketConnection.cs" />
+    <Compile Include="Main\Configurate\Host\Connection\WebsocketConnectionHandler\WebSocketConnections\WebsocketEventConnection.cs" />
     <Compile Include="Main\Configurate\Host\Connection\Reader\Reader.cs" />
     <Compile Include="Main\Configurate\Host\Connection\WebsocketConnectionHandler\WebSocketHandler.cs" />
     <Compile Include="Main\Events\ABSGrub.cs" />
@@ -85,7 +87,7 @@
     <Compile Include="Main\Configurate\Host\Connection\HTTPConnectionHandler\HTTPExceptions\SwitchingProtocolsFabric.cs" />
     <Compile Include="Main\Configurate\Host\Connection\IConnectionHandler.cs" />
     <Compile Include="Main\Configurate\Host\Connection\ConnectionExecutor.cs" />
-    <Compile Include="Main\Configurate\Host\Connection\HTTPConnectionHandler\ConnectionHandler.cs" />
+    <Compile Include="Main\Configurate\Host\Connection\HTTPConnectionHandler\HTTPConnectionHandler.cs" />
     <Compile Include="Main\Configurate\Host\Connection\HTTPConnectionHandler\Reqest.cs" />
     <Compile Include="Main\Configurate\Host\Connection\HTTPConnectionHandler\Response.cs" />
     <Compile Include="Main\Configurate\Host\Connection\WebsocketConnectionHandler\WebSocketStream.cs" />

@@ -6,97 +6,72 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Configurate.Host.Connection.WebsocketConnection
 {
-    public class WebSocketHandler : IConnectionHandler, IConnetion
+    public class WebSocketHandler : IConnectionHandler
     {
         private TcpClient client;
-        private Reader.Reader reads_bytes;
-        public ABSMIME DataHandle;
-        public UserConnect UserData;
-        private WebSocketStream SocketStream;
-        private MemoryStream InputDataStream;
-        private MemoryStream OutputDataStream;
+        private ABSMIME DataHandle;
 
-        public WebSocketHandler(TcpClient client, Reader.Reader data, UserConnect user_data)
-        {
+        public Reader.Reader ReadData { get; private set; }
+        public UserConnect UserData { get; private set; }
+        public MemoryStream InputDataStream { get; private set; }
+        public MemoryStream OutputDataStream { get; private set; }
+        public WebSocketStream SocketStream { get; private set; }
+
+        public WebSocketHandler(TcpClient client, Reader.Reader data, UserConnect user_data) {
             this.client = client;
-            reads_bytes = data;
-            DataHandle = Repository.DataHandlers[reads_bytes.FileExtension];
+            ReadData = data;
+            DataHandle = Repository.DataHandlers[ReadData.FileExtension];
             UserData = user_data;
             SocketStream = new WebSocketStream(client.GetStream());
             InputDataStream = new MemoryStream();
             OutputDataStream = new MemoryStream();
+            GetEventConnetion = new WebsocketEventConnection(this, this.client);
+            GetConnetion = new WebSocketConnection(this, this.client);
         }
-
-        public Stream InputData
-        {
-            get { return InputDataStream; }
-        }
-
-        public Stream OutputData
-        {
-            get { return OutputDataStream; }
-        }
-
-        public UserConnect UserConnectData
-        {
-            get { return UserData; }
-        }
-
-        public Reader.Reader ReadData
-        {
-            get { return reads_bytes; }
-        }
-
-        public string ConnectionType
-        {
-            get { return "websocket"; }
-        }
-        public IConnetion GetConnetion {
+        public IConnetion GetConnetion { get; private set; }
+        public IConnetion GetEventConnetion { get; private set; }
+        public IConnectionHandler ExecuteHandler {
             get { return this; }
         }
 
-        public IConnectionHandler ExecuteHandler
-        {
-            get { return this; }
-        }
-
-        public void Execute()
-        {
+        public void Execute() {
             byte[] data = new byte[1024];
-            do
-            {
+            do {
                 int count = SocketStream.Read(data, 0, 1024);
                 InputDataStream.Write(data, 0, count);
             } while (SocketStream.CanRead);
             InputDataStream.Seek(0, SeekOrigin.Begin);
             Action<string, string> add_headers = (name, value) => { };
-            DataHandle.Handle(this, add_headers);
+            try {
+                DataHandle.Handle(GetConnetion, add_headers);
+            }catch(Exception err) {
+                byte[] data_err = Encoding.UTF8.GetBytes(err.ToString());
+                OutputDataStream.Write(data, 0, data.Length);
+            }
+
             OutputDataStream.Seek(0, SeekOrigin.Begin);
             OutputDataStream.CopyTo(SocketStream);
         }
 
-        public void Dispose()
-        {
-            client.GetStream().Dispose();
-            client.Close();
-        }
-
-
         public void Reset() {
             InputDataStream = new MemoryStream();
             OutputDataStream = new MemoryStream();
-            reads_bytes.Data.Seek(0, SeekOrigin.Begin);
+            ReadData.Data.Seek(0, SeekOrigin.Begin);
         }
-
-        public IConnetion GetEventConnetion
-        {
-            get { return new WebsocketConnection(this); }
+        public void Dispose() {
+            try
+            {
+                client.GetStream().Dispose();
+                client.Close();
+            }
+            catch (Exception err) { }
         }
     }
 }

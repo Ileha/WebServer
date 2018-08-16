@@ -29,7 +29,7 @@ namespace Configurate.Host.Connection.HTTPConnection.HTTPException
             user_code = userCode;
 		}
 
-        public override void ExceptionHandleCode(ABSMIME Handler, Reqest request, Response response, IConnetion handler)
+        public override void ExceptionHandleCode(Response response, IConnetion data)
         {
             StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < protocols.Length; i++) {

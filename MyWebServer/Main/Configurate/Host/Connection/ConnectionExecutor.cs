@@ -1,6 +1,7 @@
 ﻿using System;
 using Events;
 using Configurate.Host.Connection.Exceptions;
+using System.Threading;
 
 namespace Configurate.Host.Connection
 {
@@ -14,9 +15,9 @@ namespace Configurate.Host.Connection
 
         public ConnectionExecutor(IConnectionHandler connection_handler, ConnectionEvent onConnect, ConnectionEvent onDisconnect) {
 			Handler = connection_handler;
-			ID = Guid.NewGuid();
             this.onConnect = onConnect;
             this.onDisconnect = onDisconnect;
+            ThreadPool.QueueUserWorkItem(Execute);
 		}
 
         private void ConnectionExecute(ref IConnectionHandler ConnectHandler)
@@ -40,7 +41,8 @@ namespace Configurate.Host.Connection
             ConnectHandler = ConnectHandler.ExecuteHandler;
         }
 
-		public void Execute() {
+		private void Execute(object state) {
+            ID = Guid.NewGuid();
             Console.WriteLine("start connection id: {0}", ID.ToString());
 			try {
                 while (true) { 

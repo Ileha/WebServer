@@ -21,13 +21,20 @@ namespace Configurate.Host.Connection.HTTPConnection.HTTPException
 			Code = "200 OK";
 		}
 
-        public override void ExceptionHandleCode(ABSMIME Handler, Reqest request, Response response, IConnetion data)
+        public override void ExceptionHandleCode(Response response, IConnetion data)
         {
             try {
+                ABSMIME DataHandle = null;
+                try {//попытка найти обработчик данных
+                    DataHandle = Repository.DataHandlers[data.ReadData.FileExtension];
+                }
+                catch (Exception err) {//при неудачной попытки бросаем исключение
+                    throw Repository.ExceptionFabrics["Not Implemented"].Create();
+                }
                 Action<string, string> add_headers = (name, value) => {
                     response.AddToHeader(name, value, AddMode.rewrite);
                 };
-                Handler.Handle(data, add_headers);
+                DataHandle.Handle(data, add_headers);
             }
             catch (ExceptionCode err) {
                 throw err;

@@ -23,7 +23,7 @@ namespace Configurate.Host.Connection.HTTPConnection.HTTPException
 			Code = "301 Moved Permanently";
 			this.targeURL = targeURL;
 		}
-        public override void ExceptionHandleCode(ABSMIME Handler, Reqest request, Response response, IConnetion handler)
+        public override void ExceptionHandleCode(Response response, IConnetion data)
         {
 			response.AddToHeader("Location", targeURL, AddMode.rewrite);
 		}

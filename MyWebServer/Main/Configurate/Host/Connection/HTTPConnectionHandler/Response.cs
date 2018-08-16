@@ -56,7 +56,6 @@ namespace Configurate.Host.Connection.HTTPConnection
             http_headers.Clear();
             http_cookie.Clear();
             if (OutData.Length != 0) { 
-                OutData.Dispose();
                 OutData = new MemoryStream();
             }
             forbidden_http_headers.Clear();
