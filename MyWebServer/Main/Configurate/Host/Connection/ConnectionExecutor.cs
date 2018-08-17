@@ -49,12 +49,13 @@ namespace Configurate.Host.Connection
                     ConnectionExecute(ref Handler);
                 }
 			}
-			catch (ConnectionExecutorClose close) {}
+			catch (ConnectionExecutorClose close) {
+                Handler.Dispose();
+                Console.WriteLine("end connection id: {0}", ID.ToString());
+            }
 			catch (Exception err) {
 				Console.WriteLine("in connection {0} runtime exception {1}", ID, err);
 			}
-            Handler.Dispose();
-			Console.WriteLine("end connection id: {0}", ID.ToString());
 		}
 
         public void onConnectEvent(ConnectionEventData data)

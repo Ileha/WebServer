@@ -122,22 +122,17 @@ namespace Configurate.Host.Connection.HTTPConnection
                 throw new ConnectionExecutorClose();
             }
         }
-
         public void Dispose() {
             try {
                 Client.Close();
             }
             catch (Exception err) {}
         }
-
-
         public void Reset() {
             if (reads_bytes != null) {
                 reads_bytes.Dispose();
                 reads_bytes = null;
             }
         }
-
-        
     }
 }
