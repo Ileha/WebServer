@@ -142,7 +142,6 @@ namespace Configurate.Host
 				adres = IPAddress.Any;
 			}
 			ipEndPoint = new IPEndPoint(adres, Convert.ToInt32(data.Element("port").Value));
-			data.Add(new XElement("guid", Guid.NewGuid().ToString("N")));
             sListener = new TcpListener(ipEndPoint);
 			ConfigureEvents();
             IsWork = true;

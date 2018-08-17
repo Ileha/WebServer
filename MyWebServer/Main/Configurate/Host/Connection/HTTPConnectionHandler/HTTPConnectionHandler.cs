@@ -49,11 +49,11 @@ namespace Configurate.Host.Connection.HTTPConnection
                 request = Reqest.Create(Client, out in_data);//создание экземпляра класса запроса;
                 request.CheckTabelOfRedirect();//проверка таблицы перенаправлений 
                 try {//попытка найти данные к запросу
-                    UserData = UserConnect.GetUserDataFromID(request.cookies[Repository.ConfigBody.Element("webserver").Element("guid").Value.ToString()]);
+                    UserData = UserConnect.GetUserDataFromID(request.cookies[Repository.Configurate.HostID.ToString()]);
                 }
                 catch (Exception err) {//при неудачной попытки(осутствуют данные или нет информации в куках) создать данные и запись куков в ответ
                     UserData = new UserConnect();
-                    response.SetCookie(Repository.ConfigBody.Element("webserver").Element("guid").Value.ToString(), UserData.ID);
+                    response.SetCookie(Repository.Configurate.HostID.ToString(), UserData.ID);
                 }
 
                 //нахождение пользователя

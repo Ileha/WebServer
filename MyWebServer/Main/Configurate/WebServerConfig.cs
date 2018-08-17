@@ -11,11 +11,12 @@ using System.Linq;
 namespace Configurate
 {
 	public class WebServerConfig : IDisposable {
-		public RedirectConfig RedirectConfigure;
-        public IitemRead ResourceLinker;
-		public WebSerwer Host;
-		public SessionCollect Collector;
-		public UserBank Users;
+        public RedirectConfig RedirectConfigure { get; private set; }
+        public IitemRead ResourceLinker { get; private set; }
+        public WebSerwer Host { get; private set; }
+        public SessionCollect Collector { get; private set; }
+        public UserBank Users { get; private set; }
+        public Guid HostID { get; private set; }
 
         public WebServerConfig() {}
 
@@ -56,7 +57,8 @@ namespace Configurate
 			Collector.Configurate(GetElements(Collector));
 
 			Host = new WebSerwer();
-			Host.Configurate(GetElements(Host));
+            Host.Configurate(GetElements(Host));
+            HostID = Guid.NewGuid();
 		}
 
         public void Dispose()
