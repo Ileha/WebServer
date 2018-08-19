@@ -30,8 +30,6 @@ namespace Configurate.Host.Connection.WebsocketConnection
             DataHandle = Repository.DataHandlers[ReadData.FileExtension];
             UserData = user_data;
             SocketStream = new WebSocketStream(client.GetStream());
-            InputDataStream = new MemoryStream();
-            OutputDataStream = new MemoryStream();
             GetEventConnetion = new WebsocketEventConnection(this, this.client);
             GetConnetion = new WebSocketConnection(this, this.client);
         }
@@ -42,6 +40,10 @@ namespace Configurate.Host.Connection.WebsocketConnection
         }
 
         public void Execute() {
+            InputDataStream = new MemoryStream();
+            OutputDataStream = new MemoryStream();
+            ReadData.Data.Seek(0, SeekOrigin.Begin);
+
             byte[] data = new byte[1024];
             do {
                 int count = SocketStream.Read(data, 0, 1024);
@@ -59,16 +61,9 @@ namespace Configurate.Host.Connection.WebsocketConnection
             OutputDataStream.Seek(0, SeekOrigin.Begin);
             OutputDataStream.CopyTo(SocketStream);
         }
-
-        public void Reset() {
-            InputDataStream = new MemoryStream();
-            OutputDataStream = new MemoryStream();
-            ReadData.Data.Seek(0, SeekOrigin.Begin);
-        }
         public void Dispose() {
             try
             {
-                client.GetStream().Dispose();
                 client.Close();
             }
             catch (Exception err) { }

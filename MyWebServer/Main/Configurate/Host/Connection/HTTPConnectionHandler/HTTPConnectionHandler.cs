@@ -85,7 +85,7 @@ namespace Configurate.Host.Connection.HTTPConnection
                 //websocket
                 try {
                     if (request.headers["Upgrade"] == "websocket") {
-                        actual_handler = new WebSocketHandler(Client, reads_bytes, UserData);
+                        actual_handler = new WebSocketHandler(Client, new Reader.Reader(reads_bytes), UserData);
                         string[] data = new string[] { "websocket" };
                         Action func = () =>
                         {
@@ -118,6 +118,11 @@ namespace Configurate.Host.Connection.HTTPConnection
 
             response.SendData(request);
 
+            if (reads_bytes != null) {
+                reads_bytes.Dispose();
+                reads_bytes = null;
+            }
+
             if (response.GetHeader("Connection") == "close") {
                 throw new ConnectionExecutorClose();
             }
@@ -127,12 +132,6 @@ namespace Configurate.Host.Connection.HTTPConnection
                 Client.Close();
             }
             catch (Exception err) {}
-        }
-        public void Reset() {
-            if (reads_bytes != null) {
-                reads_bytes.Dispose();
-                reads_bytes = null;
-            }
         }
     }
 }

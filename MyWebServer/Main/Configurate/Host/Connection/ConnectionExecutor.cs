@@ -26,7 +26,6 @@ namespace Configurate.Host.Connection
             onConnectEvent(data);
             try { 
                 do {
-                    ConnectHandler.Reset();
                     ConnectHandler.Execute();
                     Console.WriteLine("continue connection id: {0}", ID.ToString());
                 }while(ConnectHandler == ConnectHandler.ExecuteHandler);

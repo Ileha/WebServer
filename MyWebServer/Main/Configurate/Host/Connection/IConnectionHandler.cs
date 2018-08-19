@@ -8,6 +8,5 @@ namespace Configurate.Host.Connection
         IConnetion GetEventConnetion { get; }
         IConnectionHandler ExecuteHandler { get; }
 		void Execute();
-        void Reset();
 	}
 }

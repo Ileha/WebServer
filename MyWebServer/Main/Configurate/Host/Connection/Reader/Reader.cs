@@ -14,25 +14,30 @@ namespace Configurate.Host.Connection.Reader
     {
         private string _url;
         private Stream _data;
-        private IItem _resourse;
+        private IitemRead _resourse;
+
+        public Reader(Reader origin) {
+            _url = origin._url;
+            _resourse = origin._resourse;
+            _data = _resourse.GetData();
+        }
 
         public Reader(string URL, UserInfo target_user) {
             try {
-                IitemRead res = null;
                 try {
-                    res = Repository.Configurate.ResourceLinker.GetResourceByString(URL);
+                    _resourse = Repository.Configurate.ResourceLinker.GetResourceByString(URL);
                     _url = URL;
                 }
                 catch (FileNotFoundException err) {
                     throw Repository.ExceptionFabrics["Not Found"].Create();
                 }
-                if (!res.IsUserEnter(target_user)) {
+                if (!_resourse.IsUserEnter(target_user))
+                {
                     throw Repository.ExceptionFabrics["Unauthorized"].Create("Access to staging site");
                 }
                 try {
-                    _resourse = res;
                     try {
-                        _data = res.GetData();
+                        _data = _resourse.GetData();
                     }
                     catch (NotImplementedException err) {
                         _data = null;
