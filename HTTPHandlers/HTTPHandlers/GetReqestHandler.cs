@@ -40,7 +40,6 @@ namespace HttpHandlers
             }
             byte[] data = Encoding.UTF8.GetBytes(m.Groups["var"].Value);
             output.Data.Write(data, 0, data.Length);
-            output.Data.Seek(0, SeekOrigin.Begin);
             for (int i = 1; i < headers.Length; i++) {
                 //парсинг заголовков
                 Match m_pref = pref_val.Match(headers[i]);

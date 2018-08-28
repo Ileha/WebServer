@@ -107,7 +107,6 @@ namespace HttpHandlers
             }
             reqest.Read(bytes, 0, bytes.Length);
             output.Data.Write(bytes, 0, bytes.Length);
-            output.Data.Seek(0, SeekOrigin.Begin);
 		}
 	}
 }

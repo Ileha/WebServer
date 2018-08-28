@@ -85,7 +85,7 @@ namespace Configurate.Host.Connection.HTTPConnection
             ABSHttpHandler _handler = Repository.ReqestsHandlers[header[0] + header[2]];
             RequestDataStream stream = new RequestDataStream(bytes, _receive);
             _handler.ParseHeaders(ref result, stream);
-
+            Data.Seek(0, SeekOrigin.Begin);
         }
 
         public void CheckTabelOfRedirect()
