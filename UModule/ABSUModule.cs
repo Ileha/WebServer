@@ -12,7 +12,9 @@ namespace UModule
     public abstract class ABSUModule
     {
         public Interactive Interact { get; private set; }
-        public void Build(IConnetion Interact, XElement data) {
+        public bool IsDataRquest { get; private set; }
+        public void Build(IConnetion Interact, XElement data, bool is_data_request) {
+            IsDataRquest = is_data_request;
             this.Interact = new Interactive(Interact, data);
         }
         public abstract void Handle(); 

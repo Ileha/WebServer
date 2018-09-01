@@ -19,11 +19,15 @@ namespace HTTPHandlers
             XDocument doc = XDocument.Load(Connection.ReadData.Data);
             string class_name = doc.Root.Element("header").Element("name").Value;
             Type NeedType = Type.GetType(class_name, true);
+            bool is_data = false;
             try {
                 page = Connection.UserConnectData.GetData<ABSUModule>("data_handle");
                 if (page.GetType() != NeedType) {
                     page = (ABSUModule)Activator.CreateInstance(NeedType);
                     Connection.UserConnectData.AddData("data_handle", page);
+                }
+                else {
+                    is_data = true;
                 }
             }
             catch (Exception err) {
@@ -31,7 +35,7 @@ namespace HTTPHandlers
                 Connection.UserConnectData.AddData("data_handle", page);
             }
             
-            page.Build(Connection, doc.Root.Element("body"));
+            page.Build(Connection, doc.Root.Element("body"), (is_data && Connection.InputData.Length > 0));
             page.Handle();
             add_to_http_header_request("Content-Type", page.ContentType);
         }

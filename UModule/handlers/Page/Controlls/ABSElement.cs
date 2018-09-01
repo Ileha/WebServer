@@ -12,7 +12,6 @@ namespace UModule.handlers.Page.Controlls
         private HtmlNode block;
         public string id { get; private set; }
         public void Render() {
-            
             block = OnRender(block);
         }
         public void Init(HtmlNode cQ) {

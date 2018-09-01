@@ -8,6 +8,7 @@ using System.Xml.Linq;
 using System.Text.RegularExpressions;
 using Configurate.Host.Connection;
 using Configurate.Session;
+using System.Net;
 
 namespace UModule
 {
@@ -22,7 +23,13 @@ namespace UModule
             ReadData.Write(s_data, 0, s_data.Length);
             ReadData.Seek(0, SeekOrigin.Begin);
             OutputData = data.OutputData;
+            RemoteEndPoint = data.RemoteEndPoint;
+            LocalEndPoint = data.LocalEndPoint;
+            URL = data.ReadData.URL;
         }
+        public string URL { get; private set; }
+        public IPEndPoint RemoteEndPoint { get; private set; }
+        public IPEndPoint LocalEndPoint { get; private set; }
 
         public Stream InputData
         {
