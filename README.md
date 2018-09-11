@@ -15,7 +15,7 @@ There is a web-server written on C#, you can easily extend this server through y
 
 ###### Web-server supports commands:  
 * lshost - display available hosts
-* host <your_host_name> <command> - send <command> to host with name <your_host_name>
+* host <your_host_name> <host_command> - send <host_command> to host with name <your_host_name>
 * exit - end web-server work
   
 ###### Host supports commands:  
@@ -26,7 +26,7 @@ There is a web-server written on C#, you can easily extend this server through y
 * stop - stop host
 * status - display run/stop state of host
   
-Web-server sends command to host in order loadexplug -> loadintplug -> start on default  
+In start Web-server sends command to host in order loadexplug -> loadintplug -> start on default.  
 
 It's necessary to implement abstract class RequestHandlers.ABSHttpHandler to add a new HTTP handler. This class will notify program with the needed HTTP version and method. Moreover, it contains the actual logic which is supposed to handle request headers and http data.  
 *code example for http handler*
@@ -60,7 +60,7 @@ public class ExampleMIME : IMIME {
 		//					information about RemoteEndPoint and LocalEndPoint
 		//					input and output steam with data
 		//					user data 
-		//					reqest data in stream 
+		//					request data in stream 
 		//					type of connection
 		
 		//add_to_http_header_request Action for adding http headers to response
@@ -68,15 +68,28 @@ public class ExampleMIME : IMIME {
 }
 ```
 
-For adding exception you must implement abstract classes ExceptionFabric.ABSExceptionFabric and ExceptionFabric.ExceptionCode. It inform program about Exception code, fatal is it and also it can implement two methods: first of their can add headers into headers of request, second can add data to message body(in default first of this nothing do and the second return html page with error code)
+For adding exception you must implement abstract classes ExceptionFabric.ABSExceptionFabric and ExceptionFabric.ExceptionCode. First class is fabric of your exception, it implements two method string name { get; } and ExceptionCode Create(params object[] data). In second class you must set Code field for inform program about Exception code and also can implement method void ExceptionHandleCode(Response response, IConnetion data); this function work like Handle in DataHandlers.ABSMIME but it`s have more access to response. In default it clear response and write inform data to IConnetion.
 *code example for exceptions*
 ```cs
-public class OK : ExceptionCode
-{
-  public OK()
-  {
-    Code = "200 OK";
-    _IsFatal = false;
-  }
-}
+	public class ExampleExceptionFabric : ABSExceptionFabric {
+		public ExampleExceptionFabric() {}
+		public override string name { get { return "ExampleExceptionName"; } }
+        public override ExceptionCode Create(params object[] data) {
+            return new OK();
+        }
+    }
+	public class ExampleException : ExceptionCode {
+
+        public ExampleException() {
+			Code = "ExampleExceptionCode ExampleExceptionName";
+		}
+		
+		//default function:
+        public override void ExceptionHandleCode(Response response, IConnetion data) {
+			response.Clear();
+            response.AddToHeader("Content-Type", "text/html; charset=UTF-8", AddMode.rewrite);
+			byte[] _data = Encoding.UTF8.GetBytes("<html><body><h2>An error has occurred code of error " + Code + "</h2></body></html>");
+            data.OutputData.Write(_data, 0, _data.Length);
+        }
+	
 ```
