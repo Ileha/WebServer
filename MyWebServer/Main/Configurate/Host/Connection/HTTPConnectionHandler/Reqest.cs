@@ -67,6 +67,7 @@ namespace Configurate.Host.Connection.HTTPConnection
             do {
                 int _count = 0;
                 try { _count = _receive.Read(bytes, 0, bytes.Length); } catch (Exception err) { throw new ConnectionExecutorClose(); }
+                if (_count == 0) { throw new ConnectionExecutorClose(); }
                 _receive_data.Write(bytes, 0, _count);
                 ExistSeqeunce(0, _count, new_line, bytes, out _index);
                 if (_index == -1) {
