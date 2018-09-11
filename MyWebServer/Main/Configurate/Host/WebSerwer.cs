@@ -153,9 +153,9 @@ namespace Configurate.Host
         {
             if (!IsWork) { return; }
             IsWork = false;
+            sListener.Stop();
             thread.Abort();
             thread.Join();
-            sListener.Stop();
         }
     }
 }

@@ -41,6 +41,7 @@ namespace Configurate.Session
         public void Dispose() {
             t.Change(Timeout.Infinite, Timeout.Infinite);
             t.Dispose();
+            UserConnect.Dispose();
         }
     }
 }

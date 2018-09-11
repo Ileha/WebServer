@@ -56,9 +56,10 @@ namespace Configurate
 			Collector = new SessionCollect();
 			Collector.Configurate(GetElements(Collector));
 
+            HostID = Guid.NewGuid();
+
 			Host = new WebSerwer();
             Host.Configurate(GetElements(Host));
-            HostID = Guid.NewGuid();
 		}
 
         public void Dispose()

@@ -7,13 +7,10 @@ using Configurate.Session.Exception;
 
 namespace Configurate.Session {
 	public class UserConnect {
-		private static ConcurrentDictionary<string, UserConnect> _SessionInfo;
-		public static ConcurrentDictionary<string, UserConnect> SessionInfo {
-			get { return _SessionInfo; }
-		}
+        public static ConcurrentDictionary<string, UserConnect> SessionInfo { get; private set; }
 
 		static UserConnect() {
-			_SessionInfo = new ConcurrentDictionary<string, UserConnect>();
+            SessionInfo = new ConcurrentDictionary<string, UserConnect>();
 		}
 
 		public static UserConnect GetUserDataFromID(string id) {
@@ -26,6 +23,10 @@ namespace Configurate.Session {
 				throw new UserNotFound(id);
 			}
 		}
+
+        public static void Dispose() {
+            SessionInfo.Clear();
+        }
 
         private string _id;
         public string ID {

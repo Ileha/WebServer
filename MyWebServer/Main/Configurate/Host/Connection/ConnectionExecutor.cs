@@ -31,7 +31,7 @@ namespace Configurate.Host.Connection
                 }while(ConnectHandler == ConnectHandler.ExecuteHandler);
             }
             catch (ConnectionExecutorClose err) {
-                onDisconnect(data);
+                onDisConnectEvent(data);
                 throw err;
             }
             catch (Exception err) {
