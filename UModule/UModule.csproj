@@ -48,6 +48,17 @@
     <Compile Include="handlers\Page\Controlls\ABSElement.cs" />
     <Compile Include="handlers\Page\Controlls\UButton.cs" />
     <Compile Include="handlers\Page\Controlls\UText.cs" />
+    <Compile Include="handlers\Page\jsScripts\Connect.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Connect.tt</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\Page\jsScripts\PartialsClasses.cs" />
+    <Compile Include="handlers\Page\jsScripts\Serialize.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Serialize.tt</DependentUpon>
+    </Compile>
     <Compile Include="handlers\Page\PageHandler.cs" />
     <Compile Include="Interactive.cs" />
     <Compile Include="Loader.cs" />
@@ -63,9 +74,20 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="handlers\Page\jsScripts\Connect.js" />
     <Content Include="handlers\Page\jsScripts\Main.js" />
-    <Content Include="handlers\Page\jsScripts\Serialize.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="handlers\Page\jsScripts\Connect.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>Connect.cs</LastGenOutput>
+    </None>
+    <None Include="handlers\Page\jsScripts\Serialize.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>Serialize.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

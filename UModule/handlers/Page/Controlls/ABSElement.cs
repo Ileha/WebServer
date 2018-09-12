@@ -20,5 +20,9 @@ namespace UModule.handlers.Page.Controlls
         }
         protected abstract HtmlNode OnInit(HtmlNode cQ);
         protected abstract HtmlNode OnRender(HtmlNode out_node);
+
+        public sealed override string ToString() {
+            return string.Format("\"{0}\"", id);
+        }
     }
 }

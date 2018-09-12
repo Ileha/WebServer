@@ -8,6 +8,7 @@ using System.Reflection;
 using UModule.handlers.Page.Controlls;
 using System.Xml.Linq;
 using HtmlAgilityPack;
+using UModule.handlers.Page.jsScripts;
 
 namespace UModule.handlers.Page
 {
@@ -43,35 +44,21 @@ namespace UModule.handlers.Page
         public virtual void OnInit() { }
         public virtual void Load() { }
         public void Render() {
+            foreach (ABSElement el in elements) {
+                el.Render();
+            }
             HtmlNode body = Page.DocumentNode.SelectSingleNode("/html/body");
             HtmlNode script = Page.CreateElement("script");
             script.Attributes.Add("type", "text/javascript");
             body.AppendChild(script);
-            StringBuilder sb = new StringBuilder();
-            sb.Append("var ids = [");
-            int count = elements.Count;
-            for (int i = 0; i < count; i++)
-            {
-                if (i != count-1) {
-                    sb.AppendFormat("\"{0}\",", elements[i].id);
-                }
-                else {
-                    sb.AppendFormat("\"{0}\"", elements[i].id);
-                }
-                elements[i].Render();
-            }
-            sb.Append("];\r\n");
-            sb.Append("var s = new XMLSerializer();\r\nvar str = \"<res>\";\r\nfor (i = 0; i < ids.length; i++) {\r\nstr+=s.serializeToString(document.getElementById(ids[i]));\r\n}\r\nstr+=\"</res>\";\r\nalert(str);\r\n");
-            script.InnerHtml = sb.ToString();
-            
+            Serialize data_serializer = new Serialize(elements);
+            script.InnerHtml = data_serializer.TransformText();
+
             script = Page.CreateElement("script");
             script.Attributes.Add("type", "text/javascript");
             body.AppendChild(script);
-            sb.Clear();
-            sb.Append("var socket;\r\nfunction connect() {\r\nsocket = new WebSocket(\"ws://");
-            sb.AppendFormat("{0}{1}", Interact.LocalEndPoint, Interact.URL);
-            sb.Append("\");\r\nsocket.onopen = function() {\r\nconsole.log(\"Соединение установлено.\");\r\n};\r\nsocket.onclose = function(event) {\r\nif (event.wasClean) {\r\nconsole.log(\"Соединение закрыто чисто\");\r\n} else {\r\nconsole.log(\"Обрыв соединения\");\r\n}\r\nconsole.log(\"Код: \" + event.code + \" причина: \" + event.reason);\r\n};\r\nsocket.onmessage = function(event) {\r\nconsole.log(\"Получены данные \" + event.data);\r\n};\r\nsocket.onerror = function(error) {\r\n console.log(\"Ошибка \" + error.message);\r\n};\r\n}");
-            script.InnerHtml = sb.ToString();
+            Connect connect = new Connect(Interact);
+            script.InnerHtml = connect.TransformText();
         }
         public void Unload() {
             string res = Page.DocumentNode.InnerHtml;

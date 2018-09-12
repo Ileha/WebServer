@@ -1,0 +1,15 @@
+﻿<#@ template language="C#" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+function Serialize() {
+    var ids = [<#= String.Join(",", this.elements) #>];
+    var s = new XMLSerializer();
+    var str = "<res>";
+    for (i = 0; i < ids.length; i++) {
+        str += s.serializeToString(document.getElementById(ids[i]));
+    }
+    str += "</res>";
+    return str;
+}
+
