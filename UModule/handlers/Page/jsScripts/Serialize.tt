@@ -4,12 +4,12 @@
 
 function Serialize() {
     var ids = [<#= String.Join(",", this.elements) #>];
-    var s = new XMLSerializer();
-    var str = "<res>";
-    for (i = 0; i < ids.length; i++) {
-        str += s.serializeToString(document.getElementById(ids[i]));
+	var str = "<res>";
+	for (i = 0; i < ids.length; i++) {
+		var obj = document.getElementById(ids[i]);
+		if (obj == undefined) { continue; }
+        str += "/r/n"+obj.outerHTML;
     }
-    str += "</res>";
+	str+="</res>"
     return str;
 }
-

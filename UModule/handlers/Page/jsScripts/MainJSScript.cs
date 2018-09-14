@@ -9,6 +9,7 @@
 // ------------------------------------------------------------------------------
 namespace UModule.handlers.Page.jsScripts
 {
+    using System.Linq;
     using System.Text;
     using System.Collections.Generic;
     using System;
@@ -17,9 +18,9 @@ namespace UModule.handlers.Page.jsScripts
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\Users\alexey\Documents\Program Project\C#\WebServer\UModule\handlers\Page\jsScripts\Serialize.tt"
+    #line 1 "C:\Users\alexey\Documents\Program Project\C#\WebServer\UModule\handlers\Page\jsScripts\MainJSScript.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "12.0.0.0")]
-    public partial class Serialize : SerializeBase
+    public partial class MainJSScript : MainJSScriptBase
     {
 #line hidden
         /// <summary>
@@ -27,16 +28,7 @@ namespace UModule.handlers.Page.jsScripts
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("\r\nfunction Serialize() {\r\n    var ids = [");
-            
-            #line 6 "C:\Users\alexey\Documents\Program Project\C#\WebServer\UModule\handlers\Page\jsScripts\Serialize.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(String.Join(",", this.elements)));
-            
-            #line default
-            #line hidden
-            this.Write("];\r\n\tvar str = \"<res>\";\r\n\tfor (i = 0; i < ids.length; i++) {\r\n\t\tvar obj = documen" +
-                    "t.getElementById(ids[i]);\r\n\t\tif (obj == undefined) { continue; }\r\n        str +=" +
-                    " \"/r/n\"+obj.outerHTML;\r\n    }\r\n\tstr+=\"</res>\"\r\n    return str;\r\n}");
+            this.Write("\r\nconsole.log(Serialize());");
             return this.GenerationEnvironment.ToString();
         }
     }
@@ -48,7 +40,7 @@ namespace UModule.handlers.Page.jsScripts
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "12.0.0.0")]
-    public class SerializeBase
+    public class MainJSScriptBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;

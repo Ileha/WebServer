@@ -48,6 +48,7 @@ namespace UModule.handlers.Page
                 el.Render();
             }
             HtmlNode body = Page.DocumentNode.SelectSingleNode("/html/body");
+
             HtmlNode script = Page.CreateElement("script");
             script.Attributes.Add("type", "text/javascript");
             body.AppendChild(script);
@@ -59,6 +60,12 @@ namespace UModule.handlers.Page
             body.AppendChild(script);
             Connect connect = new Connect(Interact);
             script.InnerHtml = connect.TransformText();
+
+            script = Page.CreateElement("script");
+            script.Attributes.Add("type", "text/javascript");
+            body.AppendChild(script);
+            MainJSScript main = new MainJSScript();
+            script.InnerHtml = main.TransformText();
         }
         public void Unload() {
             string res = Page.DocumentNode.InnerHtml;

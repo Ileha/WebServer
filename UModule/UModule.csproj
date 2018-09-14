@@ -53,6 +53,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Connect.tt</DependentUpon>
     </Compile>
+    <Compile Include="handlers\Page\jsScripts\MainJSScript.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MainJSScript.tt</DependentUpon>
+    </Compile>
     <Compile Include="handlers\Page\jsScripts\PartialsClasses.cs" />
     <Compile Include="handlers\Page\jsScripts\Serialize.cs">
       <AutoGen>True</AutoGen>
@@ -83,6 +88,10 @@
     <None Include="handlers\Page\jsScripts\Connect.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>Connect.cs</LastGenOutput>
+    </None>
+    <None Include="handlers\Page\jsScripts\MainJSScript.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>MainJSScript.cs</LastGenOutput>
     </None>
     <None Include="handlers\Page\jsScripts\Serialize.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
