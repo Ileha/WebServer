@@ -26,18 +26,28 @@ namespace UModule.handlers.Page
         }
         
         public void Init() {
-            Page = new HtmlDocument();
-            Page.Load(Interact.ReadData);
-            elements = new List<ABSElement>();
-            FieldInfo[] controlls = this.GetType().GetFields();
-            Type master = typeof(ABSElement);
-            for (int i = 0; i < controlls.Length; i++) {
-                Type need_type = controlls[i].FieldType;
-                if (!need_type.IsSubclassOf(master)) { continue; }
-                ABSElement element = (ABSElement)Activator.CreateInstance(need_type);
-                element.Init(Page.DocumentNode.SelectSingleNode(string.Format("//*[@id=\"{0}\"]", controlls[i].Name)));
-                controlls[i].SetValue(this, element);
-                elements.Add(element);
+            if (!IsDataRquest) {
+                Page = new HtmlDocument();
+                Page.Load(Interact.ReadData);
+                elements = new List<ABSElement>();
+                FieldInfo[] controlls = this.GetType().GetFields();
+                Type master = typeof(ABSElement);
+                for (int i = 0; i < controlls.Length; i++)
+                {
+                    Type need_type = controlls[i].FieldType;
+                    if (!need_type.IsSubclassOf(master)) { continue; }
+                    ABSElement element = (ABSElement)Activator.CreateInstance(need_type);
+                    element.Init(Page.DocumentNode.SelectSingleNode(string.Format("//*[@id=\"{0}\"]", controlls[i].Name)));
+                    controlls[i].SetValue(this, element);
+                    elements.Add(element);
+                }
+            }
+            else {
+                HtmlDocument data = new HtmlDocument();
+                data.Load(Interact.InputData);
+                foreach (ABSElement el in elements) {
+                    
+                }
             }
             OnInit();
         }
